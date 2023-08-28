@@ -11,3 +11,8 @@ Please add your Ideas for the project below:
 * HR App, such as workers clock-in and out, PTO requests, scheduling, etc
 * Pantry Recipes App
 * Excerise/Workout Suggestions
+
+* Purdue Grades App (Connects with brightspace to show course/assignment grades and averages by Prof/Section)
+* Study plan app that professors can create study plans on (Enter important dates and study sets)
+* Purdue campus maps app (detailed map instructions to get to specific rooms/halls and seats on campus)
+* Exam Seating app
