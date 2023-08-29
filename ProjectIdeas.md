@@ -16,3 +16,7 @@ Please add your Ideas for the project below:
 * Study plan app that professors can create study plans on (Enter important dates and study sets)
 * Purdue campus maps app (detailed map instructions to get to specific rooms/halls and seats on campus)
 * Exam Seating app
+
+* City planning app, makes infrastructure maps from parameters or suggests beneficial changes, compares cities based off preferences and attributes such as walkability, diversity, economy, social scene, etc.
+
+
