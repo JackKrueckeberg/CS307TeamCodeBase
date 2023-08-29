@@ -18,5 +18,6 @@ Please add your Ideas for the project below:
 * Exam Seating app
 
 * City planning app, makes infrastructure maps from parameters or suggests beneficial changes, compares cities based off preferences and attributes such as walkability, diversity, economy, social scene, etc.
+* Assignmnet organization app (Organizes all brightspace assignmnets with due dates in one place)
 
 
