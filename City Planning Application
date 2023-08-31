@@ -1,0 +1,20 @@
+Desktop or Web application
+
+Three functionalities
+ * City creator
+ * City explorer
+ * City comparer and suggester
+
+City Creator
+ * Create from scrath or template, sandbox style
+ * Map creator, infrastructure layout
+ * City parameters, auto generate map and infrastructure layout
+
+City Explorer
+ * Explore existing cities
+ * Cities you have made
+ * Share cities you make with friends
+
+City Comparer
+ * Find a city that matches your preferencs
+ * Compare attributes of cities, diversity, economy, social scene, etc.
