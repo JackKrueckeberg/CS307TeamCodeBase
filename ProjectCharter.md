@@ -27,5 +27,7 @@ The current issue with finding a place to live is managing all of the different 
 
 #### Project Delieverables:
 
+- User authentication system that lets a user create, sign-in, and sign-out of an account that stores their favorite cities.
 
-(EVERYONE ADD ONE DELIEVERABLE FOR THE PROJECT, I'LL ADD MINE LAST WITH THE FRAMWORK/LANGUAGE THAT WE DECIDE ON (CAN PROLLY CHANGE THIS BUT NEED ONE FOR NO)W)
+
+(EVERYONE ADD ONE DELIEVERABLE FOR THE PROJECT, I'LL ADD MINE LAST WITH THE FRAMWORK/LANGUAGE THAT WE DECIDE ON (CAN PROLLY CHANGE THIS BUT NEED ONE FOR NOW)
