@@ -1,15 +1,14 @@
-# Project Charter Documentation - Find Your Home Application - Team 12
+# Project Charter Documentation - Find Your Home Web Application - Team 12
 
 #### Jack Krueckeberg, James Goldberg, Jason Bodzy, Quinn Bello, Nick Adair, McKenzie Patterson
 
-*****
-
+----
 #### Problem Statement:
 
 
 The current issue with finding a place to live is managing all of the different factors that go in to moving.  There are many sources for information; however, they are spread out across the web and not easily agglomerated by users.
 
-
+----
 #### Project Objectives:
 
 
@@ -20,18 +19,34 @@ The current issue with finding a place to live is managing all of the different 
  - Users can create a list of favorite cites to help them narrow down their choices
  - Viewing pictures and maps of cities with common attractions
 
+-----
 #### Project Stakeholders:
 
+Our stakeholders include the following staff from our development team:
+* Jack Krueckeberg
+* Quinn Bello
+* Jason Bodzy
+* McKenzie Patterson
+* Nick Adair
+* James Goldberg
 
-- Young people searching for jobs (new grads) can use this product to find ideal living locations based on their preferences
-- City planners trying to optimize cities can use this software to see what aspects of their cities are admirable and see how these metrics compare to other cities
-- Government officials and policymakers can look at various metrics of cities and cater policies to target audiences
-- Retail and travel agencies can use this software to reccomend destinations for living and traveling
+In addition to the following groups of people: 
 
+* Young people searching for jobs (new grads), who can use this product to find ideal living locations based on their preferences
+* City planners trying to optimize cities can use this software to see what aspects of their cities are admirable and see how these metrics compare to other cities
+* Government officials and policymakers, who can look at various metrics of cities and cater policies to target audiences
+* Retail and travel agencies, who can use this software to recommend destinations for living and traveling
+
+----
 #### Project Delieverables:
 
-- User authentication system that lets a user create, sign-in, and sign-out of an account that stores their favorite cities.
-- Users can browse for cities based on crime rate, and filter them accordingly
+The management team and the development team at _Find Your Home_ visualizes the web application as one that offers the following features within:
 
+* A User authentication system that lets a user create, sign-in, and sign-out of an account that stores their favorite cities.
+* Availability to browse for cities based on crime rate, and filter them accordingly
+* Availability to browse for a place to live based on as many or as little filters that selected
+* Data on car dependecy and walkability as well as available parks and other health and wellness resources
+* A backend server that stores all the information for places to be generated from
+* A Easy-to-use User-interface that is both fully-functional and appealing
 
-(EVERYONE ADD ONE DELIEVERABLE FOR THE PROJECT, I'LL ADD MINE LAST WITH THE FRAMWORK/LANGUAGE THAT WE DECIDE ON (CAN PROLLY CHANGE THIS BUT NEED ONE FOR NOW)
+We plan to either utilize the ASP.NET Framework along with C# or React with NodeJS to generate this web application.
