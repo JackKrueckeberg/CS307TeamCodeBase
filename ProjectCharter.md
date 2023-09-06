@@ -23,7 +23,10 @@ The current issue with finding a place to live is managing all of the different 
 #### Project Stakeholders:
 
 
-(JASON'S DOING THIS SECTION)
+- Young people searching for jobs (new grads) can use this product to find ideal living locations based on their preferences
+- City planners trying to optimize cities can use this software to see what aspects of their cities are admirable and see how these metrics compare to other cities
+- Government officials and policymakers can look at various metrics of cities and cater policies to target audiences
+- Retail and travel agencies can use this software to reccomend destinations for living and traveling
 
 #### Project Delieverables:
 
