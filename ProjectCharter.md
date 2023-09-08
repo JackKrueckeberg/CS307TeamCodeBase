@@ -5,19 +5,19 @@
 ----
 #### Problem Statement:
 
-
-The current issue with finding a place to live is managing all of the different factors that go in to moving.  There are many sources for information; however, they are spread out across the web and not easily agglomerated by users.
+The current issue with finding a city to live in is accounting for all of the differences of each city.  There are many sources for information; however, they are spread out across the web and not easily agglomerated by users.
 
 ----
-#### Project Objectives:
+#### Project Objectives and Features:
 
-
- - A web based application that aids people looking to move to a new city in finding a place that fits all of their preferences.  
- - Use filters on databases of city information to match the user with cities that best fit them. 
+ - A web based application that aids people looking to move to a new city in finding one that fits all of their preferences.  
+ - Create a large list of preference filters for on databases of city information. Users pick their preferences to be matched with cities that best fit them. 
  - Let the user choose which aspects of a city they want to be factored into their preferences. 
- - Compare cities' data on diversity, job opportunities, cost of living, social scene, school systems, crime rate, real estate market, types of businesses (corporate vs family owned), walkability, and more.
- - Users can create a list of favorite cites to help them narrow down their choices
- - Viewing pictures and maps of cities with common attractions
+ - Compare cities' data on diversity, job opportunities, cost of living, social scene, school systems, crime rate, real estate market, types of businesses (corporate vs family owned), walkability, parks, restaurants, health and wellness resources, and more.
+ - Users can create a list of favorite cites to help them narrow down their choices.
+ - Viewing pictures and maps of cities and common attractions, data heat maps that correlate to preference lists
+
+We plan to either utilize the ASP.NET Framework along with C# or React with NodeJS to generate this web application.
 
 -----
 #### Project Stakeholders:
@@ -40,13 +40,10 @@ In addition to the following groups of people:
 ----
 #### Project Delieverables:
 
-The management team and the development team at _Find Your Home_ visualizes the web application as one that offers the following features within:
+The management team and the development team at _Find Your Home_ visualizes the web application as one that assists users in finding the right city for the through the following features:
 
 * A User authentication system that lets a user create, sign-in, and sign-out of an account that stores their favorite cities.
-* Availability to browse for cities based on crime rate, and filter them accordingly
 * Availability to browse for a place to live based on as many or as little filters that selected
-* Data on car dependecy and walkability as well as available parks and other health and wellness resources
 * A backend server that stores all the information for places to be generated from
 * A Easy-to-use User-interface that is both fully-functional and appealing
 
-We plan to either utilize the ASP.NET Framework along with C# or React with NodeJS to generate this web application.
