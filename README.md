@@ -18,6 +18,24 @@ Notes:
 
 Overall, please create branches for your work and create individual files for your components, the way we are dividing work, you should almost never be editing the same file as someone else, therefore if you have a merge conflict, you likely are not coding in the best way (avoid spaggheti code)
 
+From this point forward:
+
+*DO NOT PUSH TO MAIN*
+
+edit this repo by:
+1. Pull main (and run `npm i` in both the client and server folder)
+2. Make a branch from main
+3. Checkout that branch
+4. Make changes
+5. Add, commit & push to your branch
+6. Make a pull request from your branch to main and wait for it to be approved.
+
+
+
+
+
+
+
  
 
 
