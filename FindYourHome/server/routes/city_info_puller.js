@@ -7,7 +7,8 @@
 async function getCitiesIterative() {
 
     // start by pulling the top 100 cities
-    top100 = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code&where=country_code%20%3D%20%22US%22&order_by=population%20DESC&limit=100`;
+    //top100 = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code&where=country_code%20%3D%20%22US%22&order_by=population%20DESC&limit=100`;
+    top100 = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code%2C%20latitude%2C%20longitude&where=country_code%20%3D%20%22US%22&order_by=population%20DESC&limit=100`;
 
     var response = await fetch(top100); // pulls cities
     
@@ -29,7 +30,8 @@ async function getCitiesIterative() {
 
     while (round < 50) { // gets the next 100 dynamically editing the URL
 
-        nextLink = new URL(`https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code&where=country_code%20%3D%20%22US%22%20and%20population%20%3C%20` + cities.results[99].population + `&order_by=population%20DESC&limit=100`);
+        //nextLink = new URL(`https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code&where=country_code%20%3D%20%22US%22%20and%20population%20%3C%20` + cities.results[99].population + `&order_by=population%20DESC&limit=100`);
+        nextLink = new URL(`https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code%2C%20latitude%2C%20longitude&where=country_code%20%3D%20%22US%22%20and%20population%20%3C%20` + cities.results[99].population + `&order_by=population%20DESC&limit=100`)
 
         response = await fetch(nextLink);
     
@@ -64,7 +66,7 @@ async function writeCity(city) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({name: city.name, population: city.population, timezone: city.timezone, state: city.admin1_code}),
+      body: JSON.stringify({name: city.name, population: city.population, timezone: city.timezone, state: city.admin1_code, lat: city.latitude, lon: city.longitude}),
       // JSON.stringify({ x: 5, y: 6 })
     })
     .catch(error => {
