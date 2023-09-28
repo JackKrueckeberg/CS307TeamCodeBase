@@ -28,7 +28,8 @@ router.post("/", async (req, res) => {
     population: req.body.population,
     //density: req.body.density,
     //gdp: req.body.gdp,
-    region: req.body.timezone
+    region: req.body.timezone,
+    state: req.body.state
     //weather: req.body.weather
   };
   let collection = await db.collection("cities");

@@ -2,28 +2,56 @@
 
 
 // gets cities name, population and timezone(region)
-async function getCities() {
-    console.log("pulling city name, pop, timezone");
-    link = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone&where=country_code%20%3D%20%22US%22%20and%20population%20%3E%20150000&limit=100`
 
-    const response = await fetch(link);
+
+async function getCitiesIterative() {
+
+    // start by pulling the top 100 cities
+    top100 = `https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code&where=country_code%20%3D%20%22US%22&order_by=population%20DESC&limit=100`;
+
+    var response = await fetch(top100); // pulls cities
     
     if (!response.ok) {
-    const message = `An error occurred: ${response.statusText}`;
-    return;
+        const message = `An error occurred: ${response.statusText}`;
+        return;
     }
     
-    const cities = await response.json();
+    var cities = await response.json();
 
     console.log(cities);
 
 
     for (let i = 0; i < cities.results.length; i++) {
-        writeCity(cities.results[i]);
+        writeCity(cities.results[i]); // writes each of top 100
+    }
+
+    round = 1
+
+    while (round < 50) { // gets the next 100 dynamically editing the URL
+
+        nextLink = new URL(`https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-500/records?select=name%2C%20population%2C%20timezone%2C%20admin1_code&where=country_code%20%3D%20%22US%22%20and%20population%20%3C%20` + cities.results[99].population + `&order_by=population%20DESC&limit=100`);
+
+        response = await fetch(nextLink);
+    
+        if (!response.ok) {
+            const message = `An error occurred: ${response.statusText}`;
+            return;
+        }
+        
+        cities = await response.json();
+    
+        console.log(cities);
+    
+    
+        for (let i = 0; i < cities.results.length; i++) {
+            writeCity(cities.results[i]); // writes the cities
+        }
+        
+        round++;
+        
     }
 
 
-    return cities;
 }
 
 async function writeCity(city) {
@@ -36,7 +64,7 @@ async function writeCity(city) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({name: city.name, population: city.population, timezone: city.timezone}),
+      body: JSON.stringify({name: city.name, population: city.population, timezone: city.timezone, state: city.admin1_code}),
       // JSON.stringify({ x: 5, y: 6 })
     })
     .catch(error => {
@@ -46,7 +74,8 @@ async function writeCity(city) {
 
 }
 
-getCities();
+
+getCitiesIterative();
 
 
 
