@@ -19,6 +19,12 @@ const App = () => {
     lat: "34.05223",
     lon: "-118.24368"
   };
+
+
+
+
+
+
  return (
    <div>
      <Navbar />
@@ -27,7 +33,6 @@ const App = () => {
        <Route path="/edit/:id" element={<Edit />} />
        <Route path="/create" element={<Create />} />
      </Routes>
-     <h2>Map of {city.name}</h2>
      <Map lat={city.lat} lon={city.lon} />
    </div>
 
