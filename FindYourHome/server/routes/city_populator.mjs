@@ -31,10 +31,13 @@ router.post("/", async (req, res) => {
     region: req.body.timezone,
     state: req.body.state,
     lat: req.body.lat,
-    lon: req.body.lon
+    lon: req.body.lon,
+    zip_code: req.body.zip_code,
+    county: req.body.county,
+    median_income: req.body.median_income
     //weather: req.body.weather
   };
-  let collection = await db.collection("cities");
+  let collection = await db.collection("cities_full_2");
   let result = await collection.insertOne(newDocument);
   res.send(result).status(204);
   console.log("inserting city to db.");
