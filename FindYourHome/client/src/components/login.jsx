@@ -1,14 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../Stylings/loginStyle.css';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const timeoutRef = useRef(null);
+
 
     const submission = (e) => {
         e.preventDefault();
     }
+
+    const togglePasswordVisibility = () => {
+        // If password is currently being shown, we hide it
+        if (showPassword) {
+            setShowPassword(false);
+            // Clear any existing timeouts
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        } 
+        // If password is currently hidden, we show it and set a timeout to hide it again
+        else {
+            setShowPassword(true);
+            timeoutRef.current = setTimeout(() => {
+                setShowPassword(false);
+            }, 20000); // Hide after 20 seconds
+        }
+    };
 
     useEffect(() => {
         // Set the background color when the component mounts
@@ -18,6 +38,13 @@ export const Login = () => {
         return () => {
             document.body.style.backgroundColor = null;
         };
+        
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+
     }, []);
 
     return (
@@ -33,9 +60,17 @@ export const Login = () => {
                 <div  className='password-entry-wrapper'>
                     <label htmlFor="password">Password: </label>
                     <input value={password} onChange = {(e) => setPassword(e.target.value)} type={showPassword ? "text" : "password"} id="password"/>
-                    <button onClick={() => setShowPassword(!showPassword)} type="button">  
+                    <button onClick={togglePasswordVisibility} 
+                        type="button"
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        role="switch"
+                        aria-checked={showPassword}
+                        className="toggle-password"
+                        data-show={!showPassword ? "true" : "false"}
+                    >
                         {showPassword ? 'Hide' : 'Show'}
                     </button>
+
                 </div>
 
                 <button type="submit">Log In</button>
