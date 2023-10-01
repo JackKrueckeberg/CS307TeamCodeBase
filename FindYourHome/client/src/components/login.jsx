@@ -4,6 +4,7 @@ import '../Stylings/loginStyle.css';
 export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
 
     const submission = (e) => {
         e.preventDefault();
@@ -25,16 +26,23 @@ export const Login = () => {
             <form onSubmit={submission}>
                 
                 {/*Email/Username Submission box*/} 
-                <label htmlFor="email/username" placeholder="youremail@example.com">Email / Username: </label>
-                <input value={email} onChange = {(e) => setEmail(e.target.value)} type="text" id="email/username" />
+                <label htmlFor="email" placeholder="youremail@example.com">Email: </label>
+                <input value={email} onChange = {(e) => setEmail(e.target.value)} type="text" id="email" />
 
                 {/*Password Submission box*/} 
-                <label htmlFor="password">Password: </label>
-                <input value={password} onChange = {(e) => setPassword(e.target.value)} type="password" id="password"/>
-                
+                <div  className='password-entry-wrapper'>
+                    <label htmlFor="password">Password: </label>
+                    <input value={password} onChange = {(e) => setPassword(e.target.value)} type={showPassword ? "text" : "password"} id="password"/>
+                    <button onClick={() => setShowPassword(!showPassword)} type="button">  
+                        {showPassword ? 'Hide' : 'Show'}
+                    </button>
+                </div>
+
                 <button type="submit">Log In</button>
             </form>
             <button id="create">Don't have an Account?  Click here to Create one.</button>
         </div>
     )
 }
+
+export default Login;

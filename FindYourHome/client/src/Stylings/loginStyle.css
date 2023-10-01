@@ -36,4 +36,21 @@ input {
     height: 40px;
     width: 100%;
     padding: 10px 15px;
+    padding-right: 75px;
+    border: 0;
+}
+
+.password-entry-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.password-entry-wrapper button{
+    position: absolute;
+    top: 68%;
+    right: 5px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
 }
