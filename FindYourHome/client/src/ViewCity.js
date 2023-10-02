@@ -30,7 +30,7 @@ const ViewCity = () => {
   const handleSubmit = () => {
     const matchedCity = allCities.find(c => c.name.toLowerCase() === searchTerm.toLowerCase());
     setCity(matchedCity);
-    setShowResults(!!matchedCity);
+    setShowResults(true);
   };
 
   const handleClear = () => {
@@ -40,6 +40,7 @@ const ViewCity = () => {
   };
 
   const renderResults = () => {
+    console.log(city);
     if (showResults && city) {
       return (
         <div className="result">
@@ -47,7 +48,7 @@ const ViewCity = () => {
           <p>{city.country}</p>
         </div>
       );
-    } else if (showResults && !city) {
+    } else if (showResults) {
       return <div className="result"><h2>Invalid Search</h2></div>;
     }
     return null;
