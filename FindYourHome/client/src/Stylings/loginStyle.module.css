@@ -1,10 +1,10 @@
-.user-authentication {
+.userAuthentication {
     display: flex;
-    flex-direction: column; 
-    align-items: center;    
-    gap: 20px;              
-    max-width: 300px;       
-    margin: 0 auto;         
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 300px;
+    margin: 0 auto;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -15,27 +15,27 @@ body {
     background-color: lightgray;
 }
 
-form {
+.form {
     display: flex;
-    flex-direction: column; 
-    gap: 10px;              
-    width: 100%;            
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
 }
 
-button {
+.button {
     align-self: center;
     border-radius: 20px;
-    padding: 10px 15px; 
+    padding: 10px 15px;
     border: none;
     background-color: white;
-    cursor: pointer;    
+    cursor: pointer;
 }
 
-label, input {
-    width: 100%;            
+.label, .input {
+    width: 100%;
 }
 
-input {
+.input {
     border-radius: 20px;
     height: 40px;
     width: 100%;
@@ -44,12 +44,12 @@ input {
     border: 0;
 }
 
-.password-entry-wrapper {
+.passwordEntryWrapper {
     position: relative;
     display: inline-block;
 }
 
-.password-entry-wrapper button{
+.passwordEntryWrapper .button {
     position: absolute;
     top: 68%;
     right: 5px;
@@ -59,27 +59,27 @@ input {
     cursor: pointer;
 }
 
-.toggle-password {
-    transition: color 0.3s; /* Optional: smooth transition of color change */
+.togglePassword {
+    transition: color 0.3s;
 }
 
-.toggle-password:hover {
-    color: green; /* Default hover color */
+.togglePassword:hover {
+    color: red;
 }
 
-.toggle-password[data-show="true"]:hover {
-    color: red; /* Hover color when password is shown */
+.togglePassword[data-show="true"]:hover {
+    color: green;
 }
 
-.password-entry-wrapper button {
-    margin-left: 25px;  /* Spacing between the input and button */
+.passwordEntryWrapper .button {
+    margin-left: 25px;
 }
 
-.password-entry-wrapper button[data-show="true"]:hover::after {
+.passwordEntryWrapper .button[data-show="true"]:hover::after {
     content: "Password field will auto-hide after 20s of inactivity for security";
     position: absolute;
     top: 50%;
-    left: calc(100% + 20px);  /* Adjust this value to position the tooltip to the right of the button */
+    left: calc(100% + 20px);
     transform: translateY(-50%);
     background-color: #333;
     color: #fff;
@@ -91,7 +91,7 @@ input {
     font-size: 12px;
 }
 
-#account {
+.account{
     background-color: lightgray;
     border: none;
 }
