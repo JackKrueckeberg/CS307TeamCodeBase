@@ -14,6 +14,10 @@ import Preferences from "./components/preferences";
 const App = () => {
  return (
    <div>
+
+    <Preferences />
+
+    
      <Navbar />
      <Routes>
        <Route exact path="/" element={<RecordList />} />

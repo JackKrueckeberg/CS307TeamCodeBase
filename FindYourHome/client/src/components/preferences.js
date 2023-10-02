@@ -44,28 +44,78 @@ export default function Create() {
 
    async function filterCities() {
     const cities = await getCities()
-    var resultArr = [];
+    var resultArr = new Set();
+
+    var total_prefs = 0;
+
     for (var i = 0; i < cities.length; i++) {
+        cities[i].pref_points = 0;
         if (form.east_coast) {
+            total_prefs++;
             if (cities[i].region === "America/New_York") {
-                resultArr.push(cities[i]);
+                resultArr.add(cities[i]);
             }
         }
         if (form.central) {
+            total_prefs++;
             if (cities[i].region === "America/Chicago") {
-                resultArr.push(cities[i]);
+                resultArr.add(cities[i]);
             }
         }
         if (form.mountain_west) {
+            total_prefs++;
             if (cities[i].region === "America/Phoenix") {
-                resultArr.push(cities[i]);
+                resultArr.add(cities[i]);
             }
         }
         if (form.west) {
+            total_prefs++;
             if (cities[i].region === "America/Los_Angeles") {
-                resultArr.push(cities[i]);
+                resultArr.add(cities[i]);
             }
         }
+
+        if (form.zip_code !== "") {
+            total_prefs++;
+            if (form.zip_code === cities[i].zip_code) {
+                resultArr.add(cities[i]);
+            }
+        }
+
+        if (form.county !== "") {
+            total_prefs++;
+            if (form.county === cities[i].county) {
+                resultArr.add(cities[i]);
+            }
+        }
+
+
+        if (form.population != "") {
+            try {
+                const formPop = parseInt(form.population);
+                const cityPop = parseInt(cities[i].population)
+                if ((Math.abs(formPop - cityPop)) / formPop >= 0.75) {
+                    resultArr.add(cities[i]);
+                }
+            } catch {
+
+            }
+        }
+
+        if (form.median_income != "") {
+            try {
+                const formIncome = parseInt(form.median_income);
+                const cityIncome = parseInt(cities[i].population);
+                if ((Math.abs(formIncome - cityIncome)) / formIncome >= 0.75) {
+                    resultArr.add(cities[i]);
+                }
+            } catch {
+                
+            }
+        }
+
+
+
     }
 
     return resultArr;
