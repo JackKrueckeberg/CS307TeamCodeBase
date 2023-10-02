@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./ViewCity.css";
 
+
 const ViewCity = () => {
 
   const [allCities, setAllCities] = useState([]);
