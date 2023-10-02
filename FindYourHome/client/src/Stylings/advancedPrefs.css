@@ -1,0 +1,27 @@
+.table_style {
+    margin-left: auto;
+    margin-right: auto;
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: black;
+    outline-offset: 4px;
+    align-items: center;
+}
+
+.padding {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    vertical-align: middle;
+}
+
+  
