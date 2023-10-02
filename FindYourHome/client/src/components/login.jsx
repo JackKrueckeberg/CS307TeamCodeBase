@@ -31,14 +31,6 @@ export const Login = () => {
     };
 
     useEffect(() => {
-        // Set the background color when the component mounts
-        document.body.style.backgroundColor = 'lightblue'; // Replace 'desiredColor' with your color.
-
-        // Reset the background color when the component unmounts
-        return () => {
-            document.body.style.backgroundColor = null;
-        };
-        
         return () => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
@@ -75,7 +67,8 @@ export const Login = () => {
 
                 <button type="submit">Log In</button>
             </form>
-            <button id="create">Don't have an Account?  Click here to Create one.</button>
+            <button type="button" id="account">Forgot my Password</button>
+            <button type="button" id="account">Don't have an Account?  Click here to Create one.</button>
         </div>
     )
 }
