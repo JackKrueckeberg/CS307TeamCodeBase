@@ -1,5 +1,10 @@
 .table_style {
-    padding-bottom: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: black;
+    outline-offset: 4px;
     align-items: center;
 }
 
@@ -11,28 +16,12 @@
 }
 
 .center {
-    outline-style: solid;
-    outline-width: 2px;
-    outline-color: black;
-    padding-left: 50%;
-    align-self: center;
+    margin-left: auto;
+    margin-right: auto;
     align-items: center;
+    align-content: center;
+    text-align: center;
+    vertical-align: middle;
 }
 
-/* Style the button that is used to open and close the collapsible content */
-.collapsible {
-    background-color: #eee;
-    color: #444;
-    cursor: pointer;
-    padding: 18px;
-    width: 100%;
-    border: none;
-    text-align: left;
-    outline: none;
-    font-size: 15px;
-  }
   
-  /* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-  .active, .collapsible:hover {
-    background-color: #ccc;
-  }
