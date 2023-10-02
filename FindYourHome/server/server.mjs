@@ -5,6 +5,7 @@ import records from "./routes/record.mjs";
 import city_populator from "./routes/city_populator.mjs";
 import city_info from "./routes/city_info.mjs";
 
+
 const PORT = process.env.PORT || 5050;
 const app = express();
 
