@@ -2,34 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./ViewCity.css";
 
 const ViewCity = () => {
-//   var url = "https://en.wikipedia.org/w/api.php"; 
 
-// var params = {
-//     action: "query",
-//     prop: "images",
-//     titles: "Cincinnati",
-//     format: "json",
-//     formatversion: "2",
-// };
-
-// url = url + "?origin=*";
-// Object.keys(params).forEach(function(key){url += "&" + key + "=" + params[key];});
-
-// fetch(url)
-//     .then(function(response){return response.json();})
-//     .then(function(response) {
-//         var pages = response.query.pages;
-//         for (var page in pages) {
-//             for (var img of pages[page].images) {
-//                 console.log(img.title);
-//             }
-//         }
-//     })
-//     .catch(function(error){console.log(error);});
   const [allCities, setAllCities] = useState([]);
   const [city, setCity] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [cityIncome,setCityIncome] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -54,6 +32,7 @@ const ViewCity = () => {
   const handleSubmit = () => {
     const matchedCity = allCities.find(c => c.name.toLowerCase() === searchTerm.toLowerCase());
     setCity(matchedCity);
+    setCityIncome(matchedCity ? matchedCity.median_income : null);
     setShowResults(true);
   };
 
@@ -64,12 +43,11 @@ const ViewCity = () => {
   };
 
   const renderResults = () => {
-    console.log(city);
     if (showResults && city) {
       return (
         <div className="result">
           <h2>{city.name}</h2>
-          <p>{city.country}</p>
+          <p>{cityIncome}</p>
         </div>
       );
     } else if (showResults) {
