@@ -4,21 +4,9 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-router.get("/cities_full_2", async (req, res) => {
-  try {
-    let collection = await db.collection("cities_full_2");
-    let results = await collection.find({}).toArray();
-    // Send the results back as JSON with a 200 status code.
-    return res.send(results).status(200);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
-// This section will help you get a list of all the records.
+// This section will help you get a list of all the citites.
 router.get("/", async (req, res) => {
-  let collection = await db.collection("records");
+  let collection = await db.collection("cities");
   let results = await collection.find({}).toArray();
   res.send(results).status(200);
 });
@@ -33,16 +21,26 @@ router.get("/:id", async (req, res) => {
   else res.send(result).status(200);
 });
 
-// This section will help you create a new record.
+// This section will help you create a new city.
 router.post("/", async (req, res) => {
   let newDocument = {
-    username: req.body.username,
-    password: req.body.password,
-    email: req.body.email,
+    name: req.body.name,
+    population: req.body.population,
+    //density: req.body.density,
+    //gdp: req.body.gdp,
+    region: req.body.timezone,
+    state: req.body.state,
+    lat: req.body.lat,
+    lon: req.body.lon,
+    zip_code: req.body.zip_code,
+    county: req.body.county,
+    median_income: req.body.median_income
+    //weather: req.body.weather
   };
-  let collection = await db.collection("records");
+  let collection = await db.collection("cities_full_2");
   let result = await collection.insertOne(newDocument);
   res.send(result).status(204);
+  console.log("inserting city to db.");
 });
 
 // This section will help you update a record by id.
@@ -50,9 +48,9 @@ router.patch("/:id", async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
   const updates =  {
     $set: {
-      username: req.body.username,
-      password: req.body.password,
-      email: req.body.email
+      name: req.body.name,
+      position: req.body.position,
+      level: req.body.level
     }
   };
 

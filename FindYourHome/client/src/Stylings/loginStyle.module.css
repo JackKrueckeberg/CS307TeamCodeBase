@@ -1,0 +1,97 @@
+.userAuthentication {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 300px;
+    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+body {
+    background-color: lightgray;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.button {
+    align-self: center;
+    border-radius: 20px;
+    padding: 10px 15px;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+}
+
+.label, .input {
+    width: 100%;
+}
+
+.input {
+    border-radius: 20px;
+    height: 40px;
+    width: 100%;
+    padding: 10px 15px;
+    padding-right: 75px;
+    border: 0;
+}
+
+.passwordEntryWrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.passwordEntryWrapper .button {
+    position: absolute;
+    top: 68%;
+    right: 5px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.togglePassword {
+    transition: color 0.3s;
+}
+
+.togglePassword:hover {
+    color: red;
+}
+
+.togglePassword[data-show="true"]:hover {
+    color: green;
+}
+
+.passwordEntryWrapper .button {
+    margin-left: 25px;
+}
+
+.passwordEntryWrapper .button[data-show="true"]:hover::after {
+    content: "Password field will auto-hide after 20s of inactivity for security";
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 20px);
+    transform: translateY(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+    font-size: 12px;
+}
+
+.account{
+    background-color: lightgray;
+    border: none;
+}
