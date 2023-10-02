@@ -3,9 +3,9 @@ import { useNavigate } from "react-router";
  
 export default function Create() {
  const [form, setForm] = useState({
-   name: "",
-   position: "",
-   level: "",
+   username: "",
+   password: "",
+   email: "",
  });
  const navigate = useNavigate();
  
@@ -42,28 +42,45 @@ export default function Create() {
  // This following section will display the form that takes the input from the user.
  return (
    <div>
-     <h3>Create New Record</h3>
+     <h3>Create New Account</h3>
      <form onSubmit={onSubmit}>
        <div className="form-group">
-         <label htmlFor="name">Name</label>
+         <label htmlFor="username">Username</label>
          <input
            type="text"
            className="form-control"
-           id="name"
-           value={form.name}
-           onChange={(e) => updateForm({ name: e.target.value })}
+           id="username"
+           value={form.username}
+           onChange={(e) => updateForm({ username: e.target.value })}
          />
        </div>
        <div className="form-group">
-         <label htmlFor="position">Position</label>
+         <label htmlFor="password">Password</label>
          <input
            type="text"
            className="form-control"
-           id="position"
-           value={form.position}
-           onChange={(e) => updateForm({ position: e.target.value })}
+           id="password"
+           value={form.password}
+           onChange={(e) => updateForm({ password: e.target.value })}
          />
        </div>
+
+
+
+
+       <div className="form-group">
+         <label htmlFor="email">Email</label>
+         <input
+           type="text"
+           className="form-control"
+           id="email"
+           value={form.email}
+           onChange={(e) => updateForm({ email: e.target.value })}
+         />
+       </div>
+
+
+{/*
        <div className="form-group">
          <div className="form-check form-check-inline">
            <input
@@ -102,6 +119,7 @@ export default function Create() {
            <label htmlFor="positionSenior" className="form-check-label">Senior</label>
          </div>
        </div>
+ */}
        <div className="form-group">
          <input
            type="submit"
