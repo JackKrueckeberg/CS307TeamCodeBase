@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import "../styles/advancedPrefs.css";
+import "../Stylings/advancedPrefs.css";
  
 export default function Create() {
  const [form, setForm] = useState({
@@ -68,7 +68,7 @@ export default function Create() {
                 resultArr.add(cities[i]);
             }
         }
-        if (form.west) {
+        if (form.west_coast) {
             total_prefs++;
             if (cities[i].region === "America/Los_Angeles") {
                 resultArr.add(cities[i]);
@@ -110,7 +110,7 @@ export default function Create() {
                     resultArr.add(cities[i]);
                 }
             } catch {
-                
+
             }
         }
 
