@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import '../Stylings/loginStyle.css';
+import styles from '../Stylings/loginStyle.module.css';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -40,24 +40,24 @@ export const Login = () => {
     }, []);
 
     return (
-        <div className='user-authentication'>
+        <div className={styles.userAuthentication}>
             <h1>Home is Where Your Journey Begins.</h1>
-            <form onSubmit={submission}>
+            <form onSubmit={submission} className={styles.form}>
                 
-                {/*Email/Username Submission box*/} 
-                <label htmlFor="email" placeholder="youremail@example.com">Email: </label>
-                <input value={email} onChange = {(e) => setEmail(e.target.value)} type="text" id="email" />
+                {/*Email/Username Submission box*/}
+                <label htmlFor="email" placeholder="youremail@example.com" className={styles.label}>Email: </label>
+                <input value={email} onChange = {(e) => setEmail(e.target.value)} type="text" id="email" className={styles.input} />
 
-                {/*Password Submission box*/} 
-                <div  className='password-entry-wrapper'>
-                    <label htmlFor="password">Password: </label>
-                    <input value={password} onChange = {(e) => setPassword(e.target.value)} type={showPassword ? "text" : "password"} id="password"/>
+                {/*Password Submission box*/}
+                <div className={styles.passwordEntryWrapper}>
+                    <label htmlFor="password" className={styles.label}>Password: </label>
+                    <input value={password} onChange = {(e) => setPassword(e.target.value)} type={showPassword ? "text" : "password"} id="password" className={styles.input}/>
                     <button onClick={togglePasswordVisibility} 
                         type="button"
                         aria-label={showPassword ? "Hide password" : "Show password"}
                         role="switch"
                         aria-checked={showPassword}
-                        className="toggle-password"
+                        className={`${styles.button} ${styles.togglePassword}`}
                         data-show={!showPassword ? "true" : "false"}
                     >
                         {showPassword ? 'Hide' : 'Show'}
@@ -65,10 +65,11 @@ export const Login = () => {
 
                 </div>
 
-                <button type="submit">Log In</button>
+                <button type="submit" className={styles.button}>Log In</button>
             </form>
-            <button type="button" id="account">Forgot my Password</button>
-            <button type="button" id="account">Don't have an Account?  Click here to Create one.</button>
+            <button type="button" className={styles.account}>Forgot my Password</button>
+            <button type="button" className={styles.account}>Don't have an Account? Click here to Create one.</button>
+
         </div>
     )
 }
