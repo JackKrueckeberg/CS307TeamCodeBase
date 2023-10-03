@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@mui/lab": "^5.0.0-alpha.146",
-    "@mui/material": "^5.14.11",
-    "react-icons": "^4.11.0"
-  }
-}
