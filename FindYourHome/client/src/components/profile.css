@@ -37,6 +37,7 @@
   .profile-header {
     text-align: center;
     margin-top: 60px;
+    width: 20%;
   }
   
   .profile-name {
@@ -98,26 +99,5 @@
     margin: 0;
     padding: 0;
     display: flex;
-  }
-  
-  .tabs li {
-    margin-right: 10px;
-  }
-  
-  .tabs a {
-    text-decoration: none;
-    background-color: #ddd;
-    padding: 10px 20px;
-    border-radius: 5px 5px 0 0; /* Rounded corners on the top */
-    color: #333;
-  }
-  
-  .tabs a:hover {
-    background-color: #aaa;
-  }
-  
-  /* Style for the tab content */
-  .tab-content {
-    display: none;
-    padding: 20px;
+    width: 50%;
   }

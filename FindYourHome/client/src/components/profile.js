@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './profile.css';
+import Favorites from './favorites.js';
 import { FaUser, FaEdit } from 'react-icons/fa';
 
 export default function Profile() {
@@ -38,25 +39,10 @@ export default function Profile() {
     // function to change password
     const handlePasswordChange = () => {
         // route the user to change password function
-      };
+    };
 
-    // function to display favorite cities
-
-
-    // function to display favorite searches
-
-
-    
     return (
         <div className="profile">
-            <div class="tab-container">
-                <ul class="tabs">
-                    <li><a href="Favorite Cities">Favorite Cities</a></li>
-                    <li><a href="Favorite Searches">Favorite Searches</a></li>
-                </ul>
-                <div id="tab1" class="tab-content">Content for Favorite Cities</div>
-                <div id="tab2" class="tab-content">Content for Favorite Searches</div>
-            </div>
             <div className="profile-header">
                 <div className="profile-avatar">
                     <FaUser size={64} />
@@ -127,6 +113,9 @@ export default function Profile() {
                         user.bio
                     )}
                 </p>
+            </div>
+            <div className="tabs">
+                <Favorites />
             </div>
         </div>
     );
