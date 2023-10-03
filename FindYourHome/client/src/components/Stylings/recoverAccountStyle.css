@@ -1,0 +1,88 @@
+.recover-account {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    gap: 20px;              
+    max-width: 300px;       
+    margin: 0 auto;         
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+form {
+    display: flex;
+    flex-direction: column; 
+    gap: 10px;              
+    width: 100%;            
+}
+
+button {
+    align-self: center;
+    border-radius: 20px;
+    padding: 10px 15px; 
+    border: none;
+    background-color: white;
+    cursor: pointer;    
+}
+
+label, input {
+    width: 100%;            
+}
+
+input {
+    border-radius: 20px;
+    height: 40px;
+    width: 100%;
+    padding: 10px 15px;
+    padding-right: 75px;
+    border: 0;
+}
+
+.password-entry-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.password-entry-wrapper button{
+    position: absolute;
+    top: 68%;
+    right: 5px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.toggle-password {
+    transition: color 0.3s; /* Optional: smooth transition of color change */
+}
+
+.toggle-password:hover {
+    color: green; /* Default hover color */
+}
+
+.toggle-password[data-show="true"]:hover {
+    color: red; /* Hover color when password is shown */
+}
+
+.password-entry-wrapper button {
+    margin-left: 25px;  /* Spacing between the input and button */
+}
+
+.password-entry-wrapper button[data-show="true"]:hover::after {
+    content: "Password field will auto-hide after 20s of inactivity for security";
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 20px);  /* Adjust this value to position the tooltip to the right of the button */
+    transform: translateY(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+    font-size: 12px;
+}
