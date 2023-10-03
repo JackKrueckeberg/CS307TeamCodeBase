@@ -47,9 +47,9 @@ export default function Edit() {
  async function onSubmit(e) {
    e.preventDefault();
    const editedPerson = {
-     name: form.name,
-     position: form.position,
-     level: form.level,
+     username: form.username,
+     password: form.password,
+     email: form.email,
    };
  
    // This will send a post request to update the data in the database.
@@ -67,28 +67,43 @@ export default function Edit() {
  // This following section will display the form that takes input from the user to update the data.
  return (
    <div>
-     <h3>Update Record</h3>
+     <h3>Update Account</h3>
      <form onSubmit={onSubmit}>
        <div className="form-group">
-         <label htmlFor="name">Name: </label>
+         <label htmlFor="name">Username: </label>
          <input
            type="text"
            className="form-control"
            id="name"
            value={form.name}
-           onChange={(e) => updateForm({ name: e.target.value })}
+           onChange={(e) => updateForm({ username: e.target.value })}
          />
        </div>
        <div className="form-group">
-         <label htmlFor="position">Position: </label>
+         <label htmlFor="position">Password: </label>
          <input
            type="text"
            className="form-control"
            id="position"
            value={form.position}
-           onChange={(e) => updateForm({ position: e.target.value })}
+           onChange={(e) => updateForm({ password: e.target.value })}
          />
        </div>
+
+
+
+       <div className="form-group">
+         <label htmlFor="position">Email: </label>
+         <input
+           type="text"
+           className="form-control"
+           id="email"
+           value={form.email}
+           onChange={(e) => updateForm({ email: e.target.value })}
+         />
+       </div>
+
+    {/*
        <div className="form-group">
          <div className="form-check form-check-inline">
            <input
@@ -127,12 +142,13 @@ export default function Edit() {
            <label htmlFor="positionSenior" className="form-check-label">Senior</label>
        </div>
        </div>
+ */}
        <br />
  
        <div className="form-group">
          <input
            type="submit"
-           value="Update Record"
+           value="Update Account"
            className="btn btn-primary"
          />
        </div>

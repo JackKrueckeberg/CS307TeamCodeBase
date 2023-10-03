@@ -8,6 +8,7 @@ import Navbar from "./components/navbar";
 import RecordList from "./components/recordList";
 import Edit from "./components/edit";
 import Create from "./components/create";
+
 import Login from "./components/login";
 import ViewCity from "./ViewCity";
  
@@ -17,6 +18,8 @@ const App = () => {
    <div>
       <ViewCity />
    </div>
+
+ 
  );
 };
  
