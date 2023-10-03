@@ -10,12 +10,13 @@ import Edit from "./components/edit";
 import Create from "./components/create";
 
 import Login from "./components/login";
-
+import ViewCity from "./ViewCity";
+ 
 const App = () => {
   
  return (
    <div>
-      <Login />
+      <ViewCity />
    </div>
 
  
