@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
-import "./ViewCity.css";
-
+import "./Stylings/ViewCity.css";
+const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 const ViewCity = () => {
-
   const [allCities, setAllCities] = useState([]);
   const [city, setCity] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const [cityIncome,setCityIncome] = useState(null);
+  const [cityIncome, setCityIncome] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -34,6 +33,7 @@ const ViewCity = () => {
     const matchedCity = allCities.find(c => c.name.toLowerCase() === searchTerm.toLowerCase());
     setCity(matchedCity);
     setCityIncome(matchedCity ? matchedCity.median_income : null);
+    searchImage();
     setShowResults(true);
   };
 
@@ -49,15 +49,32 @@ const ViewCity = () => {
         <div className="result">
           <h2>{city.name}</h2>
           <p>{cityIncome}</p>
+          <div id="imageContainer"></div>
         </div>
       );
     } else if (showResults) {
-      if (searchTerm === ""){
+      if (searchTerm === "") {
         return <div className="result"><h2>No City Searched</h2></div>;
       }
       return <div className="result"><h2>Invalid Search</h2></div>;
     }
     return null;
+  }
+
+  async function searchImage() {
+    const url = `https://api.unsplash.com/search/photos?page=1&query=${searchTerm}&client_id=${apiKey}`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const results = data.results;
+    const image = document.createElement("img");
+    image.src = results[0].urls.small;
+    const container = document.getElementById("imageContainer");
+    container.appendChild(image);
+
+    console.log(data);
+
   }
 
   return (
