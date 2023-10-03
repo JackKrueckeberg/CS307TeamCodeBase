@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './Stylings/profile.css';
+import '../Stylings/profile.css';
 import Favorites from './favorites.js';
 import { FaUser, FaEdit } from 'react-icons/fa';
 
