@@ -11,11 +11,13 @@ import Create from "./components/create";
 
 import Login from "./components/login";
 
+import Preferences from "./components/preferences";
+
 const App = () => {
   
  return (
    <div>
-      <Login />
+      <Preferences />
    </div>
 
  
