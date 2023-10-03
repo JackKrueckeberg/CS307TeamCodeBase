@@ -29,6 +29,29 @@ export const CreateAccount = () => {
         }
     };
 
+    handleFormSubmit = async (event) => {
+        event.preventDefault();
+
+        const {name, username, password} = this.state;
+
+        try {
+            const response = await fetch('/api/users/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, username, password }),
+            });
+
+            if (response.ok) {
+                console.log('User account created successfully');
+            } else {
+                console.error('An error occurred:', error);
+            }
+        } catch (error) {
+            console.error('An error occurred:', error);
+        }
+    };
 
     return (
         <div className='account-creation'>
@@ -36,14 +59,28 @@ export const CreateAccount = () => {
             <form onSubmit={submission}>
                 {/* Name and email details form */}
                 <label htmlFor="name">Your Name:</label>
-                <input value={name} name="name" id="name" placeholder="your name" />
+                <input 
+                    value={name} 
+                    name="name" 
+                    id="name" 
+                    placeholder="your name" 
+                />
                 <label htmlFor="email">Your Email:</label>
-                <input value={email} onChange={(e) => setEmail(e.target.value)} type="text" id="email" />
+                <input 
+                    value={email} 
+                    onChange={(e) => setEmail(e.target.value)} 
+                    type="text" id="email" 
+                />
 
                 {/* Password accaptance form */}
                 <div className='password-entry-wrapper'>
                     <label htmlFor="password">Password:</label>
-                    <input value={password} onChange={(e) => setPassword(e.target.value)} type={showPassword ? "text" : "password"} id="password"/>
+                    <input 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                        type={showPassword ? "text" : "password"} 
+                        id="password"
+                    />
                     <button onClick={() => setShowPassword(!showPassword)} type="submit">
                         {showPassword ? 'Hide' : 'Show'}
                     </button>
