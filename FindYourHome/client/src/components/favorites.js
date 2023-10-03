@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import './favorites.css';
+import './Stylings/favorites.css';
 
 export default function Favorites() {
     
