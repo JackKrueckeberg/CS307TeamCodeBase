@@ -8,6 +8,7 @@ const ViewCity = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [cityIncome, setCityIncome] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -33,7 +34,6 @@ const ViewCity = () => {
     const matchedCity = allCities.find(c => c.name.toLowerCase() === searchTerm.toLowerCase());
     setCity(matchedCity);
     setCityIncome(matchedCity ? matchedCity.median_income : null);
-    searchImage();
     setShowResults(true);
   };
 
@@ -45,11 +45,12 @@ const ViewCity = () => {
 
   const renderResults = () => {
     if (showResults && city) {
+      if (!imageUrl) searchImage();  // If there isn't an imageUrl, fetch it
       return (
         <div className="result">
           <h2>{city.name}</h2>
           <p>{cityIncome}</p>
-          <div id="imageContainer"></div>
+          {imageUrl && <img src={imageUrl} alt="City" />}
         </div>
       );
     } else if (showResults) {
@@ -59,22 +60,15 @@ const ViewCity = () => {
       return <div className="result"><h2>Invalid Search</h2></div>;
     }
     return null;
-  }
+  };
 
   async function searchImage() {
     const url = `https://api.unsplash.com/search/photos?page=1&query=${searchTerm}&client_id=${apiKey}`;
-
     const response = await fetch(url);
     const data = await response.json();
 
     const results = data.results;
-    const image = document.createElement("img");
-    image.src = results[0].urls.small;
-    const container = document.getElementById("imageContainer");
-    container.appendChild(image);
-
-    console.log(data);
-
+    setImageUrl(results[0].urls.small);
   }
 
   return (
