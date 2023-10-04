@@ -3,10 +3,6 @@ import cors from "cors";
 import "./loadEnvironment.mjs";
 import records from "./routes/record.mjs";
 import city_populator from "./routes/city_populator.mjs"
-<<<<<<< HEAD
-
-=======
->>>>>>> origin
 
 const PORT = process.env.PORT || 5050;
 const app = express();
