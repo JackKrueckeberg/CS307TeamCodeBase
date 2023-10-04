@@ -11,14 +11,14 @@
     transform: translate(-50%, -50%);
 }
 
-form {
+.form {
     display: flex;
     flex-direction: column; 
     gap: 10px;              
     width: 100%;            
 }
 
-button {
+.button {
     align-self: center;
     border-radius: 20px;
     padding: 10px 15px; 
@@ -27,11 +27,11 @@ button {
     cursor: pointer;    
 }
 
-label, input {
+.label, input {
     width: 100%;            
 }
 
-input {
+.input {
     border-radius: 20px;
     height: 40px;
     width: 100%;
