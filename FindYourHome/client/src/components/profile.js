@@ -6,8 +6,9 @@ import { FaUser, FaEdit } from 'react-icons/fa';
 export default function Profile() {
     // initialize the profile info
     const initialInfo = {
-        name: 'First and Last Name',
-        username: 'Your UserName',
+        firstName: 'First Name',
+        lastName: 'Last Name',
+        username: 'Your Username',
         email: 'Your Email',
         bio: 'Your Bio',
         password: '',
@@ -52,12 +53,23 @@ export default function Profile() {
                         <input
                             class = "round-corner"
                             type="text"
-                            name="name"
-                            value={user.name}
+                            name="firstName"
+                            value={user.firstName}
                             onChange={handleInputChange}
                         />
                     ) : (
-                        <h1>{user.name}</h1>
+                        <h2>{user.firstName}</h2>
+                    )}
+                    {isEditing ? (
+                        <input
+                            class = "round-corner"
+                            type="text"
+                            name="lastName"
+                            value={user.lastName}
+                            onChange={handleInputChange}
+                        />
+                    ) : (
+                        <h2>{user.lastName}</h2>
                     )}
                 </div>
                 <div className="profile-actions">
