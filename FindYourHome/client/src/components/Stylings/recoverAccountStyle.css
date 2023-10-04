@@ -11,14 +11,14 @@
     transform: translate(-50%, -50%);
 }
 
-form {
+.form {
     display: flex;
     flex-direction: column; 
     gap: 10px;              
     width: 100%;            
 }
 
-button {
+.button {
     align-self: center;
     border-radius: 20px;
     padding: 10px 15px; 
@@ -27,11 +27,11 @@ button {
     cursor: pointer;    
 }
 
-label, input {
+.label, .input {
     width: 100%;            
 }
 
-input {
+.input {
     border-radius: 20px;
     height: 40px;
     width: 100%;
@@ -45,7 +45,7 @@ input {
     display: inline-block;
 }
 
-.password-entry-wrapper button{
+.password-entry-wrapper-button{
     position: absolute;
     top: 68%;
     right: 5px;
@@ -67,11 +67,11 @@ input {
     color: red; /* Hover color when password is shown */
 }
 
-.password-entry-wrapper button {
+.password-entry-wrapper-button {
     margin-left: 25px;  /* Spacing between the input and button */
 }
 
-.password-entry-wrapper button[data-show="true"]:hover::after {
+.password-entry-wrapper-button[data-show="true"]:hover::after {
     content: "Password field will auto-hide after 20s of inactivity for security";
     position: absolute;
     top: 50%;

@@ -38,7 +38,14 @@ export const RecoverAccount = () => {
                 {/* Password accaptance form */}
                 <div className='password-entry-wrapper'>
                     <label htmlFor="password">Password:</label>
-                    <input value={password} onChange={(e) => setPassword(e.target.value)} type={showPassword ? "text" : "password"} id="password"/>
+                    <input 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                    />
                     <button onClick={() => setShowPassword(!showPassword)} type="submit">
                         {showPassword ? 'Hide' : 'Show'}
                     </button>
