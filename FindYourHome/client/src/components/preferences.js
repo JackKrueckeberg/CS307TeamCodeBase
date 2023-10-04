@@ -138,12 +138,12 @@ export default function Create() {
         return;
     }
 
-    if (form.population !== "" && !Number.isInteger(form.population)) {
+    if (form.population !== "" && form.population.toString().indexOf(".") !== -1) {
         alert("Population must be a whole number, leave blank for no preference.");
         return;
     }
 
-    if (form.median_income !== "" && !Number.isInteger(form.median_income)) {
+    if (form.median_income !== "" && form.median_income.toString().indexOf(".") !== -1) {
         alert("Median income must be a whole number, leave blank for no preference");
         return;
     }
@@ -153,7 +153,7 @@ export default function Create() {
         return;
     }
 
-    if (form.zip_code !== "" && (form.zip_code.toString().length !== 5 || form.zip_code < 0 || !Number.isInteger(form.zip_code))) {
+    if (form.zip_code !== "" && (form.zip_code.toString().length !== 5 || form.zip_code < 0 || form.zip_code.toString().indexOf(".") !== -1)) {
         alert("Zip code must be a 5 digit positive zip code, leave blank for no preference.");
         return;
     }
