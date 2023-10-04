@@ -11,12 +11,13 @@ import Create from "./components/create";
 
 import Login from "./components/login";
 import ViewCity from "./ViewCity";
+import Profile from './components/profile';
  
 const App = () => {
   
  return (
    <div>
-      <Login />
+      <Profile />
    </div>
 
  
