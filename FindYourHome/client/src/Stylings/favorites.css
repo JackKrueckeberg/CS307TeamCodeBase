@@ -1,0 +1,90 @@
+*{
+    margin:0;
+    padding:10px;
+    box-sizing: border-box;
+}
+
+.container{
+    border:2px solid grey;
+    width: 100%;
+    margin:auto;
+    margin-top: 50px;
+}
+
+.tabs-block{
+    display: flex;
+    justify-content: space-between;
+}
+
+.tab{
+    background: #ccc;
+    flex: 1;
+    padding: 1px;
+    text-align: center;
+    border: 1px solid grey;
+    border-top: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.active-tab{
+    border: none;
+    background: #fff;
+}
+
+.active-tab::after{
+    border-top: 2px solid blue;
+    content:'';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    background: initial;
+    animation: tab-animation 0.5s;
+}
+
+@keyframes tab-animation{
+    from{
+        top: 50px;
+        left: 0;
+        right: 0;
+        background: blue;
+    }
+
+    to{
+        top: 0px;
+        right: 0;
+        left: 0;
+        border-top: 2px solid blue;
+    }
+}
+
+.contents{
+    position: relative;
+}
+
+.content{
+    display: none;
+    position: relative;
+}
+
+.active-content{
+    display: block;
+    margin-left: 10px;
+    margin-right: 10px;
+    transition: all is ease-in-out;
+    animation: content-animation 0.3s;
+}
+
+@keyframes content-animation{
+    from{
+        margin: 0;
+
+    }
+
+    to{
+        margin-left: 10px;
+    }
+}
