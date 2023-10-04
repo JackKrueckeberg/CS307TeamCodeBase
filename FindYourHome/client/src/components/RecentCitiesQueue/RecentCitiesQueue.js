@@ -9,6 +9,9 @@ export class Queue {
     }
 
     enqueue(element) {
+        if (this.size() >= 10) {
+            this.dequeue();
+        }
         const newItems = { ...this.items };
         newItems[this.rear] = element;
         return new Queue(newItems, this.rear + 1, this.front);
