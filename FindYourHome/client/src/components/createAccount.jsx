@@ -1,38 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
+import styles from '../Stylings/createAccountStyle.module.css'; //assuming you named your CSS file CreateAccount.module.css
+
 
 export const CreateAccount = () => {
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const timeoutRef = useRef(null);
     
     const submission = (e) => {
         e.preventDefault();
     }
 
-    
-    const togglePasswordVisibility = () => {
-        // If password is currently being shown, we hide it
-        if (showPassword) {
-            setShowPassword(false);
-            // Clear any existing timeouts
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-        } 
-        // If password is currently hidden, we show it and set a timeout to hide it again
-        else {
-            setShowPassword(true);
-            timeoutRef.current = setTimeout(() => {
-                setShowPassword(false);
-            }, 20000); // Hide after 20 seconds
+    const isValidForm = () => {
+        if (!username.trim() || !firstName.trim() || !lastName.trim() || !email.trim() || !password.trim()) {
+            return false;
         }
+        return true;
     };
 
-    handleFormSubmit = async (event) => {
+    const handleFormSubmit = async (event) => {
         event.preventDefault();
-
-        const {name, username, password} = this.state;
+    
+        if (!isValidForm()) {
+            alert("All fields marked with * are required.");
+            return;
+        }
 
         try {
             const response = await fetch('/api/users/create', {
@@ -40,13 +36,13 @@ export const CreateAccount = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, username, password }),
+                body: JSON.stringify({ username, firstName, lastName, email, password }),
             });
-
+    
             if (response.ok) {
                 console.log('User account created successfully');
             } else {
-                console.error('An error occurred:', error);
+                console.error('An error occurred:', response.statusText);
             }
         } catch (error) {
             console.error('An error occurred:', error);
@@ -54,40 +50,59 @@ export const CreateAccount = () => {
     };
 
     return (
-        <div className='account-creation'>
-            <h1>Home is Where Your Journey Begins.</h1>
-            <form onSubmit={submission}>
-                {/* Name and email details form */}
-                <label htmlFor="name">Your Name:</label>
+        <div className={styles.accountCreation}>
+            <h1>Start Your Journey Here.</h1>
+            <form onSubmit={handleFormSubmit}>
+            <label htmlFor="username">Username*</label>
                 <input 
-                    value={name} 
-                    name="name" 
-                    id="name" 
-                    placeholder="your name" 
+                    value={username} 
+                    name="username" 
+                    id="username" 
+                    placeholder='Username' 
+                    onChange={(e) => setUsername(e.target.value)} 
                 />
-                <label htmlFor="email">Your Email:</label>
+                {/* Name and email details form */}
+                <label htmlFor="firstName">Name*</label>
+                <input 
+                    value={firstName} 
+                    name="firstName" 
+                    id="firstName" 
+                    placeholder='First Name' 
+                    onChange={(e) => setFirstName(e.target.value)} 
+                />
+                <label htmlFor="lastName"></label>
+                <input 
+                    value={lastName} 
+                    name="lastName" 
+                    id="lastName"
+                    placeholder='Last Name'   
+                    onChange={(e) => setLastName(e.target.value)} 
+                />
+                <label htmlFor="email">Email*</label>
                 <input 
                     value={email} 
+                    placeholder='youremail@gmail.com'
                     onChange={(e) => setEmail(e.target.value)} 
-                    type="text" id="email" 
+                    type="email" id="email" 
                 />
 
                 {/* Password accaptance form */}
-                <div className='password-entry-wrapper'>
-                    <label htmlFor="password">Password:</label>
+                <div className={styles.passwordEntryWrapper}>
+                    <label htmlFor="password">Password*</label>
                     <input 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
-                        type={showPassword ? "text" : "password"} 
+                        type="text"
+                        placeholder='************************'
                         id="password"
                     />
-                    <button onClick={() => setShowPassword(!showPassword)} type="submit">
-                        {showPassword ? 'Hide' : 'Show'}
-                    </button>
                 </div>
+                <button type="submit">Register</button>
             </form>
 
             <button id="login">Already have an Account?  Click here to log in.</button>
         </div>
     )
 }
+
+export default CreateAccount;
