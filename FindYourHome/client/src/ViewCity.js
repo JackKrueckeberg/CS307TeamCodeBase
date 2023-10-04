@@ -22,7 +22,6 @@ const ViewCity = () => {
           window.alert(message);
           return;
         }
-
         const cities = await response.json();
         setAllCities(cities);
       } catch (error) {
@@ -46,9 +45,9 @@ const ViewCity = () => {
     setSearchTerm("");
   };
 
-  const addToQueue = (city) => {
-    setRecentCities(q => q.enqueue(city.name));
-    window.alert(recentCities);
+  const addToQueue = (cityName) => {
+    console.log(cityName);
+    setRecentCities(q => q.enqueue(cityName));
   };
 
   async function searchImage() {
