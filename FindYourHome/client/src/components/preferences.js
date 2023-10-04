@@ -22,6 +22,18 @@ export default function Create() {
     });
   }
 
+  function compareByScore(a, b) {
+    if (a.score < b.score) {
+        return 1;
+    }
+
+    if (a.score > b.score) {
+        return -1;
+    }
+
+    return 0;
+  }
+
   async function getCities() {
     const city_info = await fetch("http://localhost:5050/city_info", {
       method: "GET",
@@ -47,39 +59,33 @@ export default function Create() {
       if (form.east_coast) {
         if (cities[i].region === "America/New_York") {
             total_prefs++;
-            resultArr.add(cities[i]);
         }
       }
       if (form.central) {
         if (cities[i].region === "America/Chicago") {
             total_prefs++;
-            resultArr.add(cities[i]);
         }
       }
       if (form.mountain_west) {
         if (cities[i].region === "America/Phoenix") {
           total_prefs++;
-          resultArr.add(cities[i]);
         }
       }
       if (form.west_coast) {
         if (cities[i].region === "America/Los_Angeles") {
             total_prefs++;
-            resultArr.add(cities[i]);
         }
       }
 
       if (form.zip_code !== "") {
         if (form.zip_code === cities[i].zip_code) {
             total_prefs++;
-            resultArr.add(cities[i]);
         }
       }
 
       if (form.county !== "") {
         if (form.county === cities[i].county) {
             total_prefs++;
-            resultArr.add(cities[i]);
         }
       }
 
@@ -89,7 +95,6 @@ export default function Create() {
           const cityPop = parseInt(cities[i].population);
           if (Math.abs(formPop - cityPop) / formPop <= 0.25) {
             total_prefs++;
-            resultArr.add(cities[i]);
           }
         } catch {}
       }
@@ -100,24 +105,28 @@ export default function Create() {
           const cityIncome = parseInt(cities[i].population);
           if (Math.abs(formIncome - cityIncome) / formIncome <= 0.25) {
             total_prefs++;
-            resultArr.add(cities[i]);
           }
         } catch {}
       }
 
       if (form.state !== "" && form.state !== "default") {
+        
         try {
           if (cities[i].state === form.state) {
             total_prefs++;
-            resultArr.add(cities[i]);
           }
         } catch {}
       }
 
       cities[i].score = total_prefs;
+      resultArr.add(cities[i]);
+
     }
 
-    return resultArr;
+    var newResultArr = Array.from(resultArr);
+    newResultArr.sort(compareByScore);
+
+    return newResultArr;
   }
 
   // This function will handle the submission.
@@ -270,6 +279,7 @@ export default function Create() {
                     id="states"
                     className="padding"
                     onChange={(e) => updateForm({ state: e.target.value })}
+                    onMouseEnter={(e) => updateForm({ state: e.target.value })}
                   >
                     <option value={"default"}>State Preference</option>
                     <option value="AL">Alabama</option>
