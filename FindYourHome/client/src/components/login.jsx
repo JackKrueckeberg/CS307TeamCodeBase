@@ -5,6 +5,7 @@ export const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [showRecoverForm, setShowRecoverFrom] = useState(false);
     const timeoutRef = useRef(null);
 
 
@@ -29,6 +30,14 @@ export const Login = () => {
             }, 20000); // Hide after 20 seconds
         }
     };
+
+    function openRecoveryForm() {
+        document.getElementById("recoveryForm").style.display = "block";
+    }
+      
+    function closeRecoveryForm() {
+        document.getElementById("recoveryForm").style.display = "none";
+    }
 
     useEffect(() => {
         return () => {
@@ -60,14 +69,28 @@ export const Login = () => {
                         className={`${styles.button} ${styles.togglePassword}`}
                         data-show={!showPassword ? "true" : "false"}
                     >
-                        {showPassword ? 'Hide' : 'Show'}
+                    {showPassword ? 'Hide' : 'Show'}
                     </button>
 
                 </div>
 
                 <button type="submit" className={styles.button}>Log In</button>
             </form>
-            <button type="button" className={styles.account}>Forgot my Password</button>
+
+            <button class="open-recover-form" onclick="openRecoveryForm()">Open Recovery Form</button>
+
+            <div class="form-popup" id="recoveryForm">
+                <form action="/action_page.php" class="form-container">
+                    <h1>Enter Email to Recover</h1>
+
+                    <label for="email"><b>Email</b></label>
+                    <input type="email" placeholder="Enter Email" name="email" required/>
+
+                    <button type="submit" class="btn">Recover</button>
+                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                </form>
+            </div>
+
             <button type="button" className={styles.account}>Don't have an Account? Click here to Create one.</button>
 
         </div>
