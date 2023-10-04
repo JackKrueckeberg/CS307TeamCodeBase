@@ -37,7 +37,7 @@ class Map extends Component {
             <button onClick={this.toggleMapVisibility}>
               {mapVisible ? 'Hide Map' : 'Show Map'}
             </button>
-            <h2>City Name: {this.props.cityName}</h2>
+            <h2>Map of: {this.props.cityName}</h2>
             <div
               id="map"
               style={{

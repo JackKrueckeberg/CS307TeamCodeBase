@@ -9,7 +9,7 @@ import Profile from "./components/profile";
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Profile />
+      <App />
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
