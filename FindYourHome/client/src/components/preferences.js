@@ -124,6 +124,31 @@ export default function Create() {
   async function onSubmit(e) {
     e.preventDefault();
 
+    if (form.population !== "" && form.population < 0) {
+        alert("Population must be a positive number, leave blank for no preference.");
+        return;
+    }
+
+    if (form.population !== "" && !Number.isInteger(form.population)) {
+        alert("Population must be a whole number, leave blank for no preference.");
+        return;
+    }
+
+    if (form.median_income !== "" && !Number.isInteger(form.median_income)) {
+        alert("Median income must be a whole number, leave blank for no preference");
+        return;
+    }
+
+    if (form.median_income !== "" && form.median_income < 0) {
+        alert("Median income must be a positive number, leave blank for no preference.");
+        return;
+    }
+
+    if (form.zip_code !== "" && (form.zip_code.toString().length !== 5 || form.zip_code < 0 || !Number.isInteger(form.zip_code))) {
+        alert("Zip code must be a 5 digit positive zip code, leave blank for no preference.");
+        return;
+    }
+
     console.log("searching...");
     var result = await filterCities();
 
@@ -309,6 +334,7 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="Zip Code Preference"
+                    type="number"
                     value={form.zip_code}
                     onChange={(e) => updateForm({ zip_code: e.target.value })}
                   />
