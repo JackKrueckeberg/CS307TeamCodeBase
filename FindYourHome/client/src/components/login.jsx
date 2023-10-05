@@ -8,6 +8,7 @@ export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showRecoverForm, setShowRecoverFrom] = useState(false);
     const [incorrectAttempts, setIncorrectAttempts] = useState(0);
+    const [rememberUser, setRememberUser] = useState(false);
     const timeoutRef = useRef(null);
 
 
@@ -102,7 +103,6 @@ export const Login = () => {
                     >
                     {showPassword ? 'Hide' : 'Show'}
                     </button>
-
                 </div>
 
                 {incorrectAttempts > 0 && (
@@ -111,7 +111,22 @@ export const Login = () => {
                     </p>
                 )}
 
-                <button type="submit" className={styles.button}>Log In</button>
+                
+                <div className={styles.buttonSectionWrapper}>
+                    <button type="submit" className={styles.button}>Log In</button>
+                    <input 
+                        type="checkbox" 
+                        id="rememberMe" 
+                        name="rememberMe" 
+                        checked={rememberUser} 
+                        onChange={(e) => setRememberUser(e.target.checked)} 
+                        className={styles.checkboxInput}
+                    />
+                    <label htmlFor="rememberMe" className={styles.checkboxLabel}>
+                        Remember Me
+                        <span className={styles.customCheckbox}></span>
+                    </label>
+                </div>
             </form>
 
         

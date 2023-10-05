@@ -101,3 +101,43 @@ body {
   padding-top: 15px;
   text-align: center;
 }
+
+.buttonSectionWrapper {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+
+.checkboxInput {
+    display: none; 
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 20px;
+    padding: 10px 15px;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkboxLabel:hover, .button:not(.togglePassword):hover{
+    background-color: #f0f0f0; 
+}
+
+.customCheckbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.checkboxInput:checked + .checkboxLabel .customCheckbox {
+    background-color: #4caf50;
+    border: 2px solid transparent;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M16.28 6.29a1 1 0 0 0-1.41 0L9 11.59l-2.29-2.3a1 1 0 0 0-1.42 1.42l3 3a1 1 0 0 0 1.42 0l6-6a1 1 0 0 0 0-1.41z" fill="white"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+}
