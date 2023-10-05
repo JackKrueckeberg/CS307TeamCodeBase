@@ -17,6 +17,7 @@ export default function Profile() {
     // Create state variables for user info ad editing mode
     const [user, setInfo] = useState(initialInfo); // user stores the profile info
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
+    const [image, setImage] = useState(); // image keeps track of the user's profile image
 
     // function to toggle between view and edit mode
     const handleEdit = () => {
@@ -42,12 +43,27 @@ export default function Profile() {
         // route the user to change password function
     };
 
+    // function to edit the profile image
+    const handleImageUpload = (e) => {
+        console.log(e.target.files);
+        setImage(URL.createObjectURL(e.target.files[0]))
+    };
+
     return (
         <div className="profile">
             <div className="profile-header">
-                <div className="profile-avatar">
-                    <FaUser size={64} />
+
+                {/* Profile Picture */}
+                {/* Not final implementation just a filler until I can figure out a better way */}
+                <div>
+                    {isEditing ? (
+                        <input class="rounded-corner" type="file" name="Upload Image" onChange={handleImageUpload} />
+                    ) : (
+                        <img className="rounded-corner" src={image} width={150} height={150}/>
+                    )}
                 </div>
+
+                {/* User's Name divided into first and last name */}
                 <div className="profile-name">
                     {isEditing ? (
                         <input
@@ -72,6 +88,8 @@ export default function Profile() {
                         <h2>{user.lastName}</h2>
                     )}
                 </div>
+
+                {/* Edit Profile and Save Changes */}
                 <div className="profile-actions">
                     {isEditing ? (
                         <button class="round-corner" onClick={handleSave}>Save</button>
@@ -82,7 +100,11 @@ export default function Profile() {
                     )}
                 </div>
             </div>
+
+            {/* Profile Details such as username, password, and bio */}
             <div className="profile-details">
+
+                {/* Profile Username */}
                 <p className="profile-username">
                     <strong> Username: </strong> {isEditing ? (
                     <input
@@ -96,6 +118,8 @@ export default function Profile() {
                         user.username
                     )}
                 </p>
+
+                {/* Profile Email */}
                 <p className="profile-email">
                     <strong> Email: </strong>{isEditing ? (
                         <input
@@ -109,10 +133,14 @@ export default function Profile() {
                         user.email
                     )}
                 </p>
+
+                {/* Profile Password */}
                 <p className="profile-password">
                     <strong>Password:</strong>
                     <button class="round-corner" onClick={handlePasswordChange}>Change Password</button>
                 </p>
+
+                {/* Profile Bio*/}
                 <p className="profile-bio">
                     <strong> Bio: </strong> {isEditing ? (
                         <textarea
@@ -126,6 +154,8 @@ export default function Profile() {
                     )}
                 </p>
             </div>
+
+            {/* Profile Favorites Tabs */}
             <div className="tabs">
                 <Favorites />
             </div>
