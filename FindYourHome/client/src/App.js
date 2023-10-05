@@ -8,18 +8,22 @@ import Navbar from "./components/navbar";
 import RecordList from "./components/recordList";
 import Edit from "./components/edit";
 import Create from "./components/create";
-
 import Login from "./components/login";
 import ViewCity from "./ViewCity";
 import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
 import Profile from './components/profile';
  
+
 const App = () => {
   
  return (
    <div>
+<<<<<<< HEAD
       <Profile />
+=======
+    <Login />
+>>>>>>> main
    </div>
 
  
