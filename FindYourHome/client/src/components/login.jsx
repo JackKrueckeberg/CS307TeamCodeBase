@@ -117,6 +117,23 @@ export const Login = () => {
         
             <button type="button" className={styles.account}>Don't have an Account? Click here to Create one.</button>
 
+            {/* QUINNS ACCOUNT RECOVER FORM CODE NEEDS TO BE REWORKED IN AND MADE AN ACTUAL POP-UP
+      
+                <button class="open-recover-form" onclick="openRecoveryForm()">Open Recovery Form</button>
+
+                            <div class="form-popup" id="recoveryForm">
+                                <form action="/action_page.php" class="form-container">
+                                    <h1>Enter Email to Recover</h1>
+
+                                    <label for="email"><b>Email</b></label>
+                                    <input type="email" placeholder="Enter Email" name="email" required/>
+
+                                    <button type="submit" class="btn">Recover</button>
+                                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                                </form>
+                            </div>
+            */}
+
         </div>
     )
 }
