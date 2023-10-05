@@ -7,6 +7,7 @@ export const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showRecoverForm, setShowRecoverFrom] = useState(false);
+    const [incorrectAttempts, setIncorrectAttempts] = useState(0);
     const timeoutRef = useRef(null);
 
 
@@ -32,8 +33,10 @@ export const Login = () => {
     
             if (response.status === 200) {
                 console.log(data.message);
+                setIncorrectAttempts(0);
             } else {
                 console.error(data.error);
+                setIncorrectAttempts(prev => prev + 1);
             }
     
         } catch (error) {
@@ -101,6 +104,12 @@ export const Login = () => {
                     </button>
 
                 </div>
+
+                {incorrectAttempts > 0 && (
+                    <p className={styles.incorrect}>
+                        Incorrect email or password
+                    </p>
+                )}
 
                 <button type="submit" className={styles.button}>Log In</button>
             </form>
