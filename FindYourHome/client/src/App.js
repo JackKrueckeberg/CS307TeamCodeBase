@@ -19,14 +19,8 @@ const App = () => {
   
  return (
    <div>
-<<<<<<< HEAD
       <Profile />
-=======
-    <Login />
->>>>>>> main
    </div>
-
- 
  );
 };
  
