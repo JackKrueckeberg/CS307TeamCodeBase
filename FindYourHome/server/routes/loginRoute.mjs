@@ -3,6 +3,7 @@ import db from "../db/conn.mjs";
 import jwt from 'jsonwebtoken';
 
 const router = express.Router();
+const JWT_secret = "42d8b67e1c6dd39493ebaafee5734e5d88c69b38ad226560be3654f31b41b0d264c87020c9f7976efe41ba80df5ef8dc"; //This is randomly generated JWT token
 
 // Login route
 router.post("/login", async (req, res) => {
@@ -17,12 +18,16 @@ router.post("/login", async (req, res) => {
             return res.status(400).json({ error: "Invalid Email or Password" });
         }
 
+
+        //Assign a Remember me token to the user
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
+
         // If credentials are correct
         return res.status(200).json({ message: "Logged in successfully" });
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        return res.status(500).json({ error: 'Internal Server Error' , token: token });
     }
 });
 

@@ -35,6 +35,9 @@ export const Login = () => {
             if (response.status === 200) {
                 console.log(data.message);
                 setIncorrectAttempts(0);
+                if (rememberUser && data.token) { 
+                    localStorage.setItem('authToken', data.token); // Store token if "Remember Me" is checked
+                }
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);
@@ -63,6 +66,27 @@ export const Login = () => {
         }
     };
 
+    const validateToken = async (token) => {
+        try {
+            const response = await fetch("http://localhost:5050/loginRoute/login", {
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+    
+            const data = await response.json();
+    
+            if (response.status === 200) {
+
+            } else {
+                // The token is invalid. Remove it from local storage.
+                localStorage.removeItem('authToken');
+            }
+        } catch (error) {
+            console.error("Error validating token:", error);
+        }
+    };    
+
     function openRecoveryForm() {
         document.getElementById("recoveryForm").style.display = "block";
     }
@@ -77,6 +101,12 @@ export const Login = () => {
                 clearTimeout(timeoutRef.current);
             }
         };
+
+        const token = localStorage.getItem('authToken');
+    
+        if (token) { // Validate the token with the server
+            validateToken(token);
+        }
 
     }, []);
 
