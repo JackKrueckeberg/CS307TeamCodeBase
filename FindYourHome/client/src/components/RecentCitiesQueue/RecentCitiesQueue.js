@@ -9,12 +9,20 @@ export class Queue {
     }
 
     enqueue(element) {
-        if (this.size() >= 10) {
-            this.dequeue();
-        }
         const newItems = { ...this.items };
+
         newItems[this.rear] = element;
-        return new Queue(newItems, this.rear + 1, this.front);
+
+        let newFront = this.front;
+        let newRear = this.rear + 1;
+
+        if ((newRear - newFront) > 10) {
+            delete newItems[newFront];
+            newFront++;
+        }
+ 
+        const newQueue = new Queue(newItems, newRear, newFront);
+        return newQueue;
     }
 
     dequeue() {
@@ -41,8 +49,8 @@ const RecentCitiesQueue = ({ queue }) => {
         <div>
             <h2>Recent Cities:</h2>
             <ul>
-                {Object.values(queue.items).map((city, index) => (
-                    <li key={index}>{city}</li>
+                {Object.values(queue.items).map(city => (
+                    <li key={city}>{city}</li>
                 ))}
             </ul>
         </div>

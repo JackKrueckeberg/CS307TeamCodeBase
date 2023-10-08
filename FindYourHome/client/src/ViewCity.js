@@ -46,7 +46,7 @@ const ViewCity = () => {
   };
 
   const addToQueue = (cityName) => {
-    console.log(cityName);
+    console.log("queue called");
     setRecentCities(q => q.enqueue(cityName));
   };
 
@@ -61,7 +61,7 @@ const ViewCity = () => {
 
   const renderResults = () => {
     if (showResults && city) {
-      if (!imageUrl) searchImage();  // If there isn't an imageUrl, fetch it
+      searchImage();  // If there isn't an imageUrl, fetch it
       return (
         <div className="result">
           <h2>{city.name}</h2>
