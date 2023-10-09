@@ -68,7 +68,8 @@ export const Login = () => {
 
     const validateToken = async (token) => {
         try {
-            const response = await fetch("http://localhost:5050/loginRoute/login", {
+            const response = await fetch("http://localhost:5050/loginRoute/validate-token", {
+                method: "GET",
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
@@ -77,13 +78,15 @@ export const Login = () => {
             const data = await response.json();
     
             if (response.status === 200) {
-
+                //REDIRCT TO HOMEPAGE WHEN HOMEPAGE IS CREATED
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
+                alert('Your session has expired. Please login again.');
             }
         } catch (error) {
             console.error("Error validating token:", error);
+            alert('There was an error validating your session. Please try again.'); 
         }
     };    
 
@@ -96,18 +99,18 @@ export const Login = () => {
     }
 
     useEffect(() => {
-        return () => {
-            if (timeoutRef.current) {
-                clearTimeout(timeoutRef.current);
-            }
-        };
-
+        
         const token = localStorage.getItem('authToken');
     
         if (token) { // Validate the token with the server
             validateToken(token);
         }
 
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
     }, []);
 
     return (
