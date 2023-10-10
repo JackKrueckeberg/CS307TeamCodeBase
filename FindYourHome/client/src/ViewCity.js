@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Autosuggest from 'react-autosuggest'; // Import Autosuggest
 import "./ViewCity.css";
 
+
 const ViewCity = () => {
   const [allCities, setAllCities] = useState([]);
   const [city, setCity] = useState(null);
@@ -11,8 +12,20 @@ const ViewCity = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+
+
+  const [recentSearches, setRecentSearches] = useState([]);
+  const [mockUser, setMockUSer] = useState({
+    username: "example_user",
+    password: "example_password",
+    email: "user@example.com",
+    favorites: [],
+    recent_cities: [],
+    recent_searches: [],
+  });
+
   useEffect(() => {
-    async function fetchData() {
+    async function fetchCity() {
       try {
         const response = await fetch(`http://localhost:5050/record/cities_full_2`);
         if (!response.ok) {
@@ -28,8 +41,40 @@ const ViewCity = () => {
       }
     }
 
-    fetchData();
-  }, []);
+    fetchCity();
+
+
+    async function fetchUser() {
+      try {
+        const response = await fetch(`http://localhost:5050/record/users`);
+        if (!response.ok) {
+          const message = `An error occurred: ${response.statusText}`;
+          window.alert(message);
+          return;
+        }
+
+        const users = await response.json();
+        console.log(users)
+      } catch (error) {
+        console.error("There was an error fetching the cities", error);
+      }
+    }
+
+    fetchUser();
+
+
+    setRecentSearches(mockUser.recent_searches);
+  }, [mockUser]);
+
+
+
+
+  const updateRecentSearches = (searchTerm) => {
+    // Update the recent_searches field of the mock user
+    mockUser.recent_searches.push(searchTerm);
+    setRecentSearches([...mockUser.recent_searches]);
+  };
+
 
   const onSuggestionsFetchRequested = ({ value }) => {
     if (value) {
@@ -53,6 +98,8 @@ const ViewCity = () => {
     setCity(matchedCity);
     setCityIncome(matchedCity ? matchedCity.median_income : null);
     setShowResults(true);
+    updateRecentSearches(searchTerm);
+
   };
 
   const handleClear = () => {
@@ -72,6 +119,10 @@ const ViewCity = () => {
   };
 
   const renderResults = () => {
+    
+    
+    
+    
     if (showResults && city) {
       return (
         <div className="result">
@@ -85,9 +136,28 @@ const ViewCity = () => {
       }
       return <div className="result"><h2>Invalid Search</h2></div>;
     }
+    
     return null;
   };
 
+
+  const renderRecentSearches = () => {
+    if (recentSearches.length === 0) {
+      return <div className="recent-searches">No recent searches</div>;
+    }
+
+    return (
+      <div className="recent-searches">
+        <h3>Recent Searches:</h3>
+        <ul>
+          {recentSearches.map((search, index) => (
+            <li key={index}>{search}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+  
   return (
     <div>
       <h1 className="header">View City Page</h1>
@@ -122,8 +192,27 @@ const ViewCity = () => {
       <div className="renderResults">
         {renderResults()}
       </div>
+      {renderRecentSearches()}
+
     </div>
   );
 };
 
 export default ViewCity;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
