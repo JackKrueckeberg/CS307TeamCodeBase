@@ -54,4 +54,16 @@ body {
   .suggestion:hover {
     background-color: #eee;
   }
+
+
+ 
+  
+  .recent-searches li {
+    padding: 5px; /* Add padding to each recent search item */
+    transition: background-color 0.3s; /* Add a smooth transition effect */
+  }
+  
+  .recent-searches li:hover {
+    background-color: #eee; /* Change the background color on hover */
+  }
   
