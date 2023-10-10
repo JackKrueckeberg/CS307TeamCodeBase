@@ -23,7 +23,7 @@ export const CreateAccount = () => {
     };
 
     const handleFormSubmit = async (event) => {
-        event.preventDefault();
+        //event.preventDefault();
     
         if (!isValidForm()) {
             alert("All fields marked with * are required.");
