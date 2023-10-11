@@ -8,7 +8,7 @@ const JWT_SECRET = "42d8b67e1c6dd39493ebaafee5734e5d88c69b38ad226560be3654f31b41
 // Login route
 router.post("/login", async (req, res) => {
     try {
-        let collection = await db.collection("users");  // Assuming you have a "users" collection
+        let collection = await db.collection("users");
         
         // Find user by email
         let user = await collection.findOne({ email: req.body.email });
