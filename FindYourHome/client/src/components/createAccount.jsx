@@ -2,87 +2,98 @@ import React, { useState, useRef } from 'react';
 import styles from '../Stylings/createAccountStyle.module.css'; //assuming you named your CSS file CreateAccount.module.css
 
 
-export const CreateAccount = () => {
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+export default function CreateAccount() {
+    const [form, setForm] = useState({
+        email: "",
+        username: "",
+        password: "",
+        firstName: "",
+        lastName: "",
+    });    
     const [showPassword, setShowPassword] = useState(false);
     const timeoutRef = useRef(null);
     
-    const submission = (e) => {
-        e.preventDefault();
-    }
+    // const submission = (e) => {
+    //     e.preventDefault();
+    // }
 
     const isValidForm = () => {
-        if (!username.trim() || !firstName.trim() || !lastName.trim() || !email.trim() || !password.trim()) {
+        if (!form.username.trim() || !form.firstName.trim() || !form.lastName.trim() || !form.email.trim() || !form.password.trim()) {
             return false;
         }
         return true;
     };
 
-    const handleFormSubmit = async (event) => {
-        //event.preventDefault();
+    function updateForm(value) {
+        return setForm((prev) => {
+            return { ...prev, ...value };
+        });
+    }
+
+    async function handleFormSubmit (event) {
+        event.preventDefault();
     
         if (!isValidForm()) {
             alert("All fields marked with * are required.");
             return;
         }
 
-        try {
-            const response = await fetch('/api/users/create', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, firstName, lastName, email, password }),
-            });
-    
-            if (response.ok) {
-                console.log('User account created successfully');
-            } else {
-                console.error('An error occurred:', response.statusText);
-            }
-        } catch (error) {
-            console.error('An error occurred:', error);
-        }
+        const newAccount = { ...form};
+
+        await fetch("http://localhost:5050/userRoutes", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newAccount),
+        })
+        .catch(error => {
+          window.alert(error);
+          return;
+        });
+
+        setForm({email: "", username: "", password: "", firstName: "", lastName: ""});
+        // if (response.ok) {
+        //     console.log('User account created successfully');
+        // } else {
+        //     console.error('An error occurred:', response.statusText);
+        // }
     };
 
     return (
         <div className={styles.accountCreation}>
             <h1>Start Your Journey Here.</h1>
             <form onSubmit={handleFormSubmit}>
-            <label htmlFor="username">Username*</label>
+                <label htmlFor="username">Username*</label>
                 <input 
-                    value={username} 
+                    value={form.username} 
                     name="username" 
                     id="username" 
                     placeholder='Username' 
-                    onChange={(e) => setUsername(e.target.value)} 
+                    onChange={(e) => updateForm({username: e.target.value})} 
                 />
                 {/* Name and email details form */}
                 <label htmlFor="firstName">Name*</label>
                 <input 
-                    value={firstName} 
+                    value={form.firstName} 
                     name="firstName" 
                     id="firstName" 
                     placeholder='First Name' 
-                    onChange={(e) => setFirstName(e.target.value)} 
+                    onChange={(e) => updateForm({firstName: e.target.value})} 
                 />
                 <label htmlFor="lastName"></label>
                 <input 
-                    value={lastName} 
+                    value={form.lastName} 
                     name="lastName" 
                     id="lastName"
                     placeholder='Last Name'   
-                    onChange={(e) => setLastName(e.target.value)} 
+                    onChange={(e) => updateForm({lastName: e.target.value})} 
                 />
                 <label htmlFor="email">Email*</label>
                 <input 
-                    value={email} 
+                    value={form.email} 
                     placeholder='youremail@gmail.com'
-                    onChange={(e) => setEmail(e.target.value)} 
+                    onChange={(e) => updateForm({email: e.target.value})} 
                     type="email"
                     id="email" 
                 />
@@ -91,15 +102,18 @@ export const CreateAccount = () => {
                 <div className={styles.passwordEntryWrapper}>
                     <label htmlFor="password">Password*</label>
                     <input 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
+                        value={form.password} 
+                        onChange={(e) => updateForm({password: e.target.value})} 
                         pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                         title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required
                         type={showPassword ? "text" : "password"} 
                         id="password"
                     />
                 </div>
-                <button type="submit">Register</button>
+                <input
+                    type="submit"
+                    value="Create Account"
+                />
             </form>
 
             <button id="login">Already have an Account?  Click here to log in.</button>
@@ -107,4 +121,3 @@ export const CreateAccount = () => {
     )
 }
 
-export default CreateAccount;
