@@ -30,13 +30,18 @@ export default function Navbar() {
          <ul className="navbar-nav ml-auto">
            <li className="nav-item">
              <NavLink className="nav-link" to="/create">
-               Create Record
+               Create Account
              </NavLink>
            </li>
             {/* Add this link for the Login page */}
             <li className="nav-item">
              <NavLink className="nav-link" to="/login">
                Login
+             </NavLink>
+           </li>
+           <li className="nav-item">
+             <NavLink className="nav-link" to="/profile">
+               Profile Page
              </NavLink>
            </li>
          </ul>

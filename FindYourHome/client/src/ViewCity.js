@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import Autosuggest from 'react-autosuggest'; // Import Autosuggest
+import "./ViewCity.css";
 import "./Stylings/ViewCity.css";
 import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
@@ -10,8 +12,8 @@ const ViewCity = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [cityIncome, setCityIncome] = useState(null);
-  const [imageUrl, setImageUrl] = useState(null);
-  const [recentCities, setRecentCities] = useState(new Queue());
+  const [suggestions, setSuggestions] = useState([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -22,6 +24,7 @@ const ViewCity = () => {
           window.alert(message);
           return;
         }
+
         const cities = await response.json();
         setAllCities(cities);
       } catch (error) {
@@ -32,8 +35,25 @@ const ViewCity = () => {
     fetchData();
   }, []);
 
+  const onSuggestionsFetchRequested = ({ value }) => {
+    if (value) {
+      const inputValue = value.trim().toLowerCase();
+      const matchingCities = allCities.filter((city) =>
+        city.name.toLowerCase().startsWith(inputValue)
+      );
+
+      setSuggestions(matchingCities.map((city) => city.name).slice(0, 10));
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
   const handleSubmit = () => {
-    const matchedCity = allCities.find(c => c.name.toLowerCase() === searchTerm.toLowerCase());
+    const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
     setCity(matchedCity);
     setCityIncome(matchedCity ? matchedCity.median_income : null);
     setShowResults(true);
@@ -45,29 +65,22 @@ const ViewCity = () => {
     setSearchTerm("");
   };
 
-  const addToQueue = (cityName) => {
-    console.log("queue called");
-    setRecentCities(q => q.enqueue(cityName));
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+    setIsDropdownOpen(true);
   };
 
-  async function searchImage() {
-    const url = `https://api.unsplash.com/search/photos?page=1&query=${searchTerm}&client_id=${apiKey}`;
-    const response = await fetch(url);
-    const data = await response.json();
-
-    const results = data.results;
-    setImageUrl(results[0].urls.small);
-  }
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion);
+    setIsDropdownOpen(false);
+  };
 
   const renderResults = () => {
     if (showResults && city) {
-      searchImage();  // If there isn't an imageUrl, fetch it
       return (
         <div className="result">
           <h2>{city.name}</h2>
           <p>{cityIncome}</p>
-          {imageUrl && <img src={imageUrl} alt="City" />}
-          <button onClick={()=> addToQueue(city.name)}>Click to add city to queue</button>
         </div>
       );
     } else if (showResults) {
@@ -85,11 +98,26 @@ const ViewCity = () => {
 
       <div className="searchBar">
         <label>Search</label>
-        <input
-          type="text"
-          placeholder="Enter a city"
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
+        <Autosuggest // Use Autosuggest component
+          suggestions={suggestions}
+          onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+          onSuggestionsClearRequested={onSuggestionsClearRequested}
+          getSuggestionValue={(suggestion) => suggestion}
+          renderSuggestion={(suggestion) => (
+            <div
+              key={suggestion}
+              className="suggestion"
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion}
+            </div>
+          )}
+          inputProps={{
+            type: "text",
+            placeholder: "Enter a city",
+            value: searchTerm,
+            onChange: handleInputChange,
+          }}
         />
         <button className="submitButton" onClick={handleSubmit}>Submit</button>
         <button className="clearButton" onClick={handleClear}>Clear</button>
@@ -98,11 +126,6 @@ const ViewCity = () => {
       <div className="renderResults">
         {renderResults()}
       </div>
-
-      <div className="recentlyViewdCities">
-        <RecentCitiesQueue queue={recentCities}/>
-      </div>
-
     </div>
   );
 };

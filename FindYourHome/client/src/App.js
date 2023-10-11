@@ -9,13 +9,18 @@ import RecordList from "./components/recordList";
 import Edit from "./components/edit";
 import Create from "./components/create";
 import Login from "./components/login";
+import ViewCity from "./ViewCity";
+import Verification from "./components/verification";
+import CreateAccount from "./components/createAccount";
  
 const App = () => {
   
  return (
    <div>
-      <Login />
+    <Login />
    </div>
+
+ 
  );
 };
  
