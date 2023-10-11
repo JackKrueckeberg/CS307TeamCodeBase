@@ -10,6 +10,13 @@ export class Queue {
 
     enqueue(element) { 
         const newItems = { ...this.items };
+        
+        for (const value of Object.values(newItems)) {
+            if (value === element) {
+                console.warn("Element already exists in the queue.");
+                return this; // Return the current state of the queue without changes.
+            }
+        }
 
         newItems[this.rear] = element;
 

@@ -57,10 +57,11 @@ const ViewCity = () => {
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
         setCityIncome(matchedCity ? matchedCity.median_income : null);
-        setShowResults(true);
-        if (city) {
+        if (matchedCity) {
             searchImage();
         }
+        setShowResults(true);
+        
     };
 
     const handleClear = () => {
