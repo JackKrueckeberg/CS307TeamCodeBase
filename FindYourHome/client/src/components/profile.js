@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import '../Stylings/profile.css';
 import Favorites from './favorites.js';
 import { FaUser, FaEdit } from 'react-icons/fa';
+import defaultImage from '../Stylings/Default_Profile_Picture.png';
 
 export default function Profile() {
     // initialize the profile info
@@ -11,13 +12,14 @@ export default function Profile() {
         username: 'Your Username',
         email: 'Your Email',
         bio: 'Your Bio',
-        password: '',
+        image: defaultImage,
     };
 
     // Create state variables for user info ad editing mode
     const [user, setInfo] = useState(initialInfo); // user stores the profile info
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
-    const [image, setImage] = useState(); // image keeps track of the user's profile image
+    const [image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
+    const fileInputRef = React.createRef();
 
     // function to toggle between view and edit mode
     const handleEdit = () => {
@@ -36,6 +38,7 @@ export default function Profile() {
     // function to save changes and exit edit mode
     const handleSave = () => {
         setIsEditing(false);
+        //saveChanges;
     };
 
     // function to change password
@@ -43,10 +46,18 @@ export default function Profile() {
         // route the user to change password function
     };
 
+    const openFileInput = () => {
+        fileInputRef.current.click();
+    };
+
     // function to edit the profile image
     const handleImageUpload = (e) => {
         console.log(e.target.files);
-        setImage(URL.createObjectURL(e.target.files[0]))
+        const file = e.target.files[0];
+        if (file) {
+            const imageURL = URL.createObjectURL(file);
+            setImage(imageURL);
+        }
     };
 
     return (
@@ -56,11 +67,15 @@ export default function Profile() {
                 {/* Profile Picture */}
                 {/* Not final implementation just a filler until I can figure out a better way */}
                 <div>
-                    {isEditing ? (
-                        <input class="rounded-corner" type="file" name="Upload Image" onChange={handleImageUpload} />
-                    ) : (
-                        <img className="rounded-corner" src={image} width={150} height={150}/>
-                    )}
+                    <img src={image} width={150} height={150} />
+                    <button class="round-corner" onClick={openFileInput}>Upload Image</button>
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={handleImageUpload}
+                    />
                 </div>
 
                 {/* User's Name divided into first and last name */}
