@@ -8,6 +8,7 @@ export const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showRecoverForm, setShowRecoverFrom] = useState(false);
     const [incorrectAttempts, setIncorrectAttempts] = useState(0);
+    const [rememberUser, setRememberUser] = useState(false);
     const timeoutRef = useRef(null);
 
 
@@ -34,6 +35,9 @@ export const Login = () => {
             if (response.status === 200) {
                 console.log(data.message);
                 setIncorrectAttempts(0);
+                if (rememberUser && data.token) { 
+                    localStorage.setItem('authToken', data.token); // Store token if "Remember Me" is checked
+                }
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);
@@ -62,6 +66,30 @@ export const Login = () => {
         }
     };
 
+    const validateToken = async (token) => {
+        try {
+            const response = await fetch("http://localhost:5050/loginRoute/validate-token", {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+    
+            const data = await response.json();
+    
+            if (response.status === 200) {
+                //REDIRCT TO HOMEPAGE WHEN HOMEPAGE IS CREATED
+            } else {
+                // The token is invalid. Remove it from local storage.
+                localStorage.removeItem('authToken');
+                alert('Your session has expired. Please login again.');
+            }
+        } catch (error) {
+            console.error("Error validating token:", error);
+            alert('There was an error validating your session. Please try again.'); 
+        }
+    };    
+
     function openRecoveryForm() {
         document.getElementById("recoveryForm").style.display = "block";
     }
@@ -71,12 +99,18 @@ export const Login = () => {
     }
 
     useEffect(() => {
+        
+        const token = localStorage.getItem('authToken');
+    
+        if (token) { // Validate the token with the server
+            validateToken(token);
+        }
+
         return () => {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current);
             }
         };
-
     }, []);
 
     return (
@@ -102,7 +136,6 @@ export const Login = () => {
                     >
                     {showPassword ? 'Hide' : 'Show'}
                     </button>
-
                 </div>
 
                 {incorrectAttempts > 0 && (
@@ -111,7 +144,22 @@ export const Login = () => {
                     </p>
                 )}
 
-                <button type="submit" className={styles.button}>Log In</button>
+                
+                <div className={styles.buttonSectionWrapper}>
+                    <button type="submit" className={styles.button}>Log In</button>
+                    <input 
+                        type="checkbox" 
+                        id="rememberMe" 
+                        name="rememberMe" 
+                        checked={rememberUser} 
+                        onChange={(e) => setRememberUser(e.target.checked)} 
+                        className={styles.checkboxInput}
+                    />
+                    <label htmlFor="rememberMe" className={styles.checkboxLabel}>
+                        Remember Me
+                        <span className={styles.customCheckbox}></span>
+                    </label>
+                </div>
             </form>
 
         
