@@ -71,6 +71,12 @@
   .profile-password {
     color: #333;
   }
+
+  .bordered-section {
+    border: 1px solid #000; /* You can customize border styles as needed */
+    border-radius: 10px;
+    padding: 10px; /* Add padding to give some spacing between content and the border */
+  }
   
   .edit-button {
     background-color: #17a2b8;
@@ -100,4 +106,12 @@
     padding: 0;
     display: flex;
     width: 50%;
+  }
+
+  /* Style for the successful profile update message */
+  .success-message {
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* White text color */
+    padding: 10px;
+    text-align: center;
   }

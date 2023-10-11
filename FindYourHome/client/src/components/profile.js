@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../Stylings/profile.css';
 import Favorites from './favorites.js';
 import { FaUser, FaEdit } from 'react-icons/fa';
@@ -20,6 +20,25 @@ export default function Profile() {
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
     const [image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
+    const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
+
+    useEffect(() => {
+        // fetch user data from the backend when the component mounts
+        fetchUserInfo();
+    }, []);
+
+    // fetch the user data from the backend
+    const fetchUserInfo = async () => {
+        try {
+            const response = await fetch("http://localhost:5050/profileRoute/profile");
+            if (response.status === 200) {
+                const userInfo = await response.json();
+                setInfo(userInfo); // Update the user state with the fetched data
+            }
+        } catch (error) {
+
+        }
+    }
 
     // function to toggle between view and edit mode
     const handleEdit = () => {
@@ -37,9 +56,47 @@ export default function Profile() {
 
     // function to save changes and exit edit mode
     const handleSave = () => {
-        setIsEditing(false);
+        setIsEditing(false)
         //saveChanges;
     };
+
+    // function to submit the changes to the database
+    const saveChanges = async (e) => {
+        e.preventDefault();
+
+        const userInfo = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
+            image: user.image,
+        };
+
+        try {
+            // Send a POST request to the server
+            const response = await fetch("http://localhost:5050/profileRoute/profile", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userInfo)
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                console.log(data.message);
+                setSuccessMessage('Profile updated successfully');
+                setTimeout(() => {
+                    setSuccessMessage('');
+                }, 5000); // Clear the message after 5 seconds
+            }
+
+        } catch (error) {
+            console.error("There was an error updating your info: ", error);
+        }
+    }
 
     // function to change password
     const handlePasswordChange = () => {
@@ -57,6 +114,7 @@ export default function Profile() {
         if (file) {
             const imageURL = URL.createObjectURL(file);
             setImage(imageURL);
+            user.image = imageURL;
         }
     };
 
@@ -65,7 +123,6 @@ export default function Profile() {
             <div className="profile-header">
 
                 {/* Profile Picture */}
-                {/* Not final implementation just a filler until I can figure out a better way */}
                 <div>
                     <img src={image} width={150} height={150} />
                     <button class="round-corner" onClick={openFileInput}>Upload Image</button>
@@ -81,31 +138,30 @@ export default function Profile() {
                 {/* User's Name divided into first and last name */}
                 <div className="profile-name">
                     {isEditing ? (
-                        <input
-                            class = "round-corner"
-                            type="text"
-                            name="firstName"
-                            value={user.firstName}
-                            onChange={handleInputChange}
-                        />
+                        <div>
+                            <input
+                                class = "round-corner"
+                                type="text"
+                                name="firstName"
+                                value={user.firstName}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                class = "round-corner"
+                                type="text"
+                                name="lastName"
+                                value={user.lastName}
+                                onChange={handleInputChange}
+                            />
+                        </div>
                     ) : (
-                        <h2>{user.firstName}</h2>
-                    )}
-                    {isEditing ? (
-                        <input
-                            class = "round-corner"
-                            type="text"
-                            name="lastName"
-                            value={user.lastName}
-                            onChange={handleInputChange}
-                        />
-                    ) : (
-                        <h2>{user.lastName}</h2>
+                        <h2>{user.firstName} {user.lastName}</h2>
                     )}
                 </div>
 
                 {/* Edit Profile and Save Changes */}
                 <div className="profile-actions">
+                    {successMessage && <div className="success-message">{successMessage}</div>}
                     {isEditing ? (
                         <button class="round-corner" onClick={handleSave}>Save</button>
                     ) : (
@@ -130,7 +186,7 @@ export default function Profile() {
                         onChange={handleInputChange}
                     />
                     ) : (
-                        user.username
+                        <span className="bordered-section">{user.username}</span>
                     )}
                 </p>
 
@@ -145,7 +201,7 @@ export default function Profile() {
                             onChange={handleInputChange}
                         />
                     ) : (
-                        user.email
+                        <span className="bordered-section">{user.email}</span>
                     )}
                 </p>
 
@@ -165,7 +221,7 @@ export default function Profile() {
                             onChange={handleInputChange}
                         />
                     ) : (
-                        user.bio
+                        <span className="bordered-section">{user.bio}</span>
                     )}
                 </p>
             </div>
