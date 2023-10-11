@@ -8,7 +8,7 @@ export class Queue {
         this.front = front;
     }
 
-    enqueue(element) {
+    enqueue(element) { 
         const newItems = { ...this.items };
 
         newItems[this.rear] = element;

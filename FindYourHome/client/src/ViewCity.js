@@ -58,7 +58,9 @@ const ViewCity = () => {
         setCity(matchedCity);
         setCityIncome(matchedCity ? matchedCity.median_income : null);
         setShowResults(true);
-        searchImage();
+        if (city) {
+            searchImage();
+        }
     };
 
     const handleClear = () => {
