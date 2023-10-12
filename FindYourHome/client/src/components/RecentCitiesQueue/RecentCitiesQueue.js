@@ -1,7 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./RecentCitiesQueue.css"
 
-let email = "nick@example.com";
+
+const RecentCitiesQueue = ({ queue }) => {
+    //const [user, setUser] = useState([]);
+
+    // useEffect(() => {
+    //     //get
+    //     async function fetchData() {
+    //         try {
+    //             const response = await fetch(`http://localhost:5050/users/${email}`);
+    //             if (!response.ok) {
+    //                 const message = `An error occurred: ${response.statusText}`;
+    //                 window.alert(message);
+    //                 return;
+    //             }
+
+    //             const user = await response.json();
+    //             setUser(user);
+    //             console.log(user);
+    //         } catch (error) {
+    //             console.error("There was an error fetching the cities", error);
+    //         }
+    //     }
+
+    //     fetchData();
+    // }, []);
+
+    return (
+        <div>
+            <h2>Recent Cities:</h2>
+            <ul>
+                {Object.values(queue.items).map(city => (
+                    <li key={city}>{city}</li>
+                ))}
+            </ul>
+        </div>
+    );
+}
 
 export class Queue {
     constructor(items = {}, rear = 0, front = 0) {
@@ -10,7 +46,32 @@ export class Queue {
         this.front = front;
     }
 
-    
+    async addToQueue(cityName) {
+        let email = "nick@example.com";
+        try {
+            const updateData = {
+                action: "addRecentCity",
+                cityName: cityName
+            };
+
+            const response = await fetch(`http://localhost:5050/users/${email}`, {
+                method: "PATCH",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            });
+
+            console.log(response);
+
+            if (!response.ok) {
+                console.error(`Error while adding city to recentViewed: ${response.statusText}`);
+            }
+        } catch (error) {
+            console.error("There was an error adding the city to recentViewed", error);
+        }
+    }
+
 
     enqueue(element) {
         const newItems = { ...this.items };
@@ -18,13 +79,12 @@ export class Queue {
         for (const value of Object.values(newItems)) {
             if (value === element) {
                 console.warn("Element already exists in the queue.");
-                return this; // Return the current state of the queue without changes.
+                return this;
             }
         }
 
         newItems[this.rear] = element;
-
-        addToQueue(element);
+        this.addToQueue(element);  // Add to user's recentViewed cities list
 
         let newFront = this.front;
         let newRear = this.rear + 1;
@@ -55,37 +115,6 @@ export class Queue {
     print() {
         console.log(this.items);
     }
-}
-
-async function addToQueue(cityName) {
-    try {
-        const response = await fetch(`http://localhost:5050/users/${email}`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({cityName})
-        });
-
-        if (!response.ok) {
-            console.error(`Error while adding user: ${response.statusText}`);
-        }
-    } catch (error) {
-        console.error("There was an error adding the user", error);
-    }
-}
-
-const RecentCitiesQueue = ({ queue }) => {
-    return (
-        <div>
-            <h2>Recent Cities:</h2>
-            <ul>
-                {Object.values(queue.items).map(city => (
-                    <li key={city}>{city}</li>
-                ))}
-            </ul>
-        </div>
-    );
 }
 
 export default RecentCitiesQueue;
