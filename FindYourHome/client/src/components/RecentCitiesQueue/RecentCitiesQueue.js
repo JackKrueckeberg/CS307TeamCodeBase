@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./RecentCitiesQueue.css"
 
-
 const RecentCitiesQueue = ({ queue }) => {
     const [queueItems, setQueueItems] = useState({});
     let email = "nick@example.com"

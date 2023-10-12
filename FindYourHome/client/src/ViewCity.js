@@ -3,6 +3,7 @@ import Autosuggest from 'react-autosuggest'; // Import Autosuggest
 import "./Stylings/ViewCity.css";
 import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
+import {CityModel, Model} from "./components/CityModel/CityModel";
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 const ViewCity = () => {
@@ -14,6 +15,7 @@ const ViewCity = () => {
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
+    const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
@@ -53,15 +55,26 @@ const ViewCity = () => {
         setSuggestions([]);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
         setCityIncome(matchedCity ? matchedCity.median_income : null);
         if (matchedCity) {
-            searchImage();
+            await searchImage();
+
+            const cityModel = new Model(
+                matchedCity.name,
+                matchedCity.population,
+                matchedCity.region,
+                matchedCity.state,
+                matchedCity.median_income,
+                imageUrl
+            );
+
+            setCityModel(cityModel);
         }
         setShowResults(true);
-        
+
     };
 
     const handleClear = () => {
@@ -104,9 +117,7 @@ const ViewCity = () => {
         if (showResults && city) {
             return (
                 <div className="result">
-                    <h2>{city.name}</h2>
-                    <p>{cityIncome}</p>
-                    {imageUrl && <img src={imageUrl} alt="City" />}
+                    <CityModel model={cityModel} />
                 </div>
             );
         } else if (showResults) {
@@ -156,6 +167,7 @@ const ViewCity = () => {
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
+
         </div>
     );
 };
