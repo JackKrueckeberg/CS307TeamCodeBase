@@ -46,6 +46,7 @@ export default function Create() {
   }
 
   async function getUser_favorites() {
+
     const city_info = await fetch("http://localhost:5050/users/user@example.com", {
       method: "GET",
       headers: {
@@ -147,11 +148,7 @@ export default function Create() {
 
   async function deleteRecents(recent) {
 
-    console.log('deleting recent searches');
-
-   
-
-    
+    console.log('deleting recent searches'); 
 
     await fetch("http://localhost:5050/recent_searches/user@example.com", {
       method: "DELETE",
@@ -163,6 +160,7 @@ export default function Create() {
       console.log("HERE")
       return;
     });
+
     
   }
 
@@ -182,12 +180,7 @@ export default function Create() {
     const resp = await city_info.json();
 
     return resp;
-  }
-
-
-
-
-  
+  }  
 
   async function filterCities() {
     const cities = await getCities();
@@ -518,7 +511,7 @@ export default function Create() {
                     <option value="PA">Pennsylvania</option>
                     <option value="RI">Rhode Island</option>
                     <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
+                    <option value="SD">Soutgeth Dakota</option>
                     <option value="TN">Tennessee</option>
                     <option value="TX">Texas</option>
                     <option value="UT">Utah</option>
@@ -601,24 +594,24 @@ export default function Create() {
         <h2>Recent Searches</h2>
         <button onClick={deleteRecents}>Clear History</button>
         <ul>
-  {recentSearches.map((search, index) => (
-    <li key={index}>
-      {Object.entries(search).map(([key, value]) => {
-        if (value !== null && value !== "" && value !== false) {
-          if (key === 'state' && value === 'default') {
-            return null; // Don't display State: default
-          }
-          return (
-            <span key={key}>
-              {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-            </span>
-          );
-        }
-        return null; // Don't display if the field is not populated
-      })}
-    </li>
-  ))}
-</ul>
+          {recentSearches.map((search, index) => (
+            <li key={index}>
+              {Object.entries(search).map(([key, value]) => {
+                if (value !== null && value !== "" && value !== false) {
+                  if (key === 'state' && value === 'default') {
+                    return null; // Don't display State: default
+                  }
+                  return (
+                    <span key={key}>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                    </span>
+                  );
+                }
+                return null; // Don't display if the field is not populated
+              })}
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
     </div>
