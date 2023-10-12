@@ -13,6 +13,7 @@ import ViewCity from "./ViewCity";
 import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
 import Profile from "./components/profile";
+import Preferences from "./components/preferences"
  
 const App = () => {
   

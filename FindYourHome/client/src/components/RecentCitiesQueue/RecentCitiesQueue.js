@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./RecentCitiesQueue.css"
 
+let email = "nick@example.com";
+
 export class Queue {
     constructor(items = {}, rear = 0, front = 0) {
         this.items = items;
@@ -8,10 +10,21 @@ export class Queue {
         this.front = front;
     }
 
+    
+
     enqueue(element) {
         const newItems = { ...this.items };
 
+        for (const value of Object.values(newItems)) {
+            if (value === element) {
+                console.warn("Element already exists in the queue.");
+                return this; // Return the current state of the queue without changes.
+            }
+        }
+
         newItems[this.rear] = element;
+
+        addToQueue(element);
 
         let newFront = this.front;
         let newRear = this.rear + 1;
@@ -20,7 +33,7 @@ export class Queue {
             delete newItems[newFront];
             newFront++;
         }
- 
+
         const newQueue = new Queue(newItems, newRear, newFront);
         return newQueue;
     }
@@ -41,6 +54,24 @@ export class Queue {
 
     print() {
         console.log(this.items);
+    }
+}
+
+async function addToQueue(cityName) {
+    try {
+        const response = await fetch(`http://localhost:5050/users/${email}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({cityName})
+        });
+
+        if (!response.ok) {
+            console.error(`Error while adding user: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error("There was an error adding the user", error);
     }
 }
 
