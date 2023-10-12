@@ -216,18 +216,16 @@ export default function Create() {
 
       var canAdd = true;
 
-      
-
-      for (var i = 0; i < user.favorite_searches.length; i++) {
-        if (form.population === user.favorite_searches[i].population) {
-          if (form.east_coast === user.favorite_searches[i].east_coast) {
-            if (form.west_coast === user.favorite_searches[i].west_coast) {
-              if (form.central === user.favorite_searches[i].central) {
-                if (form.mountain_west === user.favorite_searches[i].mountain_west) {
-                  if (form.state === user.favorite_searches[i].state) {
-                    if (form.zip_code === user.favorite_searches[i].zip_code) {
-                      if (form.county === user.favorite_searches[i].county) {
-                        if (form.median_income === user.favorite_searches[i].median_income) {
+      for (var i = 0; i < favorite_searches.length; i++) {
+        if (form.population === favorite_searches[i].population) {
+          if (form.east_coast === favorite_searches[i].east_coast) {
+            if (form.west_coast === favorite_searches[i].west_coast) {
+              if (form.central === favorite_searches[i].central) {
+                if (form.mountain_west === favorite_searches[i].mountain_west) {
+                  if (form.state === favorite_searches[i].state) {
+                    if (form.zip_code === favorite_searches[i].zip_code) {
+                      if (form.county === favorite_searches[i].county) {
+                        if (form.median_income === favorite_searches[i].median_income) {
                           alert("This search is already favorited.");
                           canAdd = false;
                           break;
