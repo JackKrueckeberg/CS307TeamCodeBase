@@ -3,6 +3,7 @@ import '../Stylings/profile.css';
 import Favorites from './favorites.js';
 import { FaEdit } from 'react-icons/fa';
 import defaultImage from '../Stylings/Default_Profile_Picture.png';
+import { useUser } from '../contexts/UserContext';
 
 export default function Profile() {
     // initialize the profile info
@@ -22,6 +23,9 @@ export default function Profile() {
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
+    const {user : userID, setLoggedInUser } = useUser(); // the id of the current logged in user
+
+    let user_id = userID._id;
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
@@ -31,7 +35,7 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch('http://localhost:5050/profileRoute/:id', {
+            const response = await fetch(`http://localhost:5050/profileRoute/${user_id}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
@@ -87,7 +91,7 @@ export default function Profile() {
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch('http://localhost:5050/profileRoute/:id', {
+            const response = await fetch(`http://localhost:5050/profileRoute/${user_id}`, {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
