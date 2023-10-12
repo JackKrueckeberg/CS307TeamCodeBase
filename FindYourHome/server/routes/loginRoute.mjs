@@ -52,7 +52,7 @@ router.get("/validate-token", (req, res) => {
             return res.status(200).json({ 
                 message: "Valid token",
                 user: {
-                    _id: user._id,
+                    _id: user.userId,
                     email: user.email,
                 }
             });
