@@ -14,14 +14,11 @@ import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
 import Preferences from "./components/preferences"
  
-
 const App = () => {
   
  return (
    <div>
-
-      <Preferences/>
-
+    <ViewCity />
    </div>
 
  
