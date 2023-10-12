@@ -122,10 +122,15 @@ export default function Profile() {
     const handleImageUpload = (e) => {
         console.log(e.target.files);
         const file = e.target.files[0];
+        console.log(file);
         if (file) {
             const imageURL = URL.createObjectURL(file);
+            console.log(imageURL);
             setImage(imageURL);
-            user.profile_image = imageURL;
+            setInfo({
+                ...user,
+                profile_image: imageURL,
+            });
         }
         saveChanges();
     };

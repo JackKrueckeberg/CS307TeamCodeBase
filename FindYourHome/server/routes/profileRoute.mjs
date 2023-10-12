@@ -31,7 +31,7 @@ router.patch("/:id", async (req, res) => {
         username: req.body.username,
         email: req.body.email,
         bio: req.body.bio,
-        image: req.body.image,
+        profile_image: req.body.profile_image,
       }
     };
   
