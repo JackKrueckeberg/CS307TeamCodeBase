@@ -30,7 +30,7 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch("http://localhost:5050/profileRoute/profile/:id");
+            const response = await fetch("http://localhost:5050/profileRoute/:id");
             if (response.status === 200) {
                 const userInfo = await response.json();
                 setInfo(userInfo); // Update the user state with the fetched data
@@ -75,7 +75,7 @@ export default function Profile() {
 
         try {
             // Send a POST request to the server
-            const response = await fetch("http://localhost:5050/profileRoute/profile", {
+            const response = await fetch("http://localhost:5050/profileRoute/:id", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'

@@ -1,5 +1,6 @@
 import express from "express";
 import db from "../db/conn.mjs";
+import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
@@ -9,20 +10,15 @@ const router = express.Router();
 router.get("/:id", async (req, res) => {
     const query = { _id: new ObjectId(req.params.id) };
 
-    try {
-        let collection = await db.collection("user_info");
-        let user = await collection.findOne(query);
+    let collection = await db.collection("user_info");
+    let user = await collection.findOne(query);
 
-        if (user) {
-            // User found, send user information as a response
-            res.status(200).json(user);
-        } else {
-            // User not found
-            res.status(404).json({ message: "User not found" });
-        }
-    } catch (error) {
-        // Handle any database or other errors here
-        res.status(500).json({ message: "Internal server error" });
+    if (user) {
+        // User found, send user information as a response
+        res.status(200).json(user);
+    } else {
+        // User not found
+        res.status(404).json({ message: "User not found" });
     }
 });
 
@@ -40,13 +36,10 @@ router.patch("/:id", async (req, res) => {
       }
     };
   
-    try {
-        let collection = await db.collection("user_info");
-        let result = await collection.updateOne(query, updates);
+    let collection = await db.collection("user_info");
+    let result = await collection.updateOne(query, updates);
 
-        res.status(200).json(result);
-    } catch (error) {
-        // Handle any database or other errors here
-        res.status(500).json({ message: "Internal server error" });
-    }
+    res.send(result).status(200);
 });
+
+export default router;
