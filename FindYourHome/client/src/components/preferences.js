@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import "../Stylings/advancedPrefs.css";
+import Checkbox from "@mui/material/Checkbox";
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
+
 
 export default function Create() {
   const [form, setForm] = useState({
@@ -13,6 +17,7 @@ export default function Create() {
     zip_code: "",
     county: "",
     median_income: "",
+    favorited: false
   });
 
   // These methods will update the state properties.
@@ -173,6 +178,7 @@ export default function Create() {
       zip_code: "",
       county: "",
       median_income: "",
+      favorited:  false
     });
   }
 
@@ -182,13 +188,18 @@ export default function Create() {
   return (
     // name, population, region, state, zip code, county, median income
     <div>
-      <div>
+        <div>
         <form onSubmit={onSubmit}>
           <div className="padding" />
           <table className={"table_style padding center"}>
             <tbody>
               <tr>
                 <td>
+                    <Checkbox
+                    icon={<FavoriteBorder />}
+                    checkedIcon={<Favorite />}
+                    onChange={(e) => updateForm({ west_coast: !form.favorited })}
+                    />
                   <h3>Preferences:</h3>
                 </td>
               </tr>
