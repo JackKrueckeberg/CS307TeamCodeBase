@@ -35,7 +35,7 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/profileRoute/:id`, { //${user_id}
+            const response = await fetch(`http://localhost:5050/profileRoute/65286646184b42dec3d76364`, { //${user_id}
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
