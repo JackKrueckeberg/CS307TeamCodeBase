@@ -20,22 +20,11 @@ export default function Create() {
     favorited: false
   });
 
-  const [user, setUser] = useState ({
-    email: "",
-    favorite_searches: ""
-  })
-
   // These methods will update the state properties.
   function updateForm(value) {
     return setForm((prev) => {
       return { ...prev, ...value };
     });
-  }
-
-  function updateUser(value) {
-    return setUser((prev) => {
-      return {...prev, ...value};
-    })
   }
 
   function compareByScore(a, b) {
@@ -63,20 +52,12 @@ export default function Create() {
 
     const resp = await city_info.json();
 
-    setUser({
-      favorite_searches: resp.favorite_searches
-    });
-
-    console.log(resp);
-
-    return resp;
+    return resp.favorite_searches;
   }  
 
-  async function addFavorite() {
+  async function addFavorite(favs) {
 
     console.log('adding favorite');
-
-    var favs = Array.from(user.favorite_searches);
 
     console.log(favs);
 
@@ -231,9 +212,11 @@ export default function Create() {
     }
 
     if (form.favorited) {
-      getUser();
+      const favorite_searches = await getUser();
 
       var canAdd = true;
+
+      /*
 
       for (var i = 0; i < user.favorite_searches.length; i++) {
         if (form.population === user.favorite_searches[i].population) {
@@ -258,9 +241,10 @@ export default function Create() {
           }
         }
       }
+      */
       
       if (canAdd) {
-        await addFavorite();
+        await addFavorite(favorite_searches);
       }
     }
 
@@ -300,6 +284,7 @@ export default function Create() {
                     icon={<FavoriteBorder />}
                     checkedIcon={<Favorite />}
                     defaultChecked={form.favorited}
+                    checked={form.favorited}
                     onChange={(e) => updateForm({ favorited: !form.favorited })}
                     />
                   <h3>Preferences:</h3>
