@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import "../Stylings/advancedPrefs.css";
 import Checkbox from "@mui/material/Checkbox";
@@ -6,7 +6,13 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
+
+
+
+
+
 export default function Create() {
+  const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
   const [form, setForm] = useState({
     population: "",
     east_coast: false,
@@ -39,7 +45,7 @@ export default function Create() {
     return 0;
   }
 
-  async function getUser() {
+  async function getUser_favorites() {
     const city_info = await fetch("http://localhost:5050/users/user@example.com", {
       method: "GET",
       headers: {
@@ -54,6 +60,22 @@ export default function Create() {
 
     return resp.favorite_searches;
   }  
+
+  async function getUser_recentSearches() {
+    const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
+
+    const resp = await city_info.json();
+
+    return resp.recent_searches;
+  } 
 
   async function addFavorite(favs) {
 
@@ -87,6 +109,65 @@ export default function Create() {
     
   }
 
+
+  async function addRecent(recent) {
+
+    console.log('adding recent search');
+
+    console.log(recent);
+
+    const newRecent = {
+      population: form.population,
+      east_coast: form.east_coast,
+      west_coast: form.west_coast,
+      central: form.central,
+      mountain_west: form.mountain_west,
+      state: form.state,
+      zip_code: form.zip_code,
+      county: form.county,
+      median_income: form.median_income
+    }
+    recent.push(newRecent);
+
+    await fetch("http://localhost:5050/recent_searches/user@example.com", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({recent_searches: recent})
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
+    
+  }
+
+
+
+
+  async function deleteRecents(recent) {
+
+    console.log('deleting recent searches');
+
+   
+
+    
+
+    await fetch("http://localhost:5050/recent_searches/user@example.com", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).catch((error) => {
+      window.alert(error);
+      console.log("HERE")
+      return;
+    });
+    
+  }
+
+  
+
   async function getCities() {
     const city_info = await fetch("http://localhost:5050/city_info", {
       method: "GET",
@@ -102,6 +183,11 @@ export default function Create() {
 
     return resp;
   }
+
+
+
+
+  
 
   async function filterCities() {
     const cities = await getCities();
@@ -212,7 +298,7 @@ export default function Create() {
     }
 
     if (form.favorited) {
-      const favorite_searches = await getUser();
+      const favorite_searches = await getUser_favorites();
 
       var canAdd = true;
 
@@ -245,11 +331,19 @@ export default function Create() {
         await addFavorite(favorite_searches);
       }
     }
+    const recent_searches = await getUser_recentSearches();
+    await addRecent(recent_searches)
+
 
     console.log("searching...");
     var result = await filterCities();
 
     console.log(result);
+
+    const recentSearches = await getUser_recentSearches();
+  setRecentSearches(recentSearches);
+  console.log('Recent searches updated');
+
 
     setForm({
       population: "",
@@ -266,6 +360,7 @@ export default function Create() {
   }
 
   const navigate = useNavigate();
+  
 
   // This following section will display the form that takes the input from the user.
   return (
@@ -498,6 +593,35 @@ export default function Create() {
           <div className="padding" />
         </form>
       </div>
+      <div>
+      {/* ... (your existing code for the form) */}
+      
+      {/* Recent Searches Section */}
+      <div className="recent-searches">
+        <h2>Recent Searches</h2>
+        <button onClick={deleteRecents}>Clear History</button>
+        <ul>
+  {recentSearches.map((search, index) => (
+    <li key={index}>
+      {Object.entries(search).map(([key, value]) => {
+        if (value !== null && value !== "" && value !== false) {
+          if (key === 'state' && value === 'default') {
+            return null; // Don't display State: default
+          }
+          return (
+            <span key={key}>
+              {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+            </span>
+          );
+        }
+        return null; // Don't display if the field is not populated
+      })}
+    </li>
+  ))}
+</ul>
+      </div>
     </div>
+    </div>
+    
   );
 }
