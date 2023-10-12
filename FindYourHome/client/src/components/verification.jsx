@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import styles from '../Stylings/verificationStyle.module.css';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const Verification = () => {
@@ -7,6 +9,7 @@ const Verification = () => {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");  // can be 'success' or 'error'
+    const navigate = useNavigate();
 
 
     // References to each of the input boxes
@@ -28,6 +31,10 @@ const Verification = () => {
         if (e.key === 'Backspace' && !codes[index] && refs[index - 1]) {
             refs[index - 1].current.focus();
         }
+    }
+
+    const handleVerifyLater = () => {
+        navigate('/view-city');
     }
 
     const handleSendVerificationCode = async () => {
@@ -70,12 +77,30 @@ const Verification = () => {
             if (response.ok) {
                 setMessage("Email verified successfully!");
                 setMessageType('success');
+                return Promise.resolve();
             } else {
                 setMessage("Invalid Verification Code");
                 setMessageType('error');
+                return Promise.resolve();
             }
         } catch (error) {
             alert("There was an error while verifying. Please try again.");
+            return Promise.resolve();
+        }
+    }
+
+    const handleResendVerificationCode = async () => {
+        if(!email.trim()) { // Check if email field is empty
+            setMessage("Please enter your email address first.");
+            setMessageType('error');
+            return;
+        }
+        try {
+            await handleSendVerificationCode(); // If email is present, send verification code
+            setMessage("Verification code was re-sent to your email!");
+            setMessageType('success');
+        } catch (error) {
+            //errors already handled this is for the sake of the try/catch
         }
     }
 
@@ -101,8 +126,8 @@ const Verification = () => {
             </div>
             <button type="button" className={styles.verifyButton} onClick={handleVerification}>Verify</button>
             <div className={styles.otherButtons}>
-                <button type="button">Resend Verification</button>
-                <button type="button">Verify Later</button>
+                <button type="button" onClick={handleResendVerificationCode}>Resend Verification</button>
+                <button type="button" onClick={handleVerifyLater}>Verify Later</button>
             </div>
             {message && (
                 <div className={`${styles.message} ${messageType === 'error' ? styles.errorMessage : styles.successMessage}`}>

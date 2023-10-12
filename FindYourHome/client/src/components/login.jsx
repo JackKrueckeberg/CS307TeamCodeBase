@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from '../Stylings/loginStyle.module.css';
 import { Collapse } from 'bootstrap';
 import { useUser } from '../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,6 +13,8 @@ export const Login = () => {
     const [rememberUser, setRememberUser] = useState(false);
     const timeoutRef = useRef(null);
     const { user, setLoggedInUser } = useUser();
+    const navigate = useNavigate();
+
 
 
 
@@ -45,7 +48,8 @@ export const Login = () => {
                 if (data.user) {
                     setLoggedInUser(data.user);
                     console.log(data.user._id);
-                }                  
+                }
+                navigate("/view-city");                  
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);

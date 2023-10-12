@@ -22,7 +22,14 @@ const App = () => {
   
  return (
   <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
-    <Profile />
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/view-city" element={<ViewCity />} />
+        <Route path="/verification" element={<Verification />} />
+        <Route path="/create-account" element={<CreateAccount />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/preferences" element={<Preferences />} />
+      </Routes>
   </UserProvider>
  );
 };
