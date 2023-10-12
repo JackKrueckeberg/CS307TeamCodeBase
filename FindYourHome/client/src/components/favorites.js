@@ -33,6 +33,12 @@ export default function Favorites() {
     
         return resp.favorite_searches;
     }
+
+    async function removeFavoriteSearch(index) {
+        var newFavs = favorite_searches;
+        newFavs.splice(index, 1);
+        setFavoriteSearches(newFavs);
+    }
     
     console.log(favorite_searches);
 
@@ -56,22 +62,24 @@ export default function Favorites() {
                     <h2> Here are your Favorite Searches </h2>
                     <p> Insert search favorites list here </p>
                     <ul>
-                        {favorite_searches.map((search, index) =>  (
-                            Object.entries(search).map(([key, value]) => {
-                                if (value !== null && value !== "" && value !== false) {
-                                    if (key === 'state' && value === 'default') {
-                                        return null;
-                                    }
-                                    return (
-                                        <span key={key}>
-                                            {key.charAt(0).toUpperCase() + key.slice(1)}: {value}, {' '}
-                                        </span>
-                                    );
-                                }
-                                return null;
+                    {favorite_searches.map((search, index) => (
+                        <li key={index}>
+                        <button onClick={() => removeFavoriteSearch(index)}>delete</button>
+                        {Object.entries(search).map(([key, value]) => {
+                            if (value !== null && value !== "" && value !== false) {
+                            if (key === 'state' && value === 'default') {
+                                return null; // Don't display State: default
                             }
-                            )
-                        ))}
+                            return (
+                                <span key={key}>
+                                {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                </span>
+                            );
+                            }
+                            return null; // Don't display if the field is not populated
+                        })}
+                        </li>
+                    ))}
                     </ul>
                 </div>
             </div>
