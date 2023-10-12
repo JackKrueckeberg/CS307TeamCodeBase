@@ -4,6 +4,7 @@ import '../Stylings/favorites.css';
 export default function Favorites() {
     
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
+    const [favorite_searches, setFavoriteSearches] = useState([]);
 
     const handleTabChange = (index) => {
         getUser_favorites();
