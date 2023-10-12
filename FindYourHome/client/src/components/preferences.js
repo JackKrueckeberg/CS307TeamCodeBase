@@ -216,7 +216,7 @@ export default function Create() {
 
       var canAdd = true;
 
-      /*
+      
 
       for (var i = 0; i < user.favorite_searches.length; i++) {
         if (form.population === user.favorite_searches[i].population) {
@@ -241,7 +241,7 @@ export default function Create() {
           }
         }
       }
-      */
+      
       
       if (canAdd) {
         await addFavorite(favorite_searches);
