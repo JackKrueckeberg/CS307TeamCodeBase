@@ -12,6 +12,7 @@ import Login from "./components/login";
 import ViewCity from "./ViewCity";
 import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
+import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 
 //We import any contexts used
@@ -21,7 +22,7 @@ const App = () => {
   
  return (
   <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
-    <ViewCity />
+    <Profile />
   </UserProvider>
  );
 };

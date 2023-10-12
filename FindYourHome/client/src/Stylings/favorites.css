@@ -6,9 +6,11 @@
 
 .container{
     border:2px solid grey;
+    background: white;
     width: 100%;
     margin:auto;
     margin-top: 50px;
+    border-radius: 10px;
 }
 
 .tabs-block{
@@ -25,6 +27,7 @@
     border-top: none;
     cursor: pointer;
     position: relative;
+    border-radius: 10px;
 }
 
 .active-tab{
@@ -33,7 +36,7 @@
 }
 
 .active-tab::after{
-    border-top: 2px solid blue;
+    border-top: 2px solid goldenrod;
     content:'';
     position: absolute;
     top: 0;
@@ -50,14 +53,14 @@
         top: 50px;
         left: 0;
         right: 0;
-        background: blue;
+        background: goldenrod;
     }
 
     to{
         top: 0px;
         right: 0;
         left: 0;
-        border-top: 2px solid blue;
+        border-top: 2px solid goldenrod;
     }
 }
 

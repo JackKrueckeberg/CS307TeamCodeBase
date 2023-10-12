@@ -4,8 +4,8 @@
     min-height: 100vh;
     margin: 0 auto;
     padding: 2%;
-    background-color: #fff;
-    border: 1px solid #ccc;
+    background-color: rgb(230, 230, 230);
+    border: 1px solid white;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -13,11 +13,12 @@
   
   .profile-avatar {
     flex: 1; /* Avatar takes up all available space on the left */
-    background-color: #ccc;
-    border-radius: 50%;
-    padding: 10px;
+    background-color: white;
+    padding-bottom: 5px;
     margin: 0 auto;
     display: inline-block;
+    width: 175px;
+    border-radius: 10px;
   }
   
   .profile-details {
@@ -43,6 +44,10 @@
   .profile-name {
     font-size: 24px;
     margin: 10px 0;
+    border: #000;
+    background: white;
+    border-radius: 10px;
+    padding: 5px 10px;
   }
   
   .profile-username {
@@ -71,20 +76,46 @@
   .profile-password {
     color: #333;
   }
+
+  .upload-image {
+    background: goldenrod;
+    border-radius: 10px;
+    padding: 5px 10px;
+  }
+
+  .upload-image:hover {
+    background-color: rgb(241, 197, 85);
+  }
+
+  .change-password {
+    background: goldenrod;
+    border-radius: 10px;
+    padding: 5px 10px;
+  }
+
+  .change-password:hover {
+    background-color: rgb(241, 197, 85);
+  }
+
+  .bordered-section {
+    border: 1px solid #000; /* You can customize border styles as needed */
+    border-radius: 10px;
+    background-color: white;
+    padding: 10px; /* Add padding to give some spacing between content and the border */
+  }
   
   .edit-button {
-    background-color: #17a2b8;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
+    background-color: goldenrod;
+    color: black;
+    padding: 5px 10px;
+    border: 2px solid black;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 14px;
     margin-top: 10px;
   }
   
   .edit-button:hover {
-    background-color: #117a8b;
+    background-color: rgb(241, 197, 85);
   }
 
   .tab-container {
@@ -100,4 +131,12 @@
     padding: 0;
     display: flex;
     width: 50%;
+  }
+
+  /* Style for the successful profile update message */
+  .success-message {
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* White text color */
+    padding: 10px;
+    text-align: center;
   }
