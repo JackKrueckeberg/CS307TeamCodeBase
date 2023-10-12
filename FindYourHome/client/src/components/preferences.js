@@ -39,6 +39,54 @@ export default function Create() {
     return 0;
   }
 
+  async function getUser() {
+    const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
+
+    const resp = await city_info.json();
+
+    return resp.favorite_searches;
+  }  
+
+  async function addFavorite(favs) {
+
+    console.log('adding favorite');
+
+    console.log(favs);
+
+    const newFavorite = {
+      population: form.population,
+      east_coast: form.east_coast,
+      west_coast: form.west_coast,
+      central: form.central,
+      mountain_west: form.mountain_west,
+      state: form.state,
+      zip_code: form.zip_code,
+      county: form.county,
+      median_income: form.median_income
+    }
+    favs.push(newFavorite);
+
+    await fetch("http://localhost:5050/favorite_searches/user@example.com", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({favorite_searches: favs})
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
+    
+  }
+
   async function getCities() {
     const city_info = await fetch("http://localhost:5050/city_info", {
       method: "GET",
@@ -163,6 +211,41 @@ export default function Create() {
         return;
     }
 
+    if (form.favorited) {
+      const favorite_searches = await getUser();
+
+      var canAdd = true;
+
+      for (var i = 0; i < favorite_searches.length; i++) {
+        if (form.population === favorite_searches[i].population) {
+          if (form.east_coast === favorite_searches[i].east_coast) {
+            if (form.west_coast === favorite_searches[i].west_coast) {
+              if (form.central === favorite_searches[i].central) {
+                if (form.mountain_west === favorite_searches[i].mountain_west) {
+                  if (form.state === favorite_searches[i].state) {
+                    if (form.zip_code === favorite_searches[i].zip_code) {
+                      if (form.county === favorite_searches[i].county) {
+                        if (form.median_income === favorite_searches[i].median_income) {
+                          alert("This search is already favorited.");
+                          canAdd = false;
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      
+      if (canAdd) {
+        await addFavorite(favorite_searches);
+      }
+    }
+
     console.log("searching...");
     var result = await filterCities();
 
@@ -198,7 +281,9 @@ export default function Create() {
                     <Checkbox
                     icon={<FavoriteBorder />}
                     checkedIcon={<Favorite />}
-                    onChange={(e) => updateForm({ west_coast: !form.favorited })}
+                    defaultChecked={form.favorited}
+                    checked={form.favorited}
+                    onChange={(e) => updateForm({ favorited: !form.favorited })}
                     />
                   <h3>Preferences:</h3>
                 </td>
@@ -231,6 +316,7 @@ export default function Create() {
                   <input
                     className="padding"
                     type="checkbox"
+                    defaultChecked={form.east_coast}
                     value={form.east_coast}
                     onChange={(e) =>
                       updateForm({ east_coast: !form.east_coast })
@@ -246,6 +332,7 @@ export default function Create() {
                     <input
                     className="padding"
                     type="checkbox"
+                    defaultChecked={form.west_coast}
                     value={form.west_coast}
                     onChange={(e) => updateForm({ west_coast: !form.west_coast })}
                     />
@@ -259,6 +346,7 @@ export default function Create() {
                   <input
                     className="padding"
                     type="checkbox"
+                    defaultChecked={form.central}
                     value={form.central}
                     onChange={(e) =>
                       updateForm({ central: !form.central })
@@ -274,6 +362,7 @@ export default function Create() {
                   <input
                     className="padding"
                     type="checkbox"
+                    defaultChecked={form.mountain_west}
                     value={form.mountain_west}
                     onChange={(e) =>
                       updateForm({ mountain_west: !form.mountain_west })

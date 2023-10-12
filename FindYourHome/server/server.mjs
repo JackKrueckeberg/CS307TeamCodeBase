@@ -8,6 +8,7 @@ import Users from "./routes/loginRoute.mjs";
 import EmailVerification from "./routes/emailVerification.mjs";;
 import profile from "./routes/profileRoute.mjs";
 import usersData from "./routes/usersData.mjs";
+import favorite_searches from "./routes/favorite_searches.mjs";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
@@ -22,6 +23,7 @@ app.use("/loginRoute", Users);
 app.use("/emailVerification", EmailVerification)
 app.use("/profileRoute", profile);
 app.use("/users", usersData);
+app.use("/favorite_searches", favorite_searches);
 
 // start the Express server
 app.listen(PORT, () => {
