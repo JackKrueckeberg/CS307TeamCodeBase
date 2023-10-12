@@ -54,4 +54,25 @@ body {
   .suggestion:hover {
     background-color: #eee;
   }
+
+
+  /* Add CSS classes to the map and city image containers */
+.map {
+    width: 60%; /* Adjust the width to your preference */
+    float: left;
+    margin-right: 20px; /* Add margin for spacing */
+}
+
+.city-image {
+    width: 40%; /* Adjust the width to your preference */
+    float: left;
+}
+
+/* Clear float after floating elements */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
   

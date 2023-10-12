@@ -14,6 +14,7 @@ import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
+import Favorites from "./components/favorites";
 
 //We import any contexts used
 import { UserProvider } from "./contexts/UserContext";
