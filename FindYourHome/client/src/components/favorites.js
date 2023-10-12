@@ -41,6 +41,18 @@ export default function Favorites() {
                 newFavs.push(favorite_searches[i]);
             }
         }
+
+        await fetch("http://localhost:5050/favorite_searches/user@example.com", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({favorite_searches: newFavs})
+          }).catch((error) => {
+            window.alert(error);
+            return;
+          });
+
         setFavoriteSearches(newFavs);
     }
     
