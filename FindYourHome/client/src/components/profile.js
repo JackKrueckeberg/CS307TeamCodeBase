@@ -129,7 +129,7 @@ export default function Profile() {
             setImage(imageURL);
             setInfo({
                 ...user,
-                profile_image: imageURL,
+                profile_image: file,
             });
         }
         saveChanges();
@@ -141,7 +141,7 @@ export default function Profile() {
 
                 {/* Profile Picture */}
                 <div className="profile-avatar">
-                    <img src={profile_image} width={150} height={150} alt="Profile Image"/>
+                    <img src={profile_image} width={150} height={150} alt="Profile"/>
                     <button className="upload-image" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"
