@@ -25,7 +25,7 @@ export default function Profile() {
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
     const {user : userID, setLoggedInUser } = useUser(); // the id of the current logged in user
 
-    let user_id = userID._id;
+    //let user_id = userID._id;
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
@@ -35,7 +35,7 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/profileRoute/${user_id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/:id`, { //${user_id}
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
@@ -91,7 +91,7 @@ export default function Profile() {
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/${user_id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/:id`, { //${user_id}
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
@@ -127,6 +127,7 @@ export default function Profile() {
             setImage(imageURL);
             user.profile_image = imageURL;
         }
+        saveChanges();
     };
 
     return (
@@ -134,9 +135,9 @@ export default function Profile() {
             <div className="profile-header">
 
                 {/* Profile Picture */}
-                <div>
+                <div className="profile-avatar">
                     <img src={profile_image} width={150} height={150} alt="Profile Image"/>
-                    <button className="round-corner" onClick={openFileInput}>Upload Image</button>
+                    <button className="upload-image" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -176,8 +177,8 @@ export default function Profile() {
                     {isEditing ? (
                         <button className="round-corner" onClick={handleSave}>Save</button>
                     ) : (
-                        <button className="round-corner" onClick={handleEdit}>
-                            <FaEdit /> Edit
+                        <button className="edit-button" onClick={handleEdit}>
+                            <FaEdit size={35}/> Edit
                         </button>
                     )}
                 </div>
@@ -219,7 +220,7 @@ export default function Profile() {
                 {/* Profile Password */}
                 <p className="profile-password">
                     <strong>Password:</strong>
-                    <button className="round-corner" onClick={handlePasswordChange}>Change Password</button>
+                    <button className="change-password" onClick={handlePasswordChange}>Change Password</button>
                 </p>
 
                 {/* Profile Bio*/}
