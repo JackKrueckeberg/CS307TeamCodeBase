@@ -8,9 +8,9 @@ export class Queue {
         this.front = front;
     }
 
-    enqueue(element) { 
+    enqueue(element) {
         const newItems = { ...this.items };
-        
+
         for (const value of Object.values(newItems)) {
             if (value === element) {
                 console.warn("Element already exists in the queue.");
@@ -27,7 +27,7 @@ export class Queue {
             delete newItems[newFront];
             newFront++;
         }
- 
+
         const newQueue = new Queue(newItems, newRear, newFront);
         return newQueue;
     }
