@@ -5,6 +5,9 @@ import styles from '../Stylings/verificationStyle.module.css';
 const Verification = () => {
     const [codes, setCodes] = useState(Array(6).fill(''));
     const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");  // can be 'success' or 'error'
+
 
     // References to each of the input boxes
     const refs = Array.from({ length: 6 }).map(() => React.createRef());
@@ -38,10 +41,12 @@ const Verification = () => {
             });
     
             if (response.ok) {
-                alert("Verification code sent to your email!");
+                setMessage("Verification code sent to your email!");
+                setMessageType('success');
             } else {
                 const data = await response.json();
-                alert(data.message || "Error sending verification code.");
+                setMessage(data.message || "Error sending verification code.");
+                setMessageType('error');
             }
         } catch (error) {
             alert("There was an error while sending the verification code. Please try again.");
@@ -63,9 +68,11 @@ const Verification = () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert("Email verified successfully!");
+                setMessage("Email verified successfully!");
+                setMessageType('success');
             } else {
-                alert("Invalid Verification Code");
+                setMessage("Invalid Verification Code");
+                setMessageType('error');
             }
         } catch (error) {
             alert("There was an error while verifying. Please try again.");
@@ -96,6 +103,9 @@ const Verification = () => {
             <div className={styles.otherButtons}>
                 <button type="button">Resend Verification</button>
                 <button type="button">Verify Later</button>
+            </div>
+            <div className={`${styles.message} ${messageType === 'error' ? styles.errorMessage : styles.successMessage}`}>
+                {message}
             </div>
         </div>
     );

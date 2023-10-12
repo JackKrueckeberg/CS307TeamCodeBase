@@ -12,16 +12,17 @@ import Login from "./components/login";
 import ViewCity from "./ViewCity";
 import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
-import Preferences from "./components/preferences"
+import Preferences from "./components/preferences";
+
+//We import any contexts used
+import { UserProvider } from "./contexts/UserContext";
  
 const App = () => {
   
  return (
-   <div>
-    <ViewCity />
-   </div>
-
- 
+  <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
+    <Login />
+  </UserProvider>
  );
 };
  

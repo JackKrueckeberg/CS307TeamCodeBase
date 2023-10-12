@@ -22,7 +22,14 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
 
         // If credentials are correct
-        return res.status(200).json({ message: "Logged in successfully"  , token: token });
+        return res.status(200).json({ 
+            message: "Logged in successfully",
+            token: token,
+            user: {
+                _id: user._id,
+                email: user.email
+            }
+        });        
 
     } catch (error) {
         console.error(error);
@@ -41,12 +48,18 @@ router.get("/validate-token", (req, res) => {
             if (err) {
                 return res.status(403).json({ error: "Forbidden" });
             }
-            return res.status(200).json({ message: "Valid token" });
+            
+            return res.status(200).json({ 
+                message: "Valid token",
+                user: {
+                    _id: user._id,
+                    email: user.email,
+                }
+            });
         });
     } else {
         res.sendStatus(401);
     }
 });
 
-// Export the router
 export default router;
