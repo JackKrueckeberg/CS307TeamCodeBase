@@ -8,7 +8,7 @@ const JWT_SECRET = "42d8b67e1c6dd39493ebaafee5734e5d88c69b38ad226560be3654f31b41
 // Login route
 router.post("/login", async (req, res) => {
     try {
-        let collection = await db.collection("users");  // Assuming you have a "users" collection
+        let collection = await db.collection("users");
         
         // Find user by email
         let user = await collection.findOne({ email: req.body.email });
@@ -22,7 +22,14 @@ router.post("/login", async (req, res) => {
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
 
         // If credentials are correct
-        return res.status(200).json({ message: "Logged in successfully"  , token: token });
+        return res.status(200).json({ 
+            message: "Logged in successfully",
+            token: token,
+            user: {
+                _id: user._id,
+                email: user.email
+            }
+        });        
 
     } catch (error) {
         console.error(error);
@@ -41,12 +48,18 @@ router.get("/validate-token", (req, res) => {
             if (err) {
                 return res.status(403).json({ error: "Forbidden" });
             }
-            return res.status(200).json({ message: "Valid token" });
+            
+            return res.status(200).json({ 
+                message: "Valid token",
+                user: {
+                    _id: user._id,
+                    email: user.email,
+                }
+            });
         });
     } else {
         res.sendStatus(401);
     }
 });
 
-// Export the router
 export default router;
