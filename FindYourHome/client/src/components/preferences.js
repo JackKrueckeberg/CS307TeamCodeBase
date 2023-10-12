@@ -160,6 +160,7 @@ export default function Create() {
       console.log("HERE")
       return;
     });
+
     
   }
 
@@ -510,7 +511,7 @@ export default function Create() {
                     <option value="PA">Pennsylvania</option>
                     <option value="RI">Rhode Island</option>
                     <option value="SC">South Carolina</option>
-                    <option value="SD">South Dakota</option>
+                    <option value="SD">Soutgeth Dakota</option>
                     <option value="TN">Tennessee</option>
                     <option value="TX">Texas</option>
                     <option value="UT">Utah</option>
