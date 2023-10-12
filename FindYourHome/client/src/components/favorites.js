@@ -35,8 +35,12 @@ export default function Favorites() {
     }
 
     async function removeFavoriteSearch(index) {
-        var newFavs = favorite_searches;
-        newFavs.splice(index, 1);
+        var newFavs = [];
+        for (var i = 0; i < favorite_searches.length; i++) {
+            if (i != index) {
+                newFavs.push(favorite_searches[i]);
+            }
+        }
         setFavoriteSearches(newFavs);
     }
     
