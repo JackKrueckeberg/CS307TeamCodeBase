@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import "./RecentCitiesQueue.css"
 
+let email = "nick@example.com";
+
 export class Queue {
     constructor(items = {}, rear = 0, front = 0) {
         this.items = items;
         this.rear = rear;
         this.front = front;
     }
+
+    
 
     enqueue(element) {
         const newItems = { ...this.items };
@@ -19,6 +23,8 @@ export class Queue {
         }
 
         newItems[this.rear] = element;
+
+        addToQueue(element);
 
         let newFront = this.front;
         let newRear = this.rear + 1;
@@ -48,6 +54,24 @@ export class Queue {
 
     print() {
         console.log(this.items);
+    }
+}
+
+async function addToQueue(cityName) {
+    try {
+        const response = await fetch(`http://localhost:5050/users/${email}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({cityName})
+        });
+
+        if (!response.ok) {
+            console.error(`Error while adding user: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error("There was an error adding the user", error);
     }
 }
 
