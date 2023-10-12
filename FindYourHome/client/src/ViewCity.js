@@ -60,17 +60,18 @@ const ViewCity = () => {
         setCity(matchedCity);
         setCityIncome(matchedCity ? matchedCity.median_income : null);
         if (matchedCity) {
-            await searchImage();
-
+            const img = await searchImage();
+            
             const cityModel = new Model(
                 matchedCity.name,
                 matchedCity.population,
                 matchedCity.region,
                 matchedCity.state,
                 matchedCity.median_income,
-                imageUrl
+                img
             );
-
+            
+            setImageUrl(img);
             setCityModel(cityModel);
         }
         setShowResults(true);
@@ -99,7 +100,7 @@ const ViewCity = () => {
         const data = await response.json();
 
         const results = data.results;
-        setImageUrl(results[0].urls.small);
+        return (results[0].urls.small);
     }
 
     const handleQueueCity = () => {
