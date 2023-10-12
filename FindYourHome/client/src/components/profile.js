@@ -53,6 +53,11 @@ export default function Profile() {
         setIsEditing(!isEditing);
     };
 
+    // function to handle password changes
+    const handlePasswordChange = (e) => {
+        // do something
+    }
+
     // function to handle input changes and update the user state
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -104,11 +109,6 @@ export default function Profile() {
             console.error("There was an error updating your info: ", error);
         }
     }
-
-    // function to change password
-    const handlePasswordChange = () => {
-        // route the user to change password function
-    };
 
     const openFileInput = () => {
         fileInputRef.current.click();
