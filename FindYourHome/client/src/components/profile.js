@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import '../Stylings/profile.css';
 import Favorites from './favorites.js';
-import { FaUser, FaEdit } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import defaultImage from '../Stylings/Default_Profile_Picture.png';
 
 export default function Profile() {
@@ -13,6 +13,7 @@ export default function Profile() {
         email: '',
         bio: 'Enter Bio Here',
         profile_image: '',
+        password: '',
     };
 
     // Create state variables for user info ad editing mode
@@ -30,9 +31,16 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch("http://localhost:5050/profileRoute/:id");
+            const response = await fetch('http://localhost:5050/profileRoute/:id', {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            })
+
             if (response.status === 200) {
                 const userInfo = await response.json();
+                console.log(userInfo);
                 setInfo(userInfo); // Update the user state with the fetched data
             }
         } catch (error) {
@@ -57,13 +65,11 @@ export default function Profile() {
     // function to save changes and exit edit mode
     const handleSave = () => {
         setIsEditing(false)
-        //saveChanges;
+        saveChanges();
     };
 
     // function to submit the changes to the database
     const saveChanges = async (e) => {
-        e.preventDefault();
-
         const userInfo = {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -71,12 +77,13 @@ export default function Profile() {
             email: user.email,
             bio: user.bio,
             profile_image: user.profile_image,
+            password: user.password,
         };
 
         try {
-            // Send a POST request to the server
-            const response = await fetch("http://localhost:5050/profileRoute/:id", {
-                method: "POST",
+            // Send a PATCH request to the server
+            const response = await fetch('http://localhost:5050/profileRoute/:id', {
+                method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -124,8 +131,8 @@ export default function Profile() {
 
                 {/* Profile Picture */}
                 <div>
-                    <img src={profile_image} width={150} height={150} />
-                    <button class="round-corner" onClick={openFileInput}>Upload Image</button>
+                    <img src={profile_image} width={150} height={150} alt="Profile Image"/>
+                    <button className="round-corner" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"
                         ref={fileInputRef}
@@ -140,14 +147,14 @@ export default function Profile() {
                     {isEditing ? (
                         <div>
                             <input
-                                class = "round-corner"
+                                className = "round-corner"
                                 type="text"
                                 name="firstName"
                                 value={user.firstName}
                                 onChange={handleInputChange}
                             />
                             <input
-                                class = "round-corner"
+                                className = "round-corner"
                                 type="text"
                                 name="lastName"
                                 value={user.lastName}
@@ -163,9 +170,9 @@ export default function Profile() {
                 <div className="profile-actions">
                     {successMessage && <div className="success-message">{successMessage}</div>}
                     {isEditing ? (
-                        <button class="round-corner" onClick={handleSave}>Save</button>
+                        <button className="round-corner" onClick={handleSave}>Save</button>
                     ) : (
-                        <button class="round-corner" onClick={handleEdit}>
+                        <button className="round-corner" onClick={handleEdit}>
                             <FaEdit /> Edit
                         </button>
                     )}
@@ -179,7 +186,7 @@ export default function Profile() {
                 <p className="profile-username">
                     <strong> Username: </strong> {isEditing ? (
                     <input
-                        class = "round-corner"
+                        className = "round-corner"
                         type="text"
                         name="username"
                         value={user.username}
@@ -194,7 +201,7 @@ export default function Profile() {
                 <p className="profile-email">
                     <strong> Email: </strong>{isEditing ? (
                         <input
-                            class = "round-corner"
+                            className = "round-corner"
                             type="text"
                             name="email"
                             value={user.email}
@@ -208,14 +215,14 @@ export default function Profile() {
                 {/* Profile Password */}
                 <p className="profile-password">
                     <strong>Password:</strong>
-                    <button class="round-corner" onClick={handlePasswordChange}>Change Password</button>
+                    <button className="round-corner" onClick={handlePasswordChange}>Change Password</button>
                 </p>
 
                 {/* Profile Bio*/}
                 <p className="profile-bio">
                     <strong> Bio: </strong> {isEditing ? (
                         <textarea
-                            class = "round-corner"
+                            className = "round-corner"
                             name="bio"
                             value={user.bio}
                             onChange={handleInputChange}
