@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Autosuggest from 'react-autosuggest'; // Import Autosuggest
-import "./ViewCity.css";
+import "./Stylings/ViewCity.css";
+import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
+import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
+const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 const ViewCity = () => {
   const [allCities, setAllCities] = useState([]);
@@ -9,6 +12,7 @@ const ViewCity = () => {
   const [showResults, setShowResults] = useState(false);
   const [cityIncome, setCityIncome] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
+  const [imageUrl, setImageUrl] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
@@ -71,12 +75,23 @@ const ViewCity = () => {
     setIsDropdownOpen(false);
   };
 
+  async function searchImage() {
+    const url = `https://api.unsplash.com/search/photos?page=1&query=${searchTerm}&client_id=${apiKey}`;
+    const response = await fetch(url);
+    const data = await response.json();
+
+    const results = data.results;
+    setImageUrl(results[0].urls.small);
+  }
+
   const renderResults = () => {
     if (showResults && city) {
+      if (!imageUrl) searchImage();
       return (
         <div className="result">
           <h2>{city.name}</h2>
           <p>{cityIncome}</p>
+          {imageUrl && <img src={imageUrl} alt="City" />}
         </div>
       );
     } else if (showResults) {

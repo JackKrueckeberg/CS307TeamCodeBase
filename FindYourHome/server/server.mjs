@@ -7,7 +7,6 @@ import city_info from "./routes/city_info.mjs";
 import Users from "./routes/loginRoute.mjs";
 import EmailVerification from "./routes/emailVerification.mjs";
 
-
 const PORT = process.env.PORT || 5050;
 const app = express();
 
