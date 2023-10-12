@@ -3,7 +3,10 @@ import Autosuggest from 'react-autosuggest'; // Import Autosuggest
 import "./Stylings/ViewCity.css";
 import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
+import Map, { lat, lon, cityName} from "./components/leaflet/leaflet"
+
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
+
 
 const ViewCity = () => {
     const [allCities, setAllCities] = useState([]);
@@ -11,6 +14,7 @@ const ViewCity = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
     const [cityIncome, setCityIncome] = useState(null);
+    const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
@@ -54,9 +58,11 @@ const ViewCity = () => {
     };
 
     const handleSubmit = () => {
+        setShowResults(false);
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
         setCityIncome(matchedCity ? matchedCity.median_income : null);
+        setCityCoordinates(matchedCity ? {lat: matchedCity.lat, lon: matchedCity.lon}: null)
         if (matchedCity) {
             searchImage();
         }
@@ -152,11 +158,19 @@ const ViewCity = () => {
             <div className="renderResults">
                 {renderResults()}
             </div>
+            {showResults && (
+        <div className="map">
+          <Map key={`${cityCoordinates.lat}-${cityCoordinates.lon}`} lat={cityCoordinates.lat} lon={cityCoordinates.lon} />
+        </div>
+      )}
 
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
-        </div>
+
+            
+            
+    </div>
     );
 };
 
