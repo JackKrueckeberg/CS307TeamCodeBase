@@ -3,7 +3,11 @@ import styles from '../Stylings/verificationStyle.module.css';
 
 
 const Verification = () => {
-    const [codes, setCodes] = useState(Array(6).fill('')); // Create an array of 6 empty strings
+    const [codes, setCodes] = useState(Array(6).fill(''));
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
+    const [messageType, setMessageType] = useState("");  // can be 'success' or 'error'
+
 
     // References to each of the input boxes
     const refs = Array.from({ length: 6 }).map(() => React.createRef());
@@ -26,20 +30,82 @@ const Verification = () => {
         }
     }
 
+    const handleSendVerificationCode = async () => {
+        try {
+            const response = await fetch('http://localhost:5050/emailVerification/send-verification-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            });
+    
+            if (response.ok) {
+                setMessage("Verification code sent to your email!");
+                setMessageType('success');
+            } else {
+                const data = await response.json();
+                setMessage(data.message || "Error sending verification code.");
+                setMessageType('error');
+            }
+        } catch (error) {
+            alert("There was an error while sending the verification code. Please try again.");
+        }
+    }
+    
+    const handleVerification = async () => {
+        const verificationCode = codes.join(""); // Join the individual codes into a single string
+
+        try {
+            const response = await fetch('http://localhost:5050/emailVerification/verify-code', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email, code: verificationCode })
+            });
+            
+            const data = await response.json();
+
+            if (response.ok) {
+                setMessage("Email verified successfully!");
+                setMessageType('success');
+            } else {
+                setMessage("Invalid Verification Code");
+                setMessageType('error');
+            }
+        } catch (error) {
+            alert("There was an error while verifying. Please try again.");
+        }
+    }
+
     return (
         <div className={styles.emailVerification}>
             <h1>Verify Your Email Address</h1>
+            <label htmlFor="email">Enter your email:</label>
+            <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="youremail@example.com"
+                id="email"
+                className={styles.emailInput} 
+            />
             <h5>Please Enter the Verification code that you received below:</h5>
             <div className={styles.codeInputs}> 
                 {codes.map((code, index) => (
                     <input key={index} type="text" maxLength="1" value={code} ref={refs[index]}onChange={e => handleInputChange(index, e)} 
                         onKeyDown={e => handleKeyDown(index, e)} className={styles.singleInputBox}/>
-                ))} 
+                ))}
+                <button type="button" className={styles.sendCodeButton} onClick={handleSendVerificationCode}>Send Verification Code</button>
             </div>
-            <button type="button" className={styles.verifyButton}>Verify</button>
+            <button type="button" className={styles.verifyButton} onClick={handleVerification}>Verify</button>
             <div className={styles.otherButtons}>
                 <button type="button">Resend Verification</button>
                 <button type="button">Verify Later</button>
+            </div>
+            <div className={`${styles.message} ${messageType === 'error' ? styles.errorMessage : styles.successMessage}`}>
+                {message}
             </div>
         </div>
     );

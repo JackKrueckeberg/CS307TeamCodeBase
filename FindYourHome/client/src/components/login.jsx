@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../Stylings/loginStyle.module.css';
 import { Collapse } from 'bootstrap';
+import { useUser } from '../contexts/UserContext';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -10,6 +11,8 @@ export const Login = () => {
     const [incorrectAttempts, setIncorrectAttempts] = useState(0);
     const [rememberUser, setRememberUser] = useState(false);
     const timeoutRef = useRef(null);
+    const { user, setLoggedInUser } = useUser();
+
 
 
     const submission = async (e) => {
@@ -38,6 +41,10 @@ export const Login = () => {
                 if (rememberUser && data.token) { 
                     localStorage.setItem('authToken', data.token); // Store token if "Remember Me" is checked
                 }
+                if (data.user) {
+                    setLoggedInUser(data.user);
+                }
+                console.log(user._id);
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);
@@ -78,7 +85,10 @@ export const Login = () => {
             const data = await response.json();
     
             if (response.status === 200) {
-                //REDIRCT TO HOMEPAGE WHEN HOMEPAGE IS CREATED
+                if (data.user) {
+                    setLoggedInUser(data.user);
+                }
+                // REDIRCT TO HOMEPAGE WHEN HOMEPAGE IS CREATED
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
@@ -88,7 +98,7 @@ export const Login = () => {
             console.error("Error validating token:", error);
             alert('There was an error validating your session. Please try again.'); 
         }
-    };    
+    };        
 
     function openRecoveryForm() {
         document.getElementById("recoveryForm").style.display = "block";

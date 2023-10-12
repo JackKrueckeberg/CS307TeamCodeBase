@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import styles from '../Stylings/createAccountStyle.module.css'; //assuming you named your CSS file CreateAccount.module.css
+import styles from '../Stylings/createAccountStyle.module.css'; 
 
 
 export const CreateAccount = () => {
