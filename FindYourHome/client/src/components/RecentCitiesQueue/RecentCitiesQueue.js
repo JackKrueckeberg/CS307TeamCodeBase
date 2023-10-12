@@ -3,30 +3,28 @@ import "./RecentCitiesQueue.css"
 
 
 const RecentCitiesQueue = ({ queue }) => {
-    //const [user, setUser] = useState([]);
+    const [queueItems, setQueueItems] = useState({});
+    let email = "nick@example.com"
+    useEffect(() => {
+        // Define the function inside useEffect
+        async function fillQueueFromDB() {
+            try {
+                const response = await fetch(`http://localhost:5050/users/${email}`);
 
-    // useEffect(() => {
-    //     //get
-    //     async function fetchData() {
-    //         try {
-    //             const response = await fetch(`http://localhost:5050/users/${email}`);
-    //             if (!response.ok) {
-    //                 const message = `An error occurred: ${response.statusText}`;
-    //                 window.alert(message);
-    //                 return;
-    //             }
+                if (!response.ok) {
+                    const message = `An error occurred: ${response.statusText}`;
+                    throw new Error(message);
+                }
 
-    //             const user = await response.json();
-    //             setUser(user);
-    //             console.log(user);
-    //         } catch (error) {
-    //             console.error("There was an error fetching the cities", error);
-    //         }
-    //     }
+                const data = await response.json();
+                queue.items = data.recent_cities; // update the state
+            } catch (error) {
+                console.error("There was an error fetching the cities", error);
+            }
+        }
 
-    //     fetchData();
-    // }, []);
-
+        fillQueueFromDB();  // Call the function on component mount
+    }, []);
     return (
         <div>
             <h2>Recent Cities:</h2>
@@ -46,8 +44,9 @@ export class Queue {
         this.front = front;
     }
 
+    //add the contents of the queue to the recent_cities field of a user based of their email
     async addToQueue(cityName) {
-        let email = "nick@example.com";
+        let email = "nick@example.com"; //mock email
         try {
             const updateData = {
                 action: "addRecentCity",
@@ -72,10 +71,8 @@ export class Queue {
         }
     }
 
-
     enqueue(element) {
         const newItems = { ...this.items };
-
         for (const value of Object.values(newItems)) {
             if (value === element) {
                 console.warn("Element already exists in the queue.");
