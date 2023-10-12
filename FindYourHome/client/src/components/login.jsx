@@ -41,10 +41,11 @@ export const Login = () => {
                 if (rememberUser && data.token) { 
                     localStorage.setItem('authToken', data.token); // Store token if "Remember Me" is checked
                 }
+                console.log('Received user object:', data.user);
                 if (data.user) {
                     setLoggedInUser(data.user);
-                }
-                console.log(user._id);
+                    console.log(data.user._id);
+                }                  
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);
@@ -69,7 +70,7 @@ export const Login = () => {
             setShowPassword(true);
             timeoutRef.current = setTimeout(() => {
                 setShowPassword(false);
-            }, 20000); // Hide after 20 seconds
+            }, 10000); // Hide after 10 seconds
         }
     };
 
@@ -87,8 +88,8 @@ export const Login = () => {
             if (response.status === 200) {
                 if (data.user) {
                     setLoggedInUser(data.user);
-                }
-                // REDIRCT TO HOMEPAGE WHEN HOMEPAGE IS CREATED
+                    console.log(data.user._id);
+                }     
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');

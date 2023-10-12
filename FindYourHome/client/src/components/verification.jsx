@@ -82,7 +82,7 @@ const Verification = () => {
     return (
         <div className={styles.emailVerification}>
             <h1>Verify Your Email Address</h1>
-            <label htmlFor="email">Enter your email:</label>
+            <label htmlFor="email">Please enter your email:</label>
             <input 
                 type="email" 
                 value={email}
@@ -91,22 +91,24 @@ const Verification = () => {
                 id="email"
                 className={styles.emailInput} 
             />
+            <button type="button" className={styles.sendCodeButton} onClick={handleSendVerificationCode}>Send Verification Code</button>
             <h5>Please Enter the Verification code that you received below:</h5>
             <div className={styles.codeInputs}> 
                 {codes.map((code, index) => (
                     <input key={index} type="text" maxLength="1" value={code} ref={refs[index]}onChange={e => handleInputChange(index, e)} 
                         onKeyDown={e => handleKeyDown(index, e)} className={styles.singleInputBox}/>
                 ))}
-                <button type="button" className={styles.sendCodeButton} onClick={handleSendVerificationCode}>Send Verification Code</button>
             </div>
             <button type="button" className={styles.verifyButton} onClick={handleVerification}>Verify</button>
             <div className={styles.otherButtons}>
                 <button type="button">Resend Verification</button>
                 <button type="button">Verify Later</button>
             </div>
-            <div className={`${styles.message} ${messageType === 'error' ? styles.errorMessage : styles.successMessage}`}>
-                {message}
-            </div>
+            {message && (
+                <div className={`${styles.message} ${messageType === 'error' ? styles.errorMessage : styles.successMessage}`}>
+                    {message}
+                </div>
+            )}
         </div>
     );
 }
