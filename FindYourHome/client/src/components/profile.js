@@ -20,7 +20,7 @@ export default function Profile() {
     // Create state variables for user info ad editing mode
     const [user, setInfo] = useState(initialInfo); // user stores the profile info
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
-    const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
+    const [profile_image, setImage] = useState(''); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
     const {user : userID, setLoggedInUser } = useUser(); // the id of the current logged in user
@@ -35,7 +35,7 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/profileRoute/65286646184b42dec3d76364`, { //${user_id}
+            const response = await fetch(`http://localhost:5050/profileRoute/65287711ec1696ee9d952168`, { //${user_id}
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
@@ -46,6 +46,12 @@ export default function Profile() {
                 const userInfo = await response.json();
                 console.log(userInfo);
                 setInfo(userInfo); // Update the user state with the fetched data
+                if (userInfo.profile_image == "") {
+                    setInfo({
+                        ...user,
+                        profile_image: defaultImage,
+                    });
+                }
             }
         } catch (error) {
             console.error("Error fetching user info: ", error);
@@ -59,7 +65,7 @@ export default function Profile() {
 
     // function to handle password changes
     const handlePasswordChange = (e) => {
-        // do something
+        
     }
 
     // function to handle input changes and update the user state
@@ -85,13 +91,13 @@ export default function Profile() {
             username: user.username,
             email: user.email,
             bio: user.bio,
-            profile_image: user.profile_image,
+            profile_image: profile_image,
             password: user.password,
         };
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/:id`, { //${user_id}
+            const response = await fetch(`http://localhost:5050/profileRoute/65287711ec1696ee9d952168`, { //${user_id}
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
@@ -129,8 +135,9 @@ export default function Profile() {
             setImage(imageURL);
             setInfo({
                 ...user,
-                profile_image: file,
+                profile_image: imageURL,
             });
+            console.log(profile_image);
         }
         saveChanges();
     };
