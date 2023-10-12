@@ -46,6 +46,7 @@ export default function Create() {
   }
 
   async function getUser_favorites() {
+
     const city_info = await fetch("http://localhost:5050/users/user@example.com", {
       method: "GET",
       headers: {
@@ -147,11 +148,7 @@ export default function Create() {
 
   async function deleteRecents(recent) {
 
-    console.log('deleting recent searches');
-
-   
-
-    
+    console.log('deleting recent searches'); 
 
     await fetch("http://localhost:5050/recent_searches/user@example.com", {
       method: "DELETE",
@@ -182,12 +179,7 @@ export default function Create() {
     const resp = await city_info.json();
 
     return resp;
-  }
-
-
-
-
-  
+  }  
 
   async function filterCities() {
     const cities = await getCities();
