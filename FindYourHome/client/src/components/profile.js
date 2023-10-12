@@ -7,18 +7,18 @@ import defaultImage from '../Stylings/Default_Profile_Picture.png';
 export default function Profile() {
     // initialize the profile info
     const initialInfo = {
-        firstName: 'First Name',
-        lastName: 'Last Name',
-        username: 'Your Username',
-        email: 'Your Email',
-        bio: 'Your Bio',
-        image: defaultImage,
+        firstName: '',
+        lastName: '',
+        username: '',
+        email: '',
+        bio: 'Enter Bio Here',
+        profile_image: '',
     };
 
     // Create state variables for user info ad editing mode
     const [user, setInfo] = useState(initialInfo); // user stores the profile info
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
-    const [image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
+    const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
 
@@ -30,13 +30,13 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch("http://localhost:5050/profileRoute/profile");
+            const response = await fetch("http://localhost:5050/profileRoute/profile/:id");
             if (response.status === 200) {
                 const userInfo = await response.json();
                 setInfo(userInfo); // Update the user state with the fetched data
             }
         } catch (error) {
-
+            console.error("Error fetching user info: ", error);
         }
     }
 
@@ -70,7 +70,7 @@ export default function Profile() {
             username: user.username,
             email: user.email,
             bio: user.bio,
-            image: user.image,
+            profile_image: user.profile_image,
         };
 
         try {
@@ -114,7 +114,7 @@ export default function Profile() {
         if (file) {
             const imageURL = URL.createObjectURL(file);
             setImage(imageURL);
-            user.image = imageURL;
+            user.profile_image = imageURL;
         }
     };
 
@@ -124,7 +124,7 @@ export default function Profile() {
 
                 {/* Profile Picture */}
                 <div>
-                    <img src={image} width={150} height={150} />
+                    <img src={profile_image} width={150} height={150} />
                     <button class="round-corner" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"
