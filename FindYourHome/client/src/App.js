@@ -22,7 +22,7 @@ const App = () => {
   
  return (
   <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
-    <Profile />
+    <ViewCity />
   </UserProvider>
  );
 };
