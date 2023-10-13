@@ -119,7 +119,7 @@ button:hover {
     color: red;
     margin-top: 20px;
     text-align: center; /* Centering the error message */
-
+}
 .verificationBanner {
     background-color: red;
     color: white;
