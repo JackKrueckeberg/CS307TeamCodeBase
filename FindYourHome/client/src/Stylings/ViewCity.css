@@ -75,4 +75,11 @@ body {
     display: table;
 }
 
-  
+.verificationBanner {
+    background-color: red;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+}

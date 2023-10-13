@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from '../Stylings/verificationStyle.module.css';
 import { useNavigate } from 'react-router-dom';
+import RecentCitiesQueue from "./RecentCitiesQueue/RecentCitiesQueue";
 
 
 
@@ -10,6 +11,8 @@ const Verification = () => {
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("");  // can be 'success' or 'error'
     const navigate = useNavigate();
+    const [isVerified, setIsVerified] = useState(false);
+
 
 
     // References to each of the input boxes
@@ -77,6 +80,9 @@ const Verification = () => {
             if (response.ok) {
                 setMessage("Email verified successfully!");
                 setMessageType('success');
+                setIsVerified(true);
+                localStorage.setItem('isVerified', 'true');
+                navigate("/view-city");
                 return Promise.resolve();
             } else {
                 setMessage("Invalid Verification Code");
