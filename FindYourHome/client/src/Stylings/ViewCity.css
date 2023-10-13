@@ -75,4 +75,23 @@ body {
     display: table;
 }
 
+.fav_icon {
+    scale: 5;
+}
+.confirmButton {
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Add a smooth transition effect */
+    margin-top: 100px; /* Increase the top margin to move the button down */
+  
+    /* Other styles for the button in its default state */
+  }
+  
+  .confirmButton:hover {
+    background-color: #2980b9; /* Change the background color on hover */
+    /* Additional styles for the button on hover */
+  }
   

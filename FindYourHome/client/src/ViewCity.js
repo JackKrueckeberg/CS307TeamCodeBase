@@ -5,6 +5,9 @@ import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import Map, { lat, lon, cityName} from "./components/leaflet/leaflet"
 import {CityModel, Model} from "./components/CityModel/CityModel";
+import Checkbox from "@mui/material/Checkbox";
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import Favorite from '@mui/icons-material/Favorite';
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 
@@ -20,6 +23,7 @@ const ViewCity = () => {
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [favorite, setFavorite] = useState(false)
 
     useEffect(() => {
         async function fetchData() {
@@ -40,6 +44,51 @@ const ViewCity = () => {
 
         fetchData();
     }, []);
+
+
+    async function getUser_favorites() {
+
+        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).catch((error) => {
+          window.alert(error);
+          return;
+        });
+    
+        const resp = await city_info.json();
+    
+        return resp.favorite_cities;
+      }  
+
+
+      async function addFavorite(favs) {
+
+        console.log('adding favorite');
+    
+        console.log(favs);
+    
+        const newFavorite = {
+          city: city.name
+        }
+        favs.push(newFavorite);
+    
+        await fetch("http://localhost:5050/favorite_cities/user@example.com", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({favorite_cities: favs})
+        }).catch((error) => {
+          window.alert(error);
+          return;
+        });
+        
+      }
+
+
 
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
@@ -79,9 +128,35 @@ const ViewCity = () => {
             setImageUrl(img);
             setCityModel(cityModel);
         }
+       
+        
+        
+        
+      
         setShowResults(true);
 
     };
+
+    const confirm_fav = async () => {
+        if (favorite) {
+            const favorite_cities = await getUser_favorites();
+      
+            var canAdd = true;
+      
+            for (var i = 0; i < favorite_cities.length; i++) {
+              if (city.name === favorite_cities[i].cityName) {
+                alert("This search is already favorited.");
+                    canAdd = false;
+                    break;
+              }
+            }
+            
+            
+            if (canAdd) {
+              await addFavorite(favorite_cities);
+            }
+          }
+    }
 
     const handleClear = () => {
         setCity(null);
@@ -138,8 +213,26 @@ const ViewCity = () => {
     return (
         <div>
             <h1 className="header">View City Page</h1>
-
+            {showResults && (
+            <div>
+            <div>
+            <label>favicon</label>
+            
+            
+            <Checkbox
+                    icon={<FavoriteBorder />}
+                    checkedIcon={<Favorite />}
+                    defaultChecked={favorite}
+                    checked={favorite}
+                    className="fav_icon"
+                    onChange={(e) => setFavorite(!favorite)}
+                    />
+            </div>
+            <button className="confirmButton" onClick={confirm_fav}>Confirm favortie</button>
+            </div>
+            )}
             <div className="searchBar">
+                
                 <label>Search</label>
                 <Autosuggest // Use Autosuggest component
                     suggestions={suggestions}
@@ -161,6 +254,8 @@ const ViewCity = () => {
                         onChange: handleInputChange,
                     }}
                 />
+                
+            
                 <button className="submitButton" onClick={handleSubmit}>Submit</button>
                 <button className="clearButton" onClick={handleClear}>Clear</button>
                 <button className="queueButton" onClick={handleQueueCity}>Add to Queue</button>
