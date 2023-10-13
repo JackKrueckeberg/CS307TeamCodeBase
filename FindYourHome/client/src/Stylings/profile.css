@@ -103,6 +103,16 @@
     background-color: white;
     padding: 10px; /* Add padding to give some spacing between content and the border */
   }
+
+  .viewCity-button {
+    background: goldenrod;
+    border-radius: 10px;
+    padding: 5px 10px;
+  }
+
+  .viewCity-button:hover {
+    background-color: rgb(241, 197, 85);
+  }
   
   .edit-button {
     background-color: goldenrod;
