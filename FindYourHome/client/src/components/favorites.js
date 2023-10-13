@@ -75,7 +75,6 @@ export default function Favorites() {
 
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Searches </h2>
-                    <p> Insert search favorites list here </p>
                     <ul>
                     {favorite_searches.map((search, index) => (
                         <li key={index}>
