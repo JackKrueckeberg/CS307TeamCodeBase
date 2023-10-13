@@ -5,14 +5,19 @@ export default function Favorites() {
     
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
     const [favorite_searches, setFavoriteSearches] = useState([]);
+    const [favorite_cities, setFavoriteCities] = useState([]);
 
     const handleTabChange = (index) => {
-        getUser_favorites();
+        if(tabVal === 1) {
+            getUser_favorite_searches();
+        } else {
+            getUser_favorite_cities();
+        }
         setTabVal(index) // sets the state to whatever index the tab is
         console.log(index);
     }
 
-    async function getUser_favorites() {
+    async function getUser_favorite_searches() {
 
         const city_info = await fetch("http://localhost:5050/users/user@example.com", {
           method: "GET",
@@ -58,6 +63,50 @@ export default function Favorites() {
     console.log(favorite_searches);
 
 
+    async function getUser_favorite_cities() {
+
+        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).catch((error) => {
+          window.alert(error);
+          return;
+        });
+    
+        const resp = await city_info.json();
+
+        setFavoriteCities(resp.favorite_cities);
+
+        console.log(resp.favorite_cities);
+    
+        return resp.favorite_cities;
+    }
+
+    async function removeFavoriteCity(index) {
+        var newFavs = [];
+        for (var i = 0; i < favorite_cities.length; i++) {
+            if (i != index) {
+                newFavs.push(favorite_cities[i]);
+            }
+        }
+
+        await fetch("http://localhost:5050/favorite_cities/user@example.com", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({favorite_cities: newFavs})
+          }).catch((error) => {
+            window.alert(error);
+            return;
+          });
+
+        setFavoriteCities(newFavs);
+    }
+
+
 
 
     return (
@@ -71,6 +120,27 @@ export default function Favorites() {
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Cities </h2>
                     <p> Insert city favorites list here</p>
+                    
+                    <ul>
+                    {favorite_cities.map((search, index) => (
+                        <li key={index}>
+                        <button onClick={() => removeFavoriteCity(index)}>delete</button>
+                        {Object.entries(search).map(([key, value]) => {
+                            
+                            
+                            return (
+                                <span key={key}>
+                                {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                </span>
+                            );
+                            
+                           
+                        })}
+                        </li>
+                    ))}
+                    </ul>
+
+
                 </div>
 
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
