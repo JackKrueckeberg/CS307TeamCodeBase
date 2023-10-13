@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import '../Stylings/favorites.css';
 
 export default function Favorites() {
@@ -6,6 +6,11 @@ export default function Favorites() {
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
     const [favorite_searches, setFavoriteSearches] = useState([]);
     const [favorite_cities, setFavoriteCities] = useState([]);
+
+    useEffect(() => {
+        // Call the function to get favorite cities when the component mounts
+        getUser_favorite_cities();
+    }, []); 
 
     const handleTabChange = (index) => {
         if(tabVal === 1) {
@@ -117,8 +122,10 @@ export default function Favorites() {
             </div>
 
             <div className="contents">
+                
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Cities </h2>
+                    {getUser_favorite_cities}
                     <ul>
                     {favorite_cities.map((search, index) => (
                         <li key={index}>
