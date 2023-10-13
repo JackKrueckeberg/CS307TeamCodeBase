@@ -6,11 +6,6 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 
-
-
-
-
-
 export default function Create() {
   const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
   const [form, setForm] = useState({

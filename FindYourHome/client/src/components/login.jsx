@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styles from '../Stylings/loginStyle.module.css';
 import { Collapse } from 'bootstrap';
 import { useUser } from '../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,8 +13,7 @@ export const Login = () => {
     const [rememberUser, setRememberUser] = useState(false);
     const timeoutRef = useRef(null);
     const { user, setLoggedInUser } = useUser();
-
-
+    const navigate = useNavigate();
 
     const submission = async (e) => {
         e.preventDefault();
@@ -41,10 +41,12 @@ export const Login = () => {
                 if (rememberUser && data.token) { 
                     localStorage.setItem('authToken', data.token); // Store token if "Remember Me" is checked
                 }
+                console.log('Received user object:', data.user);
                 if (data.user) {
                     setLoggedInUser(data.user);
+                    console.log(data.user._id);
                 }
-                console.log(user._id);
+                navigate("/view-city");                  
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);
@@ -69,7 +71,7 @@ export const Login = () => {
             setShowPassword(true);
             timeoutRef.current = setTimeout(() => {
                 setShowPassword(false);
-            }, 20000); // Hide after 20 seconds
+            }, 10000); // Hide after 10 seconds
         }
     };
 
@@ -87,8 +89,9 @@ export const Login = () => {
             if (response.status === 200) {
                 if (data.user) {
                     setLoggedInUser(data.user);
+                    console.log(data.user._id);
                 }
-                // REDIRCT TO HOMEPAGE WHEN HOMEPAGE IS CREATED
+                navigate("/view-city");     
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
