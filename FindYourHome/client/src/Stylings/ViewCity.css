@@ -1,79 +1,124 @@
+/* Stylings/ViewCity.css */
+
 body {
-    background-color: lightgray;
+    font-family: 'Arial', sans-serif;
+    background-color: #f6f8fa;
+    margin: 0;
+    padding: 0;
+}
+
+div.container {
+    display: flex;
+    margin-top: 10px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* centers the container */
+}
+
+.header {
+    width: 100%;
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.mainContent {
+    flex: 1;
+    /* take the available space */
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
 }
 
 .searchBar {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    /* stretch to full width */
+    gap: 20px;
 }
 
 .searchBar label {
-    padding-right: 10px;
+    font-size: 1.1em;
+    color: #555;
 }
 
-.header {
+.button-group {
     display: flex;
-    justify-content: center;
-    margin-bottom: 10px;
+    gap: 15px;
 }
 
-.renderResults {
-    display: flex;
-    justify-content: center;
-    align-content: center;
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+button:hover {
+    transform: scale(1.05);
+    /* subtle grow effect */
+}
+
+.submitButton {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+.clearButton {
+    background-color: #e74c3c;
+    color: #ffffff;
+}
+
+.queueButton {
+    background-color: #2ecc71;
+    color: #ffffff;
 }
 
 .result {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20%;
-    transition: .3s;
-    border: solid;
-    width: 200px;
-}
-
-
-.suggestions {
-    display: flex;
     flex-direction: column;
-    position: absolute;
-    width: 100%;
-    background-color: white;
-    border: 1px solid #ccc;
-    max-height: 150px;
-    overflow-y: auto;
-  }
-  
-  .suggestion {
-    padding: 5px;
-    cursor: pointer;
-  }
-  
-  .suggestion:hover {
-    background-color: #eee;
-  }
+    align-items: stretch;
+    gap: 20px;
+}
 
-
-  /* Add CSS classes to the map and city image containers */
 .map {
-    width: 60%; /* Adjust the width to your preference */
-    float: left;
-    margin-right: 20px; /* Add margin for spacing */
+    flex: 1; /* Makes the map take all available space after CityModel */
 }
 
-.city-image {
-    width: 40%; /* Adjust the width to your preference */
-    float: left;
+.recentlyViewedCities {
+    width: 300px;
+    /* fixed width for this section */
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
 }
 
-/* Clear float after floating elements */
-.clearfix::after {
-    content: "";
-    clear: both;
-    display: table;
+.suggestion {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
 }
+
+.suggestion:hover {
+    background-color: #ecf0f1;
+}
+
+
+.errorMessage {
+    font-size: 1.5rem; 
+    color: red;
+    margin-top: 20px;
+    text-align: center; /* Centering the error message */
 
 .verificationBanner {
     background-color: red;
