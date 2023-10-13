@@ -184,6 +184,8 @@ const ViewCity = () => {
                 <button className="submitButton" onClick={handleSubmit}>Submit</button>
                 <button className="clearButton" onClick={handleClear}>Clear</button>
                 <button className="queueButton" onClick={handleQueueCity}>Add to Queue</button>
+                <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+                <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
             </div>
 
             <div className="renderResults">
