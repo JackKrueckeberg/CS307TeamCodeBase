@@ -5,6 +5,9 @@ import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import Map, { lat, lon, cityName} from "./components/leaflet/leaflet"
 import {CityModel, Model} from "./components/CityModel/CityModel";
+import { useUser } from './contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
+
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 
@@ -20,8 +23,14 @@ const ViewCity = () => {
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
+
+    const { user } = useUser();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const verificationStatus = localStorage.getItem('isVerified');
+        setIsVerified(verificationStatus === 'true');
         async function fetchData() {
             try {
                 const response = await fetch(`http://localhost:5050/record/cities_full_2`);
@@ -135,8 +144,19 @@ const ViewCity = () => {
         return null;
     };
 
+    const handleVerification = () => {
+        navigate("/verification");
+    };
+    
+
     return (
         <div>
+            {!isVerified && (
+                <div className="verificationBanner">
+                    Your account is not verified 
+                    <button onClick={handleVerification}>Click here to verify</button>
+                </div>
+            )}
             <h1 className="header">View City Page</h1>
 
             <div className="searchBar">
