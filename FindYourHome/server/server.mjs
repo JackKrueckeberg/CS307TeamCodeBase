@@ -9,6 +9,7 @@ import EmailVerification from "./routes/emailVerification.mjs";;
 import profile from "./routes/profileRoute.mjs";
 import usersData from "./routes/usersData.mjs";
 import favorite_searches from "./routes/favorite_searches.mjs";
+import favorite_cities from "./routes/favorite_cities.mjs";
 import recent_searches from "./routes/recent_searches.mjs";
 import favorite_cities from "./routes/favorite_cities.mjs";
 
@@ -26,6 +27,7 @@ app.use("/emailVerification", EmailVerification)
 app.use("/profileRoute", profile);
 app.use("/users", usersData);
 app.use("/favorite_searches", favorite_searches);
+app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);
 app.use("/favorite_cities", favorite_cities);
 

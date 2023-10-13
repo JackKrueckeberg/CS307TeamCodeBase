@@ -26,10 +26,10 @@ router.post("/login", async (req, res) => {
             message: "Logged in successfully",
             token: token,
             user: {
-                _id: user._id,
+                _id: user._id.toString(),
                 email: user.email
             }
-        });        
+        });      
 
     } catch (error) {
         console.error(error);
@@ -52,7 +52,7 @@ router.get("/validate-token", (req, res) => {
             return res.status(200).json({ 
                 message: "Valid token",
                 user: {
-                    _id: user._id,
+                    _id: user.userId,
                     email: user.email,
                 }
             });
@@ -61,5 +61,6 @@ router.get("/validate-token", (req, res) => {
         res.sendStatus(401);
     }
 });
+
 
 export default router;

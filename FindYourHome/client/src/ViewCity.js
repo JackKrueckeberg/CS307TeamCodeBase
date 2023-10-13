@@ -8,6 +8,12 @@ import {CityModel, Model} from "./components/CityModel/CityModel";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
+import { useNavigate } from "react-router-dom";
+import { useUser } from "./contexts/UserContext";
+import Map, { lat, lon, cityName } from "./components/leaflet/leaflet"
+import { CityModel, Model } from "./components/CityModel/CityModel";
+
+
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 
@@ -23,9 +29,18 @@ const ViewCity = () => {
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     const [favorite, setFavorite] = useState(false)
 
+    const [isVerified, setIsVerified] = useState(false);
+
+    const { user } = useUser();
+    const navigate = useNavigate();
+
+
     useEffect(() => {
+        const verificationStatus = localStorage.getItem('isVerified');
+        setIsVerified(verificationStatus === 'true');
         async function fetchData() {
             try {
                 const response = await fetch(`http://localhost:5050/record/cities_full_2`);
@@ -112,19 +127,30 @@ const ViewCity = () => {
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
         setCityIncome(matchedCity ? matchedCity.median_income : null);
-        setCityCoordinates(matchedCity ? {lat: matchedCity.lat, lon: matchedCity.lon}: null)
+        setCityCoordinates(matchedCity ? { lat: matchedCity.lat, lon: matchedCity.lon } : null)
         if (matchedCity) {
             const img = await searchImage();
-            
+            const med_income = matchedCity.median_income ? matchedCity.median_income : "N/A";
+
+            let nation_avg;
+            let nation_flag = false;
+            if (med_income !== "N/A") {
+                nation_avg = med_income - 74580;
+                if (nation_avg >= 0) {
+                    nation_flag = true;
+                }
+            }
             const cityModel = new Model(
                 matchedCity.name,
                 matchedCity.population,
                 matchedCity.region,
                 matchedCity.state,
-                matchedCity.median_income,
-                img
+                med_income,
+                img,
+                nation_avg,
+                nation_flag
             );
-            
+
             setImageUrl(img);
             setCityModel(cityModel);
         }
@@ -194,25 +220,27 @@ const ViewCity = () => {
         }
     };
 
-    const renderResults = () => {
-        if (showResults && city) {
-            return (
-                <div className="result">
-                    <CityModel model={cityModel} />
-                </div>
-            );
-        } else if (showResults) {
-            if (searchTerm === "") {
-                return <div className="result"><h2>No City Searched</h2></div>;
-            }
-            return <div className="result"><h2>Invalid Search</h2></div>;
-        }
-        return null;
+    //allows the submit button to handle the submit and add the city to the queue
+    function handleCombinedActions() {
+        handleSubmit();
+        handleQueueCity();
+    }
+
+    const handleVerification = () => {
+        navigate("/verification");
     };
+    
 
     return (
         <div>
+            {!isVerified && (
+                <div className="verificationBanner">
+                    Your account is not verified 
+                    <button onClick={handleVerification}>Click here to verify</button>
+                </div>
+            )}
             <h1 className="header">View City Page</h1>
+fav_cities-james
             {showResults && (
             <div>
             <div>
@@ -261,20 +289,62 @@ const ViewCity = () => {
                 <button className="queueButton" onClick={handleQueueCity}>Add to Queue</button>
             </div>
 
-            <div className="renderResults">
-                {renderResults()}
-            </div>
-            {showResults && (
-        <div className="map">
-          <Map key={`${cityCoordinates.lat}-${cityCoordinates.lon}`} lat={cityCoordinates.lat} lon={cityCoordinates.lon} />
-        </div>
-      )}
 
-            <div className="recentlyViewedCities">
-                <RecentCitiesQueue queue={recentCitiesQueue} />
+            <div className="container">
+
+                <div className="result">
+                    {showResults && city && <CityModel model={cityModel} />}
+                    {showResults && city && <Map key={`${cityCoordinates.lat}-${cityCoordinates.lon}`} lat={cityCoordinates.lat} lon={cityCoordinates.lon} />}
+                </div>
+
+                {showResults && !city &&
+                    <div className="errorMessage">
+                        {searchTerm === "" ? <h2>No City Searched</h2> : <h2>Invalid Search</h2>}
+                    </div>
+                }
+
+                <div className="mainContent">
+                    <div className="searchBar">
+                        <label htmlFor="city-input">Search</label>
+                        <Autosuggest // Use Autosuggest component
+                            suggestions={suggestions}
+                            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                            onSuggestionsClearRequested={onSuggestionsClearRequested}
+                            getSuggestionValue={(suggestion) => suggestion}
+                            renderSuggestion={(suggestion) => (
+                                <div
+                                    key={suggestion}
+                                    className="suggestion"
+                                    onClick={() => handleSuggestionClick(suggestion)}>
+                                    {suggestion}
+                                </div>
+                            )}
+                            inputProps={{
+                                type: "text",
+                                placeholder: "Enter a city",
+                                value: searchTerm,
+                                onChange: handleInputChange,
+                            }}
+                        />
+                        <div className="button-group">
+                            <button className="submitButton" onClick={handleCombinedActions}>Submit</button>
+                            <button className="clearButton" onClick={handleClear}>Clear</button>
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+                <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
             </div>
 
-        </div>
+
+                <div className="recentlyViewedCities">
+                    <RecentCitiesQueue queue={recentCitiesQueue} />
+                </div>
+            </div>
+
     );
 };
 
