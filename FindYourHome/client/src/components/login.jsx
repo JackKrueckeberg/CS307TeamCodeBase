@@ -15,9 +15,6 @@ export const Login = () => {
     const { user, setLoggedInUser } = useUser();
     const navigate = useNavigate();
 
-
-
-
     const submission = async (e) => {
         e.preventDefault();
 
@@ -93,7 +90,8 @@ export const Login = () => {
                 if (data.user) {
                     setLoggedInUser(data.user);
                     console.log(data.user._id);
-                }     
+                }
+                navigate("/view-city");     
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
