@@ -5,7 +5,6 @@ import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
-
 export default function Create() {
   const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
   const [form, setForm] = useState({
@@ -20,6 +19,7 @@ export default function Create() {
     median_income: "",
     favorited: false
   });
+  const [results, setResults] = useState([]);
 
   // These methods will update the state properties.
   function updateForm(value) {
@@ -159,7 +159,6 @@ export default function Create() {
     
   }
 
-  
 
   async function getCities() {
     const city_info = await fetch("http://localhost:5050/city_info", {
@@ -173,7 +172,6 @@ export default function Create() {
     });
 
     const resp = await city_info.json();
-
     return resp;
   }  
 
@@ -317,6 +315,7 @@ export default function Create() {
       
       if (canAdd) {
         await addFavorite(favorite_searches);
+        alert("Search added to favorites.")
       }
     }
     const recent_searches = await getUser_recentSearches();
@@ -325,7 +324,7 @@ export default function Create() {
 
     console.log("searching...");
     var result = await filterCities();
-
+    setResults(result);
     console.log(result);
 
     const recentSearches = await getUser_recentSearches();
@@ -354,6 +353,8 @@ export default function Create() {
   return (
     // name, population, region, state, zip code, county, median income
     <div>
+        <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
+        <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
         <div>
         <form onSubmit={onSubmit}>
           <div className="padding" />
@@ -366,6 +367,7 @@ export default function Create() {
                     checkedIcon={<Favorite />}
                     defaultChecked={form.favorited}
                     checked={form.favorited}
+                    className="favBtn"
                     onChange={(e) => updateForm({ favorited: !form.favorited })}
                     />
                   <h3>Preferences:</h3>
@@ -594,6 +596,28 @@ export default function Create() {
               {Object.entries(search).map(([key, value]) => {
                 if (value !== null && value !== "" && value !== false) {
                   if (key === 'state' && value === 'default') {
+                    return null; // Don't display State: default
+                  }
+                  return (
+                    <span key={key}>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                    </span>
+                  );
+                }
+                return null; // Don't display if the field is not populated
+              })}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="Results">
+      <h2>Results</h2>
+      <ul>
+          {results.map((search, index) => (
+            <li key={index}>
+              {Object.entries(search).map(([key, value]) => {
+                if (value !== null && value !== "" && value !== false) {
+                  if (key !== 'state' && key !== 'name') {
                     return null; // Don't display State: default
                   }
                   return (
