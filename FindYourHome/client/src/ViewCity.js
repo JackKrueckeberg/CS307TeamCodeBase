@@ -251,7 +251,7 @@ const ViewCity = () => {
                             onChange={(e) => setFavorite(!favorite)}
                         />
                     </div>
-                    <button className="confirmButton" onClick={confirm_fav}>Confirm favortie</button>
+                    <button className="confirmButton" onClick={confirm_fav}>Confirm favorite</button>
                 </div>
             )}
 
