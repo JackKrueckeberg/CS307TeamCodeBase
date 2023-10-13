@@ -192,10 +192,10 @@ const ViewCity = () => {
         setIsDropdownOpen(true);
     };
 
-    const handleSuggestionClick = (suggestion) => {
-        setSearchTerm(suggestion);
-        setIsDropdownOpen(false);
-    };
+    // const handleSuggestionClick = (suggestion) => {
+    //     setSearchTerm(suggestion);
+    //     setIsDropdownOpen(false);
+    // };
 
     async function searchImage() {
         const url = `https://api.unsplash.com/search/photos?page=1&query=${searchTerm}&client_id=${apiKey}`;
@@ -280,7 +280,7 @@ const ViewCity = () => {
                                 <div
                                     key={suggestion}
                                     className="suggestion"
-                                    onClick={() => handleSuggestionClick(suggestion)}>
+                                    >
                                     {suggestion}
                                 </div>
                             )}
