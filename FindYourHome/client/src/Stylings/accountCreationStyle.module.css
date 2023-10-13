@@ -11,6 +11,10 @@
     transform: translate(-50%, -50%);
 }
 
+body {
+    background-color: lightcoral;
+}
+
 .form {
     display: flex;
     flex-direction: column; 
@@ -27,7 +31,7 @@
     cursor: pointer;    
 }
 
-.label, input {
+.label, .input {
     width: 100%;            
 }
 
@@ -45,7 +49,7 @@
     display: inline-block;
 }
 
-.password-entry-wrapper button{
+.password-entry-wrapper .button{
     position: absolute;
     top: 68%;
     right: 5px;
