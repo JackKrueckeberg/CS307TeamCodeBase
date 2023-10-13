@@ -119,8 +119,6 @@ export default function Favorites() {
             <div className="contents">
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Cities </h2>
-                    <p> Insert city favorites list here</p>
-                    
                     <ul>
                     {favorite_cities.map((search, index) => (
                         <li key={index}>

@@ -7,6 +7,7 @@
 .container{
     border:2px solid grey;
     background: white;
+    flex-direction: column;
     width: 100%;
     margin:auto;
     margin-top: 50px;
