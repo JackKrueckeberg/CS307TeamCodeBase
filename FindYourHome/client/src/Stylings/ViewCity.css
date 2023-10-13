@@ -113,9 +113,18 @@ button:hover {
     background-color: #ecf0f1;
 }
 
+
 .errorMessage {
     font-size: 1.5rem; 
     color: red;
     margin-top: 20px;
     text-align: center; /* Centering the error message */
+
+.verificationBanner {
+    background-color: red;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
 }

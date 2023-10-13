@@ -3,8 +3,10 @@ import Autosuggest from 'react-autosuggest'; // Import Autosuggest
 import "./Stylings/ViewCity.css";
 import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
+
 import Map, { lat, lon, cityName } from "./components/leaflet/leaflet"
 import { CityModel, Model } from "./components/CityModel/CityModel";
+
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 
@@ -20,8 +22,14 @@ const ViewCity = () => {
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
+
+    const { user } = useUser();
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const verificationStatus = localStorage.getItem('isVerified');
+        setIsVerified(verificationStatus === 'true');
         async function fetchData() {
             try {
                 const response = await fetch(`http://localhost:5050/record/cities_full_2`);
@@ -136,8 +144,19 @@ const ViewCity = () => {
         handleQueueCity();
     }
 
+    const handleVerification = () => {
+        navigate("/verification");
+    };
+    
+
     return (
         <div>
+            {!isVerified && (
+                <div className="verificationBanner">
+                    Your account is not verified 
+                    <button onClick={handleVerification}>Click here to verify</button>
+                </div>
+            )}
             <h1 className="header">View City Page</h1>
 
             <div className="container">
@@ -180,8 +199,23 @@ const ViewCity = () => {
                             <button className="submitButton" onClick={handleCombinedActions}>Submit</button>
                             <button className="clearButton" onClick={handleClear}>Clear</button>
                         </div>
+
                     </div>
                 </div>
+
+                    )}
+                    inputProps={{
+                        type: "text",
+                        placeholder: "Enter a city",
+                        value: searchTerm,
+                        onChange: handleInputChange,
+                    }}
+                />
+
+                <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+                <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+            </div>
+
 
                 <div className="recentlyViewedCities">
                     <RecentCitiesQueue queue={recentCitiesQueue} />

@@ -76,7 +76,7 @@ body {
 }
 
 .passwordEntryWrapper .button[data-show="true"]:hover::after {
-    content: "Password field will auto-hide after 20s of inactivity for security";
+    content: "Password field will auto-hide after 10s of inactivity for security";
     position: absolute;
     top: 50%;
     left: calc(100% + 20px);
