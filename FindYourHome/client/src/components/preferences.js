@@ -315,6 +315,7 @@ export default function Create() {
       
       if (canAdd) {
         await addFavorite(favorite_searches);
+        alert("Search added to favorites.")
       }
     }
     const recent_searches = await getUser_recentSearches();
@@ -352,6 +353,8 @@ export default function Create() {
   return (
     // name, population, region, state, zip code, county, median income
     <div>
+        <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
+        <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
         <div>
         <form onSubmit={onSubmit}>
           <div className="padding" />
