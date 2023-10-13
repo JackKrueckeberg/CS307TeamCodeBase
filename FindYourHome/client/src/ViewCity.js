@@ -3,7 +3,8 @@ import Autosuggest from 'react-autosuggest'; // Import Autosuggest
 import "./Stylings/ViewCity.css";
 import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
-
+import { useNavigate } from "react-router-dom";
+import { useUser } from "./contexts/UserContext";
 import Map, { lat, lon, cityName } from "./components/leaflet/leaflet"
 import { CityModel, Model } from "./components/CityModel/CityModel";
 
@@ -203,15 +204,6 @@ const ViewCity = () => {
                     </div>
                 </div>
 
-                    )}
-                    inputProps={{
-                        type: "text",
-                        placeholder: "Enter a city",
-                        value: searchTerm,
-                        onChange: handleInputChange,
-                    }}
-                />
-
                 <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
                 <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
             </div>
@@ -221,7 +213,6 @@ const ViewCity = () => {
                     <RecentCitiesQueue queue={recentCitiesQueue} />
                 </div>
             </div>
-        </div>
 
     );
 };
