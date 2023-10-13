@@ -4,6 +4,7 @@ import Favorites from './favorites.js';
 import { FaEdit } from 'react-icons/fa';
 import defaultImage from '../Stylings/Default_Profile_Picture.png';
 import { useUser } from '../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
     // initialize the profile info
@@ -23,9 +24,11 @@ export default function Profile() {
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
-    const {user : userID, setLoggedInUser } = useUser(); // the id of the current logged in user
+    const {user: userProfile } = useUser(); // the id of the current logged in user
+    const navigate = useNavigate();
 
     //let user_id = userID._id;
+    //console.log(userProfile._id);
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
@@ -35,7 +38,7 @@ export default function Profile() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/profileRoute/65286646184b42dec3d76364`, { //${user_id}
+            const response = await fetch(`http://localhost:5050/profileRoute/65287e9e1fb72b3ad696aebb`, { //${user_id}
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
@@ -62,6 +65,10 @@ export default function Profile() {
     const handleEdit = () => {
         setIsEditing(!isEditing);
     };
+
+    const handlePageChange = () => {
+        navigate("/view-city");
+    }
 
     // function to handle password changes
     const handlePasswordChange = (e) => {
@@ -97,7 +104,7 @@ export default function Profile() {
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/65286646184b42dec3d76364`, { //${user_id}
+            const response = await fetch(`http://localhost:5050/profileRoute/65287e9e1fb72b3ad696aebb`, { //${user_id}
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
@@ -144,6 +151,9 @@ export default function Profile() {
 
     return (
         <div className="profile">
+            <div>
+                <button className="viewCity-button" onClick={handlePageChange}>Return to View City</button>
+            </div>
             <div className="profile-header">
 
                 {/* Profile Picture */}
