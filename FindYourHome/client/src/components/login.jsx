@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../Stylings/loginStyle.module.css';
-import { Collapse } from 'bootstrap';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 

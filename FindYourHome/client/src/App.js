@@ -15,6 +15,7 @@ import CreateAccount from "./components/createAccount";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
+import DiscussionHome from "./components/discussionHome";
 
 //We import any contexts used
 import { UserProvider } from "./contexts/UserContext";
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/create-account" element={<CreateAccount />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/preferences" element={<Preferences />} />
+        <Route path="/discussion-home" element={<DiscussionHome />} />
       </Routes>
   </UserProvider>
  );
