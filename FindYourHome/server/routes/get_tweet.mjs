@@ -6,9 +6,9 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
     //const twitterURL = "https://twitter.com/search?q=%23dallas&src=typed_query";
-    const twitterURL = "https://twitter.com/dallas";
-    //const url = "https://publish.twitter.com/oembed?url=" + twitterURL;
-    const url = "https://publish.twitter.com/oembed?url=https://twitter.com/dallas";
+    const twitterURL = "https://twitter.com/dallasnews";
+    const url = "https://publish.twitter.com/oembed?url=" + twitterURL;
+    //const url = "https://publish.twitter.com/oembed?url=https://twitter.com/dallas";
 
     const results = await fetch(url, {
         method: "GET",
@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
 
     console.log(resp.html);
 
-    res.send(resp).status(200);
+    res.send(resp.html).status(200);
 
 })
 
