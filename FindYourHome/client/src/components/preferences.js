@@ -75,6 +75,64 @@ export default function Create() {
 
   async function addFavorite(favs) {
 
+    updateForm({ favorited: !form.favorited });
+
+    if (form.favorited == true) {
+      return;
+    }
+
+    if (form.population !== "" && form.population < 0) {
+      alert("Population must be a positive number, leave blank for no preference.");
+      return;
+    }
+
+    if (form.population !== "" && form.population.toString().indexOf(".") !== -1) {
+        alert("Population must be a whole number, leave blank for no preference.");
+        return;
+    }
+
+    if (form.median_income !== "" && form.median_income.toString().indexOf(".") !== -1) {
+        alert("Median income must be a whole number, leave blank for no preference");
+        return;
+    }
+
+    if (form.median_income !== "" && form.median_income < 0) {
+        alert("Median income must be a positive number, leave blank for no preference.");
+        return;
+    }
+
+    if (form.zip_code !== "" && (form.zip_code.toString().length !== 5 || form.zip_code < 0 || form.zip_code.toString().indexOf(".") !== -1)) {
+        alert("Zip code must be a 5 digit positive zip code, leave blank for no preference.");
+        return;
+    }
+
+    const favorite_searches = await getUser_favorites();
+
+    for (var i = 0; i < favorite_searches.length; i++) {
+      if (form.population === favorite_searches[i].population) {
+        if (form.east_coast === favorite_searches[i].east_coast) {
+          if (form.west_coast === favorite_searches[i].west_coast) {
+            if (form.central === favorite_searches[i].central) {
+              if (form.mountain_west === favorite_searches[i].mountain_west) {
+                if (form.state === favorite_searches[i].state) {
+                  if (form.zip_code === favorite_searches[i].zip_code) {
+                    if (form.county === favorite_searches[i].county) {
+                      if (form.median_income === favorite_searches[i].median_income) {
+                        alert("This search is already favorited.");
+                        return;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    var favs = favorite_searches;
+
     console.log('adding favorite');
 
     console.log(favs);
@@ -283,41 +341,6 @@ export default function Create() {
         return;
     }
 
-    if (form.favorited) {
-      const favorite_searches = await getUser_favorites();
-
-      var canAdd = true;
-
-      for (var i = 0; i < favorite_searches.length; i++) {
-        if (form.population === favorite_searches[i].population) {
-          if (form.east_coast === favorite_searches[i].east_coast) {
-            if (form.west_coast === favorite_searches[i].west_coast) {
-              if (form.central === favorite_searches[i].central) {
-                if (form.mountain_west === favorite_searches[i].mountain_west) {
-                  if (form.state === favorite_searches[i].state) {
-                    if (form.zip_code === favorite_searches[i].zip_code) {
-                      if (form.county === favorite_searches[i].county) {
-                        if (form.median_income === favorite_searches[i].median_income) {
-                          alert("This search is already favorited.");
-                          canAdd = false;
-                          break;
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      
-      
-      if (canAdd) {
-        await addFavorite(favorite_searches);
-        alert("Search added to favorites.")
-      }
-    }
     const recent_searches = await getUser_recentSearches();
     await addRecent(recent_searches)
 
@@ -368,7 +391,7 @@ export default function Create() {
                     defaultChecked={form.favorited}
                     checked={form.favorited}
                     className="favBtn"
-                    onChange={(e) => updateForm({ favorited: !form.favorited })}
+                    onChange={(e) => addFavorite()}
                     />
                   <h3>Preferences:</h3>
                 </td>

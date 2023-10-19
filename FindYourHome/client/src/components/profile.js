@@ -7,6 +7,9 @@ export default function Profile() {
 
     const [tabVal, setTabVal] = useState('1');
     const navigate = useNavigate();
+    const storedUser = localStorage.getItem("currentUser");
+
+    const [user, setInfo] = useState(storedUser || userProfile || initialInfo);
 
     const handleTabChange = (index) => {
         setTabVal(index);
