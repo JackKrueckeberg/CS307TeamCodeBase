@@ -27,7 +27,7 @@ const App = () => {
         <Route path="/" element={<Login />} />
         <Route path="/view-city" element={<ViewCity />} />
         <Route path="/verification" element={<Verification />} />
-        <Route path="/create-account" element={<CreateAccount />} />
+        <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/preferences" element={<Preferences />} />
       </Routes>
