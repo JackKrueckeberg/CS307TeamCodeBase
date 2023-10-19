@@ -15,6 +15,7 @@ import CreateAccount from "./components/createAccount";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
+import Twitter from "./components/twitter";
 
 //We import any contexts used
 import { UserProvider } from "./contexts/UserContext";
@@ -22,17 +23,20 @@ import { UserProvider } from "./contexts/UserContext";
 const App = () => {
   
  return (
-  <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/view-city" element={<ViewCity />} />
-        <Route path="/verification" element={<Verification />} />
-        <Route path="/create-account" element={<CreateAccount />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/preferences" element={<Preferences />} />
-      </Routes>
-  </UserProvider>
+  <Twitter></Twitter>
  );
 };
  
 export default App;
+
+
+  // <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
+ //   <Routes>
+  //  <Route path="/" element={<Login />} />
+  //  <Route path="/view-city" element={<ViewCity />} />
+  //  <Route path="/verification" element={<Verification />} />
+  //  <Route path="/create-account" element={<CreateAccount />} />
+  //  <Route path="/profile" element={<Profile />} />
+  //  <Route path="/preferences" element={<Preferences />} />
+ // </Routes>
+ /// </UserProvider>
