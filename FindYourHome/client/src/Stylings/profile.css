@@ -1,152 +1,110 @@
-.profile {
-    max-width: 100%;
-    width: 100%;
-    min-height: 100vh;
-    margin: 0 auto;
-    padding: 2%;
-    background-color: rgb(230, 230, 230);
-    border: 1px solid white;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-  }
-  
-  .profile-avatar {
-    flex: 1; /* Avatar takes up all available space on the left */
-    background-color: white;
-    padding-bottom: 5px;
-    margin: 0 auto;
-    display: inline-block;
-    width: 175px;
-    border-radius: 10px;
-  }
-  
-  .profile-details {
-    margin-top: 60px;
-    flex: 3; /* Details take up remaining space on the right */
-    padding-left: 20px;
-    display: flex;
-    flex-direction: column; /* Stack details vertically */
-  }
-  
-  .round-corner {
-    border-radius: 10px; /* You can adjust the value to control the roundness of the corners */
-    padding: 5px 10px; /* Adding some padding to make the button look nice */
-    font-size: 16px; /* Setting the font size for the button text */
+*{
+  margin:0;
+  padding:10px;
+  box-sizing: border-box;
+}
+
+.container{
+  border:2px solid grey;
+  background: white;
+  flex-direction: column;
+  width: 100%;
+  margin:auto;
+  margin-top: 50px;
+  border-radius: 10px;
+}
+
+.tabs-block{
+  display: flex;
+  justify-content: space-between;
+}
+
+.tab{
+  background: rgb(224, 218, 201);
+  flex: 1;
+  padding: 1px;
+  text-align: center;
+  border: 1px solid grey;
+  border-top: none;
+  cursor: pointer;
+  position: relative;
+  border-radius: 10px;
+}
+
+.active-tab{
+  border: none;
+  background: #fff;
+}
+
+.active-tab::after{
+  border-top: 2px solid goldenrod;
+  content:'';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  background: initial;
+  animation: tab-animation 0.5s;
+}
+
+@keyframes tab-animation{
+  from{
+      top: 50px;
+      left: 0;
+      right: 0;
+      background: goldenrod;
   }
 
-  .profile-header {
-    text-align: center;
-    margin-top: 60px;
-    width: 20%;
+  to{
+      top: 0px;
+      right: 0;
+      left: 0;
+      border-top: 2px solid goldenrod;
   }
-  
-  .profile-name {
-    font-size: 24px;
-    margin: 10px 0;
-    border: #000;
-    background: white;
-    border-radius: 10px;
-    padding: 5px 10px;
-  }
-  
-  .profile-username {
-    color: #010101;
-  }
-  
-  .profile-bio {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-  
-  .profile-contact {
-    display: flex;
-    align-items: center;
-  }
-  
-  .profile-icon {
-    margin-right: 10px;
-    color: #007BFF;
-  }
-  
-  .profile-email {
-    color: #333;
+}
+
+.contents{
+  position: relative;
+}
+
+.content{
+  display: none;
+  position: relative;
+}
+
+.active-content{
+  display: block;
+  margin-left: 10px;
+  margin-right: 10px;
+  transition: all is ease-in-out;
+  animation: content-animation 0.3s;
+}
+
+@keyframes content-animation{
+  from{
+      margin: 0;
+
   }
 
-  .profile-password {
-    color: #333;
+  to{
+      margin-left: 10px;
   }
+}
 
-  .upload-image {
-    background: goldenrod;
-    border-radius: 10px;
-    padding: 5px 10px;
-  }
+.viewCity-button {
+  background: rgb(224, 218, 201);
+}
 
-  .upload-image:hover {
-    background-color: rgb(241, 197, 85);
-  }
+.viewCity-button:hover {
+  background-color: rgb(241, 197, 85);
+}
 
-  .change-password {
-    background: goldenrod;
-    border-radius: 10px;
-    padding: 5px 10px;
-  }
+.preferences-button {
+  background: rgb(224, 218, 201);
+}
 
-  .change-password:hover {
-    background-color: rgb(241, 197, 85);
-  }
-
-  .bordered-section {
-    border: 1px solid #000; /* You can customize border styles as needed */
-    border-radius: 10px;
-    background-color: white;
-    padding: 10px; /* Add padding to give some spacing between content and the border */
-  }
-
-  .viewCity-button {
-    background: goldenrod;
-    border-radius: 10px;
-    padding: 5px 10px;
-  }
-
-  .viewCity-button:hover {
-    background-color: rgb(241, 197, 85);
-  }
-  
-  .edit-button {
-    background-color: goldenrod;
-    color: black;
-    padding: 5px 10px;
-    border: 2px solid black;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  .edit-button:hover {
-    background-color: rgb(241, 197, 85);
-  }
-
-  .tab-container {
-    width: 100%;
-    height: 5vh;
-    background-color: #f2f2f2;
-  }
-  
-  /* Style for the tabs */
-  .tabs {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    width: 50%;
-  }
-
-  /* Style for the successful profile update message */
-  .success-message {
-    background-color: #4CAF50; /* Green background color */
-    color: white; /* White text color */
-    padding: 10px;
-    text-align: center;
-  }
+.preferences-button:hover {
+  background-color: rgb(241, 197, 85);
+}
