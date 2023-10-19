@@ -38,7 +38,8 @@ export const Login = () => {
                 console.log(data.message);
                 setIncorrectAttempts(0);
                 if (rememberUser && data.token) { 
-                    localStorage.setItem('authToken', data.token); // Store token if "Remember Me" is checked
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', data.user._id); 
                 }
                 console.log('Received user object:', data.user);
                 if (data.user) {
@@ -94,6 +95,7 @@ export const Login = () => {
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
                 alert('Your session has expired. Please login again.');
             }
         } catch (error) {
