@@ -4,9 +4,9 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/:city", async (req, res) => {
     //const twitterURL = "https://twitter.com/search?q=%23dallas&src=typed_query";
-    const twitterURL = "https://twitter.com/dallasnews";
+    const twitterURL = "https://twitter.com/" + req.params.city + "news";
     const url = "https://publish.twitter.com/oembed?url=" + twitterURL;
     //const url = "https://publish.twitter.com/oembed?url=https://twitter.com/dallas";
 
@@ -21,11 +21,16 @@ router.get("/", async (req, res) => {
         return;
     });
 
-    const resp = await results.json();
+    try {
 
-    console.log(resp.html);
+        const resp = await results.json();
 
-    res.send(resp.html).status(200);
+        console.log(resp.html);
+
+        res.send(resp.html).status(200);
+    } catch {
+        res.send("<label>Error lading tweets for this city.</label>").status(200);
+    }
 
 })
 
