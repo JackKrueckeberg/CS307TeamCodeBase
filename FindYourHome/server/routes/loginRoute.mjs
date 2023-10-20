@@ -19,7 +19,7 @@ router.post("/login", async (req, res) => {
         }
 
         //Assign a Remember me token to the user
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '5m' });
 
         // If credentials are correct
         return res.status(200).json({ 

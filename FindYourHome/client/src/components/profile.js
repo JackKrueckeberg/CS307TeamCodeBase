@@ -6,6 +6,7 @@ import defaultImage from '../Stylings/Default_Profile_Picture.png';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
+
 export default function Profile() {
     // initialize the profile info
     const initialInfo = {
@@ -19,45 +20,71 @@ export default function Profile() {
     };
 
     // Create state variables for user info ad editing mode
-    const [user, setInfo] = useState(initialInfo); // user stores the profile info
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const navigate = useNavigate();
+    const storedUser = localStorage.getItem("currentUser");
 
-    //let user_id = userID._id;
-    //console.log(userProfile._id);
+    const [user, setInfo] = useState(storedUser || userProfile || initialInfo);
+
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
         fetchUserInfo();
-    }, []);
+    }, [userProfile]);
 
+    console.log(`${storedUser}`);
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
-        try {
-            const response = await fetch(`http://localhost:5050/profileRoute/65287e9e1fb72b3ad696aebb`, { //${user_id}
-                method: "GET",
-                headers: {
-                    "Accept": "application/json"
-                }
-            })
+        if (!storedUser && userProfile && userProfile._id) {
+            try {
+                const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                })
 
-            if (response.status === 200) {
-                const userInfo = await response.json();
-                console.log(userInfo);
-                setInfo(userInfo); // Update the user state with the fetched data
-                if (userInfo.profile_image == "") {
-                    setInfo({
-                        ...user,
-                        profile_image: defaultImage,
-                    });
+                if (response.status === 200) {
+                    const userInfo = await response.json();
+                    console.log(userInfo);
+                    setInfo(userInfo); // Update the user state with the fetched data
+                    if (userInfo.profile_image == "") {
+                        setInfo({
+                            ...user,
+                            profile_image: defaultImage,
+                        });
+                    }
                 }
+            } catch (error) {
+                console.error("Error fetching user info: ", error);
             }
-        } catch (error) {
-            console.error("Error fetching user info: ", error);
+        } else {
+            try {
+                const response = await fetch(`http://localhost:5050/profileRoute/${storedUser}`, {
+                    method: "GET",
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                })
+
+                if (response.status === 200) {
+                    const userInfo = await response.json();
+                    console.log(userInfo);
+                    setInfo(userInfo); // Update the user state with the fetched data
+                    if (userInfo.profile_image == "") {
+                        setInfo({
+                            ...user,
+                            profile_image: defaultImage,
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching user info: ", error);
+            }
         }
     }
 
@@ -104,7 +131,7 @@ export default function Profile() {
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/65287e9e1fb72b3ad696aebb`, { //${user_id}
+            const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
