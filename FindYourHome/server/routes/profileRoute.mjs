@@ -12,6 +12,22 @@ const validateAndConvertId = (id) => {
   return null;
 };
 
+router.get("/check-username/:username", async (req, res) => {
+  const requestedUsername = req.params.username;
+  const collection = db.collection("users");
+
+  // Check if the requested username already exists in the database
+  const existingUser = await collection.findOne({ username: requestedUsername });
+
+  if (existingUser) {
+    // Username is already in use
+    res.json({ isAvailable: false });
+  } else {
+    // Username is available
+    res.json({ isAvailable: true });
+  }
+});
+
 
 // Get user info
 router.get("/:id", async (req, res) => {

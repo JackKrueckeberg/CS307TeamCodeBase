@@ -4,6 +4,7 @@ import Favorites from './favorites.js';
 import { FaEdit } from 'react-icons/fa';
 import defaultImage from '../Stylings/Default_Profile_Picture.png';
 import { useUser } from '../contexts/UserContext';
+import Modal from "react-modal";
 
 export default function AccountInfo() {
     // initialize the profile info
@@ -12,22 +13,26 @@ export default function AccountInfo() {
         lastName: '',
         username: '',
         email: '',
-        bio: 'Enter Bio Here',
+        bio: '',
         profile_image: '',
         password: '',
     };
 
     // Create state variables for user info ad editing mode
-    const [user, setInfo] = useState(initialInfo); // user stores the profile info
+    const storedUser = localStorage.getItem("currentUser");
+    const {user: userProfile } = useUser(); // the id of the current logged in user
+    const [user, setInfo] = useState(storedUser || userProfile || initialInfo);
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
     const [prevUser, setPrevUser] = useState(initialInfo); // Store a copy of user data to revert if editing is canceled
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
-    const {user: userProfile } = useUser(); // the id of the current logged in user
-
-    const user_id = userProfile._id;
-    console.log(userProfile._id);
+    const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
+    const [showChangePasswordModal, setShowChangePasswordModal] = useState(false); // password change pop-up
+    const [newPassword, setNewPassword] = useState(''); //new password
+    const [confrimPassword, setConfirmPassword] = useState(''); //confirm new password
+    const oldPassword = user.password; //old password
+    const [checkOldPassword, setCheckOldPassword] = useState(''); //check the old password
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
@@ -37,7 +42,7 @@ export default function AccountInfo() {
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/profileRoute/${user_id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
@@ -48,7 +53,7 @@ export default function AccountInfo() {
                 const userInfo = await response.json();
                 console.log(userInfo);
                 setInfo(userInfo); // Update the user state with the fetched data
-                if (userInfo.profile_image == "") {
+                if (userInfo.profile_image === "") {
                     setInfo({
                         ...user,
                         profile_image: defaultImage,
@@ -68,13 +73,27 @@ export default function AccountInfo() {
     };
 
     // function to handle password changes
-    const handlePasswordChange = (e) => {
-        
+    const handlePasswordChange = () => {
+        setShowChangePasswordModal(true);
+    }
+
+    // Function to save the new password
+    const saveNewPassword = () => {
+        // You can add logic to send the new password to your backend
+        // and update it in the database.
+
+        // For now, let's just log the new password:
+        console.log("New Password:", newPassword);
     }
 
     // function to handle input changes and update the user state
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === 'username') {
+            checkUsernameAvailability(value);
+        }
+
         setInfo({
             ...user,
             [name]: value,
@@ -83,6 +102,12 @@ export default function AccountInfo() {
 
     // function to save changes and exit edit mode
     const handleSave = () => {
+        if (prevUser.username !== user.username && !isUsernameAvailable) {
+            alert('Username is already taken. Please choose a different one.');
+            setInfo(prevUser);
+            return;
+          }
+
         setIsEditing(false)
         saveChanges();
     };
@@ -94,8 +119,39 @@ export default function AccountInfo() {
         setIsEditing(false);
     }
 
+    // Function to check username availability on the server
+    const checkUsernameAvailability = async (newUsername) => {
+        try {
+            const response = await fetch(`http://localhost:5050/profileRoute/check-username/${newUsername}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                return !data.isUsernameTaken;
+            }
+
+            return false;
+        } catch (error) {
+            console.error("Error checking username availability: ", error);
+            return false;
+        }
+    }; 
+
     // function to submit the changes to the database
     const saveChanges = async (e) => {
+        // Check if the new username is available
+        const isUsernameAvailable = await checkUsernameAvailability(user.username);
+
+        if (prevUser.username !== user.username && !isUsernameAvailable) {
+            alert('Username is already taken. Please choose a different one.');
+            setInfo(prevUser);
+            return;
+        }
+
         const userInfo = {
             firstName: user.firstName,
             lastName: user.lastName,
@@ -108,7 +164,7 @@ export default function AccountInfo() {
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/${user_id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
@@ -136,6 +192,7 @@ export default function AccountInfo() {
     };
 
     // function to edit the profile image
+    // TODO fix this 
     const handleImageUpload = (e) => {
         console.log(e.target.files);
         const file = e.target.files[0];
@@ -144,13 +201,11 @@ export default function AccountInfo() {
             const imageURL = URL.createObjectURL(file);
             console.log(imageURL);
             setImage(imageURL);
-            setInfo((user) => ({
+            setInfo({
                 ...user,
                 profile_image: imageURL,
-            }) , () => {
-                console.log(user.profile_image);
-                saveChanges();
             });
+            console.log(user.profile_image);
         }
     };
 
@@ -249,17 +304,52 @@ export default function AccountInfo() {
                     <button className="change-password" onClick={handlePasswordChange}>Change Password</button>
                 </p>
 
+                {/* Password Change Modal */}
+                <Modal
+                    className={"password-change-modal"}
+                    isOpen={showChangePasswordModal}
+                    onRequestClose={() => setShowChangePasswordModal(false)}
+                    contentLabel="Change Password Modal"
+                >
+                    <div className="modal-content">
+                        <h2>Password Change</h2>
+                        <input
+                            type="password"
+                            placeholder="Old Password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            placeholder="New Password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Confirm New Password"
+                            value={newPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                        />
+                        <button className="save-button" onClick={() => saveNewPassword(newPassword)}>Save Password</button>
+                        <button className="cancel-button" onClick={() => setShowChangePasswordModal(false)}>Cancel</button>
+                    </div>
+                </Modal>
+
                 {/* Profile Bio*/}
                 <p className="profile-bio">
                     <strong> Bio: </strong> {isEditing ? (
                         <textarea
                             className = "round-corner"
+                            placeholder="Tell us about yourself"
                             name="bio"
                             value={user.bio}
                             onChange={handleInputChange}
                         />
                     ) : (
-                        <div className="bordered-section">{user.bio}</div>
+                        <div className="bordered-section">
+                            <span placeholder="Tell us about yourself">{user.bio}</span>
+                        </div>
                     )}
                 </p>
             </div>

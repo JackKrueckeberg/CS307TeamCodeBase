@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
 import '../Stylings/profile.css';
 import { useNavigate } from 'react-router-dom';
-import AccountInfo from "./accountInfo";
+import AccountInfo from "./accountInfo.js";
 
 export default function Profile() {
 
-    const [tabVal, setTabVal] = useState('1');
+    const [tabVal, setTabVal] = useState(1);
     const navigate = useNavigate();
-    const storedUser = localStorage.getItem("currentUser");
-
-    const [user, setInfo] = useState(storedUser || userProfile || initialInfo);
 
     const handleTabChange = (index) => {
         setTabVal(index);
@@ -34,7 +31,7 @@ export default function Profile() {
                 </div>
 
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
-                    
+                    <p2>Messages</p2>
                 </div>
             </div>
         </div>
