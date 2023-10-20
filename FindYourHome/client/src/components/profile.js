@@ -1,296 +1,39 @@
 import React, { useState, useEffect } from "react";
 import '../Stylings/profile.css';
-import Favorites from './favorites.js';
-import { FaEdit } from 'react-icons/fa';
-import defaultImage from '../Stylings/Default_Profile_Picture.png';
-import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
-
+import AccountInfo from "./accountInfo.js";
 
 export default function Profile() {
-    // initialize the profile info
-    const initialInfo = {
-        firstName: '',
-        lastName: '',
-        username: '',
-        email: '',
-        bio: 'Enter Bio Here',
-        profile_image: '',
-        password: '',
-    };
 
-    // Create state variables for user info ad editing mode
-    const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
-    const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
-    const fileInputRef = React.createRef();
-    const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
-    const {user: userProfile } = useUser(); // the id of the current logged in user
+    const [tabVal, setTabVal] = useState(1);
     const navigate = useNavigate();
-    const storedUser = localStorage.getItem("currentUser");
 
-    const [user, setInfo] = useState(storedUser || userProfile || initialInfo);
-
-
-    useEffect(() => {
-        // fetch user data from the backend when the component mounts
-        fetchUserInfo();
-    }, [userProfile]);
-
-    console.log(`${storedUser}`);
-    // fetch the user data from the backend
-    const fetchUserInfo = async () => {
-        if (!storedUser && userProfile && userProfile._id) {
-            try {
-                const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
-                    method: "GET",
-                    headers: {
-                        "Accept": "application/json"
-                    }
-                })
-
-                if (response.status === 200) {
-                    const userInfo = await response.json();
-                    console.log(userInfo);
-                    setInfo(userInfo); // Update the user state with the fetched data
-                    if (userInfo.profile_image == "") {
-                        setInfo({
-                            ...user,
-                            profile_image: defaultImage,
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching user info: ", error);
-            }
-        } else {
-            try {
-                const response = await fetch(`http://localhost:5050/profileRoute/${storedUser}`, {
-                    method: "GET",
-                    headers: {
-                        "Accept": "application/json"
-                    }
-                })
-
-                if (response.status === 200) {
-                    const userInfo = await response.json();
-                    console.log(userInfo);
-                    setInfo(userInfo); // Update the user state with the fetched data
-                    if (userInfo.profile_image == "") {
-                        setInfo({
-                            ...user,
-                            profile_image: defaultImage,
-                        });
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching user info: ", error);
-            }
-        }
-    }
-
-    // function to toggle between view and edit mode
-    const handleEdit = () => {
-        setIsEditing(!isEditing);
-    };
-
-    const handlePageChange = () => {
-        navigate("/view-city");
-    }
-
-    // function to handle password changes
-    const handlePasswordChange = (e) => {
-        
-    }
-
-    // function to handle input changes and update the user state
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setInfo({
-            ...user,
-            [name]: value,
-        });
-    };
-
-    // function to save changes and exit edit mode
-    const handleSave = () => {
-        setIsEditing(false)
-        saveChanges();
-    };
-
-    // function to submit the changes to the database
-    const saveChanges = async (e) => {
-        const userInfo = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            username: user.username,
-            email: user.email,
-            bio: user.bio,
-            profile_image: profile_image,
-            password: user.password,
-        };
-
-        try {
-            // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
-                method: "PATCH",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userInfo)
-            });
-
-            const data = await response.json();
-
-            if (response.status === 200) {
-                console.log(data.message);
-                setSuccessMessage('Profile updated successfully');
-                setTimeout(() => {
-                    setSuccessMessage('');
-                }, 5000); // Clear the message after 5 seconds
-            }
-
-        } catch (error) {
-            console.error("There was an error updating your info: ", error);
-        }
-    }
-
-    const openFileInput = () => {
-        fileInputRef.current.click();
-    };
-
-    // function to edit the profile image
-    const handleImageUpload = (e) => {
-        console.log(e.target.files);
-        const file = e.target.files[0];
-        console.log(file);
-        if (file) {
-            const imageURL = URL.createObjectURL(file);
-            console.log(imageURL);
-            setImage(imageURL);
-            setInfo({
-                ...user,
-                profile_image: imageURL,
-            });
-            console.log(profile_image);
-        }
-        saveChanges();
+    const handleTabChange = (index) => {
+        setTabVal(index);
+        console.log(index);
     };
 
     return (
-        <div className="profile">
-            <div>
-                <button className="viewCity-button" onClick={handlePageChange}>Return to View City</button>
+        <div className="container">
+            <div className="nav-buttons">
+                <button className="viewCity-button" onClick={() => navigate('/view-city')}>Go to City Search</button>
+                <button className="preferences-button" onClick={() => navigate('/preferences')}>Go to Preferences</button>
             </div>
-            <div className="profile-header">
-
-                {/* Profile Picture */}
-                <div className="profile-avatar">
-                    <img src={profile_image} width={150} height={150} alt="Profile"/>
-                    <button className="upload-image" onClick={openFileInput}>Upload Image</button>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={handleImageUpload}
-                    />
-                </div>
-
-                {/* User's Name divided into first and last name */}
-                <div className="profile-name">
-                    {isEditing ? (
-                        <div>
-                            <input
-                                className = "round-corner"
-                                type="text"
-                                name="firstName"
-                                value={user.firstName}
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                className = "round-corner"
-                                type="text"
-                                name="lastName"
-                                value={user.lastName}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    ) : (
-                        <h2>{user.firstName} {user.lastName}</h2>
-                    )}
-                </div>
-
-                {/* Edit Profile and Save Changes */}
-                <div className="profile-actions">
-                    {successMessage && <div className="success-message">{successMessage}</div>}
-                    {isEditing ? (
-                        <button className="round-corner" onClick={handleSave}>Save</button>
-                    ) : (
-                        <button className="edit-button" onClick={handleEdit}>
-                            <FaEdit size={35}/> Edit
-                        </button>
-                    )}
-                </div>
+            <div className="tabs-block">
+                <div onClick={() => handleTabChange(1)} className={`${tabVal === 1 ? 'tab active-tab' : 'tab'}`}> Account Info </div>
+                <div className={`${tabVal === 2 ? 'tab active-tab' : 'tab'}`} onClick={() => handleTabChange(2)}> Messages </div>
             </div>
 
-            {/* Profile Details such as username, password, and bio */}
-            <div className="profile-details">
+            <div className="contents">
+                
+                <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
+                    <AccountInfo/>
+                </div>
 
-                {/* Profile Username */}
-                <p className="profile-username">
-                    <strong> Username: </strong> {isEditing ? (
-                    <input
-                        className = "round-corner"
-                        type="text"
-                        name="username"
-                        value={user.username}
-                        onChange={handleInputChange}
-                    />
-                    ) : (
-                        <span className="bordered-section">{user.username}</span>
-                    )}
-                </p>
-
-                {/* Profile Email */}
-                <p className="profile-email">
-                    <strong> Email: </strong>{isEditing ? (
-                        <input
-                            className = "round-corner"
-                            type="text"
-                            name="email"
-                            value={user.email}
-                            onChange={handleInputChange}
-                        />
-                    ) : (
-                        <span className="bordered-section">{user.email}</span>
-                    )}
-                </p>
-
-                {/* Profile Password */}
-                <p className="profile-password">
-                    <strong>Password:</strong>
-                    <button className="change-password" onClick={handlePasswordChange}>Change Password</button>
-                </p>
-
-                {/* Profile Bio*/}
-                <p className="profile-bio">
-                    <strong> Bio: </strong> {isEditing ? (
-                        <textarea
-                            className = "round-corner"
-                            name="bio"
-                            value={user.bio}
-                            onChange={handleInputChange}
-                        />
-                    ) : (
-                        <span className="bordered-section">{user.bio}</span>
-                    )}
-                </p>
-            </div>
-
-            {/* Profile Favorites Tabs */}
-            <div className="tabs">
-                <Favorites />
+                <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
+                    <p2>Messages</p2>
+                </div>
             </div>
         </div>
-    );
-};
+    )
+}
