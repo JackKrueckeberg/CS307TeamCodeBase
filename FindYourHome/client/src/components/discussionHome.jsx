@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Stylings/discussionStyle.module.css';
+import DiscussNav from './discussNav.js';
+
 
 const DiscussionHome = () => {
     const [discussions, setDiscussions] = useState([]);
@@ -8,6 +10,9 @@ const DiscussionHome = () => {
     const [content, setContent] = useState('');
     const [city, setCity] = useState('');
     const [error, setError] = useState('');
+    const [selectorChoice, setSelectorChoice] = useState("");
+    const [dropdownSelection, setDropdownSelection] = useState("");
+
 
  
     const handleCancel = () => {
@@ -16,6 +21,8 @@ const DiscussionHome = () => {
         setTitle('');        // Clear the title
         setContent('');      // Clear the content
         setCity('');         // Clear the city
+        setDropdownSelection('');
+        setSelectorChoice('');
     };
 
     const handleSubmit = async () => {
@@ -26,7 +33,8 @@ const DiscussionHome = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ title, content, city })
+                body: JSON.stringify({ title, content, city, selectorChoice, dropdownSelection })
+
             });
     
             const data = await response.json();
@@ -64,13 +72,20 @@ const DiscussionHome = () => {
     }, []);
 
     return (
-        <div className="discussionHome">
+        <div className={styles.DiscussionHome}>
             <h2>Discussions</h2>
+            {!showForm && <DiscussNav />}
             
             {error && <div className="error">{error}</div>}
             
             {!showForm && <button onClick={() => setShowForm(true)}>Create New Discussion</button>}
             
+            {!showForm && <div className={styles.commentsBox}>
+                {/* TODO: Render comments here */}
+                This is where comments will be.
+            </div>}
+
+
             {showForm && (
                 <div className={styles.discussionForm}>
                     <h3>Create New Discussion</h3>
@@ -83,6 +98,7 @@ const DiscussionHome = () => {
                             onChange={(e) => setTitle(e.target.value)} 
                             placeholder="Enter the title"
                             className={styles.inputField}
+                            required
                         />
                     </label>
 
@@ -94,7 +110,50 @@ const DiscussionHome = () => {
                             onChange={(e) => setCity(e.target.value)} 
                             placeholder="Which city are you discussing"
                             className={styles.inputField}
+                            required
                         />
+                    </label>
+
+                    <label>
+                        <span>Post as:</span>
+                        <div className={styles.choiceGroup}>
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="Anonymous"
+                                    required
+                                    checked={selectorChoice === "Anonymous"}
+                                    onChange={(e) => setSelectorChoice(e.target.value)}
+                                />
+                                <span>Anonymous</span>
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    value="Your Username"
+                                    required
+                                    checked={selectorChoice === "Your Username"}
+                                    onChange={(e) => setSelectorChoice(e.target.value)}
+                                />
+                                <span>Username</span>
+                            </label>
+                        </div>
+                    </label>
+
+
+                    <label>
+                        <span>Select an item:</span>
+                        <select
+                            value={dropdownSelection}
+                            onChange={(e) => setDropdownSelection(e.target.value)} required>
+                            <option value="" disabled selected>Select an option</option>
+                            <option value="General">General</option>
+                            <option value="Crime">Crime</option>
+                            <option value="Dining">Dining</option>
+                            <option value="ToDo">Things to Do</option>
+                            <option value="other">Other</option>
+                        </select>
                     </label>
 
                     <label>
@@ -104,12 +163,13 @@ const DiscussionHome = () => {
                             onChange={(e) => setContent(e.target.value)} 
                             placeholder="Share your thoughts"
                             className={styles.inputField}
+                            required
                         ></textarea>
                     </label>
     
                     <div className={styles.button}>
                         <button onClick={handleSubmit} className={styles.submit}>Submit</button>
-                        <button onClick={() => setShowForm(false)} className={styles.cancel}>Cancel</button>
+                        <button onClick={() => {setShowForm(false); handleCancel();}} className={styles.cancel}>Cancel</button>
                     </div>
                 </div>
             )}
