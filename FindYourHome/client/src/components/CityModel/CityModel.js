@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 export const CityModel = ({ model }) => {
     const [cityList, setCityList] = useState({});
-
+    const navigate = useNavigate();
     useEffect(() => {
         if (model && !cityList[model.name]) {
             setCityList(prevCityList => ({
@@ -28,6 +29,7 @@ export const CityModel = ({ model }) => {
                 <p>State: {model.state}</p>
                 <p>Median Income: {model.median_income}</p>
                 <p>This is ${model.nation_avg} {national_income} than the National Medium Income Average</p>
+                <button onClick={() => navigate("/city-information")}>Click here for more information</button>
                 <img src={model.img_url} alt={model.name} />
             </div>
         </div>

@@ -14,6 +14,7 @@ import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
+import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
 import DiscussionHome from "./components/discussionHome";
 import { UserContext } from "./contexts/UserContext";
@@ -48,6 +49,7 @@ const App = () => {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/preferences" element={<Preferences />} />
                 <Route path="/discussion-home" element={<DiscussionHome />} />
+                <Route path="/city-information" element={<City_Info />} />
             </Routes>
         </UserContext.Provider>
     );

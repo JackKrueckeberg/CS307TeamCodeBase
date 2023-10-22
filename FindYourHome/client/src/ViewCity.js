@@ -152,10 +152,6 @@ const ViewCity = () => {
             setCityModel(cityModel);
         }
 
-
-
-
-
         setShowResults(true);
 
     };
