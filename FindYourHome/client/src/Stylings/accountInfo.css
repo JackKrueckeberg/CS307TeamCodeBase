@@ -80,7 +80,7 @@
         background-color: #fff;
         border-radius: 5px;
         padding: 20px;
-        width: 250px;
+        width: 600px;
         text-align: center;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
     }
@@ -105,4 +105,39 @@
         cursor: pointer;
         margin: 5px;
     }
+}
+
+/* Remove the list bullet point */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Reduce the gap between items in the list */
+ul li {
+    margin-bottom: 1px;
+    margin-top: 1px;
+    padding: 0;
+}
+
+/* Style for the fulfilled requirements */
+.fulfilled::before {
+    content: '\2713'; /* Check mark symbol */
+    color: green;
+    margin-right: 5px;
+}
+
+/* Style for the unfulfilled requirements */
+.unfulfilled::before {
+    content: '\2717'; /* Cross mark symbol */
+    color: red;
+    margin-right: 5px;
+}
+
+.error-message {
+    background-color: #cf0000; /* Green background color */
+    color: white; /* White text color */
+    padding: 10px;
+    text-align: center;
 }
