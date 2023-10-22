@@ -37,7 +37,7 @@ export const CityModel = ({ model }) => {
 }
 
 export class Model {
-    constructor(name, population, region, state, median_income, img_url, nation_avg, nation_flag) {
+    constructor(name, population, region, state, median_income, img_url, nation_avg, nation_flag, lon, lat) {
         this.name = name;
         this.population = population;
         this.region = region;
@@ -46,5 +46,7 @@ export class Model {
         this.img_url = img_url;
         this.nation_avg = nation_avg;
         this.nation_flag = nation_flag;
+        this.lon = lon;
+        this.lat = lat;
     }
 }

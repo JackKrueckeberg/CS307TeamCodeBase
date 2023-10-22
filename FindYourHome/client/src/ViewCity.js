@@ -145,7 +145,9 @@ const ViewCity = () => {
                 med_income,
                 img,
                 nation_avg,
-                nation_flag
+                nation_flag,
+                matchedCity.lon,
+                matchedCity.lat
             );
 
             setImageUrl(img);
