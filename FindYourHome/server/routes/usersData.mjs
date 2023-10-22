@@ -39,13 +39,12 @@ router.post("/", async (req, res) => {
     password: req.body.password,
     email: req.body.email,
     firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    bio: req.body.bio,
-    profile_image: req.body.profile_image
+    lastName: req.body.lastName
   };
-  let collection = await db.collection("users");
+  let collection = db.collection("users");
   let result = await collection.insertOne(newDocument);
   res.send(result).status(204);
+  console.log("inserting user to db.");
 });
 
 //delete a user
@@ -96,4 +95,5 @@ router.patch('/:email', async (req, res) => {
     res.status(400).send({ message: 'Invalid action' });
   }
 });
+
 export default router;
