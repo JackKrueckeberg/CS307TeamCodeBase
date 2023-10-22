@@ -213,7 +213,7 @@ export const Login = () => {
                         onChange={(e) => setForgotPasswordEmail(e.target.value)}
                         value={forgotPasswordEmail}
                     />
-                    <button type="submit">Reset Password</button>
+                    <button type="submit">Send Reset Email</button>
                     </div>
                 </form>
                 <button onClick={() => handleForgotPasswordSubmit}>Close</button>
