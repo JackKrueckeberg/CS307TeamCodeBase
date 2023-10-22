@@ -3,6 +3,16 @@ import React, { useState, useEffect } from 'react';
 export const RecoverAccount = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [toke, setToken] = useState(null);
+
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tokenFromUrl = url.Params.get('token');
+
+        if (tokenFromUrl) {
+            setToken(tokenFromUrl);
+        }
+    }, []);
     
     const submission = (e) => {
         e.preventDefault();
@@ -26,7 +36,6 @@ export const RecoverAccount = () => {
             }, 20000); // Hide after 20 seconds
         }
     };
-
 
     return (
         <div className='recover-account'>
