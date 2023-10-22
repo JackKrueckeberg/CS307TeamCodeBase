@@ -32,6 +32,22 @@ app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);
 //app.use("/discussionPost", discussion);
 
+app.get('/getAttractions', async (req, res) => {
+  const cityName = req.query.cityName;
+  const GOOGLE_API_KEY = "AIzaSyC7T8MFYwJ84U8OpjRczDsZD8Mmk-Bm_KA";
+
+  if (!cityName) {
+      return res.status(400).send({ error: 'City name is required.' });
+  }
+
+  try {
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=attractions+in+${cityName}&key=${GOOGLE_API_KEY}`);
+      return res.send(response.data);
+  } catch (error) {
+      return res.status(500).send({ error: 'Failed to fetch data from Google Places API.' });
+  }
+});
+
 
 // start the Express server
 app.listen(PORT, () => {
