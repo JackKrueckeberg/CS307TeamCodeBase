@@ -77,14 +77,6 @@ export const Login = () => {
         }
     };
 
-    const handleForgotPasswordSubmit = (e) => {
-        e.preventDefault();
-    
-        console.log('Forgot Password Email:', forgotPasswordEmail);
-    
-        setIsForgotPasswordPopupOpen(false);
-      }
-
     const validateToken = async (token) => {
         try {
             const response = await fetch("http://localhost:5050/loginRoute/validate-token", {
@@ -114,13 +106,33 @@ export const Login = () => {
         }
     };        
 
-    function openRecoveryForm() {
-        document.getElementById("recoveryForm").style.display = "block";
+    const handleForgotPasswordSubmit = async (e) => {
+        e.preventDefault();
+    
+        try {
+            console.log("inside try catch");
+            const response = await fetch('http://localhost:5050/emailForgotPassword/send-reset-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: forgotPasswordEmail })
+            });
+            console.log("after post attempt");
+            const data = await response.json();
+            console.log("after await")
+    
+            if (response.status === 200) {
+                alert(data.message);
+                setIsForgotPasswordPopupOpen(false);
+            } else {
+                alert(data.error || 'Failed to send email');
+            }
+        } catch (error) {
+            console.error('There was an error:', error);
+        }
     }
-      
-    function closeRecoveryForm() {
-        document.getElementById("recoveryForm").style.display = "none";
-    }
+    
 
     useEffect(() => {
         
@@ -204,7 +216,7 @@ export const Login = () => {
                     <button type="submit">Reset Password</button>
                     </div>
                 </form>
-                <button onClick={() => setIsForgotPasswordPopupOpen(false)}>Close</button>
+                <button onClick={() => handleForgotPasswordSubmit}>Close</button>
                 </div>
             )}
 
