@@ -29,7 +29,7 @@ export const CityModel = ({ model }) => {
                 <p>State: {model.state}</p>
                 <p>Median Income: {model.median_income}</p>
                 <p>This is ${model.nation_avg} {national_income} than the National Medium Income Average</p>
-                <button onClick={() => navigate("/city-information")}>Click here for more information</button>
+                <button onClick={() => navigate("/city-information", {state: {model: model}})}>Click here for more information</button>
                 <img src={model.img_url} alt={model.name} />
             </div>
         </div>

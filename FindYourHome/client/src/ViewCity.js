@@ -10,6 +10,7 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
+import City_Info from "./components/city-info";
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
