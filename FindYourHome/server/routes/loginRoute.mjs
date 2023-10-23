@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import db from "../db/conn.mjs";
 import jwt from 'jsonwebtoken';
 
