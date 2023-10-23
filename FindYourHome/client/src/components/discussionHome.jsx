@@ -88,9 +88,25 @@ const DiscussionHome = () => {
             
             {!showForm && <button onClick={() => setShowForm(true)}>Create New Discussion</button>}
             
+            <div className={`${styles.threadContainer} ${showForm ? styles.formActive : ''}`}>
             {!showForm && <div className={styles.commentsBox}>
-                This is where comments will be.
+                {discussions.slice().reverse().map((discussion, index) => (
+                    <div key={index} className={styles.discussionPost}>
+                        <div className={styles.authorInfo}>
+                            <div className={styles.fakeAvatar}></div>
+                            <h3>{discussion.authorType === "Your Username" ? "Username" : "Anonymous"}</h3>
+                        </div>
+                        <div className={styles.postContent}>
+                            <h4 className={styles.postTitle}>{discussion.title}</h4>
+                            <p>{discussion.content}</p>
+                            <p className={styles.metadata}>City: {discussion.city} | Category: {discussion.category}</p>
+                        </div>
+                    </div>
+                ))}
             </div>}
+        </div>
+
+
 
 
             {showForm && (
