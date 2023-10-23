@@ -25,15 +25,23 @@ const DiscussionHome = () => {
         setSelectorChoice('');
     };
 
+    const userPost = {
+        title: title,
+        city: city,
+        content: content,
+        selectorChoice: selectorChoice,
+        dropdownSelection: dropdownSelection
+    };
+
     const handleSubmit = async () => {
         try {
             // Send a POST request to the server
-            const response = await fetch("http://localhost:5050/discussionRoute/newDiscussion", { 
+            const response = await fetch("http://localhost:5050/discussionPost/newDiscussion", { 
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ title, content, city, selectorChoice, dropdownSelection })
+                body: JSON.stringify(userPost)
 
             });
     
@@ -55,7 +63,7 @@ const DiscussionHome = () => {
     useEffect(() => {
         async function fetchDiscussions() {
             try {
-                const response = await fetch("http://localhost:5050/discussionRoute/getDiscussions");
+                const response = await fetch("http://localhost:5050/discussionPost/getDiscussions");
                 const data = await response.json();
     
                 if (response.status === 200) {
@@ -81,7 +89,6 @@ const DiscussionHome = () => {
             {!showForm && <button onClick={() => setShowForm(true)}>Create New Discussion</button>}
             
             {!showForm && <div className={styles.commentsBox}>
-                {/* TODO: Render comments here */}
                 This is where comments will be.
             </div>}
 

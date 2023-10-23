@@ -12,7 +12,7 @@ import createUser from "./routes/createUser.mjs";
 import favorite_searches from "./routes/favorite_searches.mjs";
 import favorite_cities from "./routes/favorite_cities.mjs";
 import recent_searches from "./routes/recent_searches.mjs";
-//import DiscussionHome from "./routes/discussionPost.mjs"
+import DiscussionHome from "./routes/discussionPost.mjs"
 
 
 const PORT = process.env.PORT || 5050;
@@ -32,7 +32,7 @@ app.use("/createUser", createUser);
 app.use("/favorite_searches", favorite_searches);
 app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);
-//app.use("/discussionPost", discussion);
+app.use("/discussionPost", DiscussionHome);
 
 
 // start the Express server
