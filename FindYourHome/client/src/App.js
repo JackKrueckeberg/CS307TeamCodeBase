@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
 
 // We use Route in order to define the different routes of our application
 import { Route, Routes } from "react-router-dom";
@@ -16,44 +16,23 @@ import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
 
-import DiscussionHome from "./components/discussionHome";
-import { UserContext } from "./contexts/UserContext";
+//We import any contexts used
+import { UserProvider } from "./contexts/UserContext";
  
 const App = () => {
-  const storedUser = sessionStorage.getItem("currentUser");
-  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
-
-  useEffect(() => {
-      if (user) {
-          sessionStorage.setItem("currentUser", JSON.stringify(user));
-      } else {
-          sessionStorage.removeItem("currentUser");
-      }
-  }, [user]);
-
-  const setLoggedInUser = (userData) => {
-      setUser(userData);
-  };
-
-  const logout = () => {
-      setUser(null);
-  };
-
-    return (
-        <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
-            <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/view-city" element={<ViewCity />} />
-                <Route path="/verification" element={<Verification />} />
-                <Route path="/createAccount" element={<CreateAccount />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/preferences" element={<Preferences />} />
-                <Route path="/discussion-home" element={<DiscussionHome />} />
-            </Routes>
-        </UserContext.Provider>
-    );
+  
+ return (
+  <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/view-city" element={<ViewCity />} />
+        <Route path="/verification" element={<Verification />} />
+        <Route path="/create-account" element={<CreateAccount />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/preferences" element={<Preferences />} />
+      </Routes>
+  </UserProvider>
+ );
 };
  
 export default App;
-
-
