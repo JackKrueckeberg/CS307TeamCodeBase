@@ -15,6 +15,7 @@ import CreateAccount from "./components/createAccount";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
+
 import DiscussionHome from "./components/discussionHome";
 import { UserContext } from "./contexts/UserContext";
  
@@ -54,3 +55,5 @@ const App = () => {
 };
  
 export default App;
+
+
