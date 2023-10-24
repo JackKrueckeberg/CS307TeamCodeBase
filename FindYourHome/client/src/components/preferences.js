@@ -4,6 +4,11 @@ import "../Stylings/advancedPrefs.css";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
+import searchImage from "../ViewCity.js";
+import Model from "../ViewCity.js";
+import "../Stylings/ViewCity.css";
+import CityPage from "./citypage"
+
 
 export default function Create() {
   const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
@@ -19,7 +24,17 @@ export default function Create() {
     median_income: "",
     favorited: false
   });
+
   const [results, setResults] = useState([]);
+  const [showResults, setShowResults] = useState(false);
+  const [cityIncome, setCityIncome] = useState(null);
+  const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
+  const [cityModel, setCityModel] = useState(null);
+  const [allCities, setAllCities] = useState([]);
+  const [city, setCity] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
+  const [showing, setShowing] = useState([]);
 
   // These methods will update the state properties.
   function updateForm(value) {
@@ -217,7 +232,6 @@ export default function Create() {
     
   }
 
-
   async function getCities() {
     const city_info = await fetch("http://localhost:5050/city_info", {
       method: "GET",
@@ -230,6 +244,7 @@ export default function Create() {
     });
 
     const resp = await city_info.json();
+    setAllCities(resp);
     return resp;
   }  
 
@@ -367,6 +382,64 @@ export default function Create() {
       median_income: "",
       favorited:  false
     });
+  }
+
+
+  const handleCity = async (value) => {
+
+    var temp = [];
+    var contains = false;
+
+    for (var i = 0; i < showing.length; i++) {
+      if (showing[i] === value) {
+        contains = true;
+      } else {
+        temp.push(showing[i]);
+      }
+    }
+
+    if (contains === true) {
+      setShowing(temp);
+      return;
+    }
+
+    var tempShow = showing;
+    tempShow.push(value);
+    setShowing(tempShow);
+    
+    setSearchTerm(value);
+    console.log(value);
+    setShowResults(false);
+    const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
+    setCity(matchedCity);
+    setCityIncome(matchedCity ? matchedCity.median_income : null);
+    setCityCoordinates(matchedCity ? { lat: matchedCity.lat, lon: matchedCity.lon } : null)
+    if (matchedCity) {
+        const img = await searchImage();
+        const med_income = matchedCity.median_income ? matchedCity.median_income : "N/A";
+
+        let nation_avg;
+        let nation_flag = false;
+        if (med_income !== "N/A") {
+            nation_avg = med_income - 74580;
+            if (nation_avg >= 0) {
+                nation_flag = true;
+            }
+        }
+        const cityModel = new Model(
+            matchedCity.name,
+            matchedCity.population,
+            matchedCity.region,
+            matchedCity.state,
+            med_income,
+            img,
+            nation_avg,
+            nation_flag
+        );
+
+        setImageUrl(img);
+        setCityModel(cityModel);
+    }
   }
 
   const navigate = useNavigate();
@@ -640,12 +713,14 @@ export default function Create() {
             <li key={index}>
               {Object.entries(search).map(([key, value]) => {
                 if (value !== null && value !== "" && value !== false) {
-                  if (key !== 'state' && key !== 'name') {
+                  if (key !== 'name') {
                     return null; // Don't display State: default
                   }
                   return (
                     <span key={key}>
-                      {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                      {key.charAt(0).toUpperCase() + key.slice(1)}: {value}{' '}
+                      <button onClick={() => handleCity(value)}>View</button>
+                      {showResults && city && <CityPage showResults={showResults} city={city} cityModel={cityModel} cityCoordinates={cityCoordinates} testProp="Test"></CityPage>}
                     </span>
                   );
                 }
