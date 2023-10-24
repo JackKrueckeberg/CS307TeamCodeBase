@@ -13,8 +13,28 @@ const DiscussionHome = () => {
     const [selectorChoice, setSelectorChoice] = useState("");
     const [dropdownSelection, setDropdownSelection] = useState("");
 
+    
+    const getUniqueCitiesWithCasePreserved = (discussions) => {
+        const uniqueCitySet = new Set();
+        const uniqueCityList = [];
+    
+        discussions.forEach(discussion => {
+            const cityLowerCase = discussion.city.toLowerCase();
+            if (!uniqueCitySet.has(cityLowerCase)) {
+                uniqueCitySet.add(cityLowerCase);
+                uniqueCityList.push(discussion.city);
+            }
+        });
+    
+        return uniqueCityList;
+    };
+    
+    const uniqueCities = getUniqueCitiesWithCasePreserved(discussions);
 
- 
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    }
+    
     const handleCancel = () => {
         setShowForm(false);  // Hide the form
         setError('');        // Clear any previous errors
@@ -82,15 +102,26 @@ const DiscussionHome = () => {
     return (
         <div className={styles.DiscussionHome}>
             <h2>Discussions</h2>
+
             {!showForm && <DiscussNav />}
             
             {error && <div className="error">{error}</div>}
             
-            {!showForm && <button onClick={() => setShowForm(true)}>Create New Discussion</button>}
-            
+            {!showForm && <button onClick={() => setShowForm(true)} className={styles.createNew}>Create New Discussion</button>}
+            {!showForm && 
+                <select
+                    className={styles.filter} 
+                    value={city} 
+                    onChange={(e) => setCity(e.target.value)}>
+                    <option value="">All Cities</option>
+                    {uniqueCities.map((uniqueCity, index) => (
+                         <option key={index} value={uniqueCity}>{capitalizeFirstLetter(uniqueCity)}</option>
+                    ))}
+                </select>
+            }
             <div className={`${styles.threadContainer} ${showForm ? styles.formActive : ''}`}>
             {!showForm && <div className={styles.commentsBox}>
-                {discussions.slice().reverse().map((discussion, index) => (
+                {discussions.slice().reverse().filter(discussion => !city || discussion.city.toLowerCase() === city.toLowerCase()).map((discussion, index) => (
                     <div key={index} className={styles.discussionPost}>
                         <div className={styles.authorInfo}>
                             <div className={styles.fakeAvatar}></div>
@@ -174,8 +205,8 @@ const DiscussionHome = () => {
                             <option value="General">General</option>
                             <option value="Crime">Crime</option>
                             <option value="Dining">Dining</option>
-                            <option value="ToDo">Things to Do</option>
-                            <option value="other">Other</option>
+                            <option value="Things To Do">Things to Do</option>
+                            <option value="Other">Other</option>
                         </select>
                     </label>
 
