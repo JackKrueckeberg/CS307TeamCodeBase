@@ -8,9 +8,12 @@ import Users from "./routes/loginRoute.mjs";
 import EmailVerification from "./routes/emailVerification.mjs";;
 import profile from "./routes/profileRoute.mjs";
 import usersData from "./routes/usersData.mjs";
+import createUser from "./routes/createUser.mjs";
 import favorite_searches from "./routes/favorite_searches.mjs";
 import favorite_cities from "./routes/favorite_cities.mjs";
 import recent_searches from "./routes/recent_searches.mjs";
+import get_tweet from "./routes/get_tweet.mjs"
+
 //import DiscussionHome from "./routes/discussionPost.mjs"
 
 
@@ -27,10 +30,15 @@ app.use("/loginRoute", Users);
 app.use("/emailVerification", EmailVerification)
 app.use("/profileRoute", profile);
 app.use("/users", usersData);
+app.use("/createUser", createUser);
 app.use("/favorite_searches", favorite_searches);
 app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);
+
+app.use("/get_tweet", get_tweet);
+
 //app.use("/discussionPost", discussion);
+
 
 
 // start the Express server

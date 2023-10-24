@@ -15,6 +15,7 @@ import CreateAccount from "./components/createAccount";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
+
 import DiscussionHome from "./components/discussionHome";
 import { UserContext } from "./contexts/UserContext";
  
@@ -44,7 +45,7 @@ const App = () => {
                 <Route path="/" element={<Login />} />
                 <Route path="/view-city" element={<ViewCity />} />
                 <Route path="/verification" element={<Verification />} />
-                <Route path="/create-account" element={<CreateAccount />} />
+                <Route path="/createAccount" element={<CreateAccount />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/preferences" element={<Preferences />} />
                 <Route path="/discussion-home" element={<DiscussionHome />} />
@@ -54,3 +55,5 @@ const App = () => {
 };
  
 export default App;
+
+
