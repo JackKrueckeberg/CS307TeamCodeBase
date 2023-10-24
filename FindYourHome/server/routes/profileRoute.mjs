@@ -28,7 +28,6 @@ router.get("/check-username/:username", async (req, res) => {
   }
 });
 
-
 // Get user info
 router.get("/:id", async (req, res) => {
     try {
