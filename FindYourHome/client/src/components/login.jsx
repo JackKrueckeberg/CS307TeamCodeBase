@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../Stylings/loginStyle.module.css';
-import { Collapse } from 'bootstrap';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +10,8 @@ export const Login = () => {
     const [showRecoverForm, setShowRecoverFrom] = useState(false);
     const [incorrectAttempts, setIncorrectAttempts] = useState(0);
     const [rememberUser, setRememberUser] = useState(false);
+    const [isForgotPasswordPopupOpen, setIsForgotPasswordPopupOpen] = useState(false)
+    const [forgotPasswordEmail, setForgotPasswordEmail] = useState('')
     const timeoutRef = useRef(null);
     const { user, setLoggedInUser } = useUser();
     const navigate = useNavigate();
@@ -39,7 +40,8 @@ export const Login = () => {
                 console.log(data.message);
                 setIncorrectAttempts(0);
                 if (rememberUser && data.token) { 
-                    localStorage.setItem('authToken', data.token); // Store token if "Remember Me" is checked
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('currentUser', data.user._id); 
                 }
                 console.log('Received user object:', data.user);
                 if (data.user) {
@@ -75,6 +77,14 @@ export const Login = () => {
         }
     };
 
+    const handleForgotPasswordSubmit = (e) => {
+        e.preventDefault();
+    
+        console.log('Forgot Password Email:', forgotPasswordEmail);
+    
+        setIsForgotPasswordPopupOpen(false);
+      }
+
     const validateToken = async (token) => {
         try {
             const response = await fetch("http://localhost:5050/loginRoute/validate-token", {
@@ -95,6 +105,7 @@ export const Login = () => {
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
                 alert('Your session has expired. Please login again.');
             }
         } catch (error) {
@@ -175,25 +186,28 @@ export const Login = () => {
                 </div>
             </form>
 
+            <button type="button" onClick={() => setIsForgotPasswordPopupOpen(true)} className={styles.button}>Forgot Password</button>
         
-            <button type="button" className={styles.account}>Don't have an Account? Click here to Create one.</button>
+            <button type="button" onClick={() => navigate("/createAccount")}className={styles.account}>Don't have an Account? Click here to Create one.</button>
 
-            {/* QUINNS ACCOUNT RECOVER FORM CODE NEEDS TO BE REWORKED IN AND MADE AN ACTUAL POP-UP
-      
-                <button class="open-recover-form" onclick="openRecoveryForm()">Open Recovery Form</button>
+            {isForgotPasswordPopupOpen && (
+                <div className="popup">
+                <h3>Forgot Password</h3>
+                <form onSubmit={handleForgotPasswordSubmit}>
+                    <div className="form-content">
+                    <label>Email address:</label>
+                    <input
+                        type="email"
+                        onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                        value={forgotPasswordEmail}
+                    />
+                    <button type="submit">Reset Password</button>
+                    </div>
+                </form>
+                <button onClick={() => setIsForgotPasswordPopupOpen(false)}>Close</button>
+                </div>
+            )}
 
-                            <div class="form-popup" id="recoveryForm">
-                                <form action="/action_page.php" class="form-container">
-                                    <h1>Enter Email to Recover</h1>
-
-                                    <label for="email"><b>Email</b></label>
-                                    <input type="email" placeholder="Enter Email" name="email" required/>
-
-                                    <button type="submit" class="btn">Recover</button>
-                                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-                                </form>
-                            </div>
-            */}
 
         </div>
     )

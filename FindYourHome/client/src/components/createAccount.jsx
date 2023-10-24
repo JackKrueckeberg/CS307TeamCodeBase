@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import styles from '../Stylings/createAccountStyle.module.css'; 
+import { useNavigate } from 'react-router-dom';
 
 
 export const CreateAccount = () => {
@@ -9,6 +10,7 @@ export const CreateAccount = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
     const timeoutRef = useRef(null);
     
     const submission = (e) => {
@@ -22,16 +24,15 @@ export const CreateAccount = () => {
         return true;
     };
 
-    const handleFormSubmit = async (event) => {
-        event.preventDefault();
-    
-        if (!isValidForm()) {
-            alert("All fields marked with * are required.");
-            return;
-        }
+    const [error, setError] = useState(null)
+    const [isLoading, setIsLoading] = useState(null)
+    //const { dispatch } = useAuthContext()
+
+    const signup = async (e) => {
+        e.preventDefault();
 
         try {
-            const response = await fetch('/api/users/create', {
+            const response = await fetch("http://localhost:5050/createUser", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,62 +48,62 @@ export const CreateAccount = () => {
         } catch (error) {
             console.error('An error occurred:', error);
         }
-    };
+    }
 
     return (
         <div className={styles.accountCreation}>
             <h1>Start Your Journey Here.</h1>
-            <form onSubmit={handleFormSubmit}>
-            <label htmlFor="username">Username*</label>
-                <input 
-                    value={username} 
-                    name="username" 
-                    id="username" 
-                    placeholder='Username' 
-                    onChange={(e) => setUsername(e.target.value)} 
-                />
-                {/* Name and email details form */}
-                <label htmlFor="firstName">Name*</label>
-                <input 
-                    value={firstName} 
-                    name="firstName" 
-                    id="firstName" 
-                    placeholder='First Name' 
-                    onChange={(e) => setFirstName(e.target.value)} 
-                />
-                <label htmlFor="lastName"></label>
-                <input 
-                    value={lastName} 
-                    name="lastName" 
-                    id="lastName"
-                    placeholder='Last Name'   
-                    onChange={(e) => setLastName(e.target.value)} 
-                />
-                <label htmlFor="email">Email*</label>
-                <input 
-                    value={email} 
-                    placeholder='youremail@gmail.com'
-                    onChange={(e) => setEmail(e.target.value)} 
-                    type="email"
-                    id="email" 
-                />
-
-                {/* Password accaptance form */}
-                <div className={styles.passwordEntryWrapper}>
-                    <label htmlFor="password">Password*</label>
+            <form>
+                <label htmlFor="username">Username*</label>
                     <input 
-                        value={password} 
-                        onChange={(e) => setPassword(e.target.value)} 
-                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-                        title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required
-                        type={showPassword ? "text" : "password"} 
-                        id="password"
+                        value={username} 
+                        name="username" 
+                        id="username" 
+                        placeholder='Username' 
+                        onChange={(e) => setUsername(e.target.value)} 
                     />
-                </div>
-                <button type="submit">Register</button>
+                    {/* Name and email details form */}
+                    <label htmlFor="firstName">Name*</label>
+                    <input 
+                        value={firstName} 
+                        name="firstName" 
+                        id="firstName" 
+                        placeholder='First Name' 
+                        onChange={(e) => setFirstName(e.target.value)} 
+                    />
+                    <label htmlFor="lastName"></label>
+                    <input 
+                        value={lastName} 
+                        name="lastName" 
+                        id="lastName"
+                        placeholder='Last Name'   
+                        onChange={(e) => setLastName(e.target.value)} 
+                    />
+                    <label htmlFor="email">Email*</label>
+                    <input 
+                        value={email} 
+                        placeholder='youremail@gmail.com'
+                        onChange={(e) => setEmail(e.target.value)} 
+                        type="email"
+                        id="email" 
+                    />
+
+                    {/* Password accaptance form */}
+                    <div className={styles.passwordEntryWrapper}>
+                        <label htmlFor="password">Password*</label>
+                        <input 
+                            value={password} 
+                            onChange={(e) => setPassword(e.target.value)} 
+                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                            title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required
+                            type={showPassword ? "text" : "password"} 
+                            id="password"
+                        />
+                    </div>
+                <button onClick={() => signup}type="submit">Register</button>
             </form>
 
-            <button id="login">Already have an Account?  Click here to log in.</button>
+            <button onClick={() => navigate("/")}id="login">Already have an Account? Click here to log in.</button>
         </div>
     )
 }

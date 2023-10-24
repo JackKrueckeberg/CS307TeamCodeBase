@@ -5,12 +5,41 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 // Profile Route
+const validateAndConvertId = (id) => {
+  if (/^[0-9a-fA-F]{24}$/.test(id)) {
+      return new ObjectId(id);
+  }
+  return null;
+};
+
+router.get("/check-username/:username", async (req, res) => {
+  const requestedUsername = req.params.username;
+  const collection = db.collection("users");
+
+  // Check if the requested username already exists in the database
+  const existingUser = await collection.findOne({ username: requestedUsername });
+
+  if (existingUser) {
+    // Username is already in use
+    res.json({ isAvailable: false });
+  } else {
+    // Username is available
+    res.json({ isAvailable: true });
+  }
+});
+
 
 // Get user info
 router.get("/:id", async (req, res) => {
     try {
         let collection = await db.collection("users");
-        let query = {_id: new ObjectId(req.params.id)};  // Search for the user by id
+
+        const validObjectId = validateAndConvertId(req.params.id);
+        if (!validObjectId) {
+            return res.status(400).send("Invalid ID format");
+        }
+
+        let query = {_id: new ObjectId(validObjectId)};  // Search for the user by id
         let result = await collection.findOne(query);
     
         if (!result) return res.status(404).send("User Not found");
@@ -23,7 +52,11 @@ router.get("/:id", async (req, res) => {
 
 // Update the user info
 router.patch("/:id", async (req, res) => {
-    const query = {_id: new ObjectId(req.params.id)}; // update the user based on their id
+    const validObjectId = validateAndConvertId(req.params.id);
+    if (!validObjectId) {
+        return res.status(400).send("Invalid ID format");
+    }
+    const query = {_id: new ObjectId(validObjectId)}; // update the user based on their id
     const updates =  {
       $set: {
         firstName: req.body.firstName,
