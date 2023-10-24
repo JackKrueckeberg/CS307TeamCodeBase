@@ -127,7 +127,7 @@ export default function AccountInfo() {
     }
 
     // Function to save the new password
-    const saveNewPassword = () => {
+    const saveNewPassword = async () => {
         if (oldPassword !== user.password) {
             setError("That password does not match our records. Please try again.");
             return;
@@ -148,6 +148,30 @@ export default function AccountInfo() {
         }
 
         //TODO save to the backend
+        try {
+            const response = await fetch(`http://localhost:5050/profileRoute/update-password/${userProfile._id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ password: newPassword }),
+            });
+
+            console.log(newPassword);
+
+            if (response.status === 200) {
+                const data = await response.json();
+                console.log(data.message);
+                setSuccessMessage('Password updated successfully');
+                setTimeout(() => {
+                    setSuccessMessage('');
+                }, 5000); // Clear the message after 5 seconds
+            } else {
+                console.error("Password update failed");
+            }
+        } catch (error) {
+            console.error("Error updating password:", error);
+        }
 
         console.log("New Password:", newPassword);
         handlePasswordCancel();
@@ -240,13 +264,11 @@ export default function AccountInfo() {
             username: user.username,
             email: user.email,
             bio: user.bio,
-            profile_image: profile_image,
-            password: user.password,
         };
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/update-info/${userProfile._id}`, {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
@@ -275,19 +297,35 @@ export default function AccountInfo() {
 
     // function to edit the profile image
     // TODO fix this 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         console.log(e.target.files);
         const file = e.target.files[0];
         console.log(file);
         if (file) {
-            const imageURL = URL.createObjectURL(file);
-            console.log(imageURL);
-            setImage(imageURL);
-            setInfo({
-                ...user,
-                profile_image: imageURL,
-            });
-            console.log(user.profile_image);
+            const formData = new FormData();
+            formData.append('profile_image', file);
+            //console.log(imageURL);
+            //setImage(imageURL);
+            try {
+                // Send a PATCH request to the server
+                const response = await fetch(`http://localhost:5050/profileRoute/update-image/${userProfile._id}`, {
+                    method: "PATCH",
+                    body: formData,
+                });
+    
+                const data = await response.json();
+    
+                if (response.status === 200) {
+                    console.log(data.message);
+                    setSuccessMessage('Profile Image updated successfully');
+                    setTimeout(() => {
+                        setSuccessMessage('');
+                    }, 5000); // Clear the message after 5 seconds
+                }
+    
+            } catch (error) {
+                console.error("There was an error updating your info: ", error);
+            }
         }
     };
 
