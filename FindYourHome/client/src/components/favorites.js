@@ -1,11 +1,24 @@
 import React, { useState, useEffect } from "react";
 import '../Stylings/favorites.css';
+import Modal from "react-modal";
+
 
 export default function Favorites() {
     
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
     const [favorite_searches, setFavoriteSearches] = useState([]);
     const [favorite_cities, setFavoriteCities] = useState([]);
+
+    const [selectedCities, setSelectedCities] = useState([]);
+    const [isSelecting, setIsSelecting] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
+
+    const [showShareModal, setShareModal] = useState(false);
+    const [recipient, setRecipient] = useState('');
+    const [isExisting, setIsExisting] = useState(true);
+
+    const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
+    const [errorMessage, setError] = useState(''); // errorMessage will display when there is an error
 
     useEffect(() => {
         // Call the function to get favorite cities when the component mounts
@@ -84,6 +97,8 @@ export default function Favorites() {
 
         setFavoriteCities(resp.favorite_cities);
 
+        setSelectedCities(Array.from({ length: resp.favorite_cities.length }, () => false));
+
         console.log(resp.favorite_cities);
     
         return resp.favorite_cities;
@@ -111,7 +126,73 @@ export default function Favorites() {
         setFavoriteCities(newFavs);
     }
 
+    // function to toggle between view and select mode
+    const handleSelect = () => {
+        setIsSelecting(!isSelecting);
+    };
 
+    // function to toggle between select and view mode
+    const handleCancel = () => {
+        setIsSelecting(false);
+    };
+
+    // function to toggle the checkbox
+    const handleCheckboxChange = (index) => {
+        const updatedCheckboxes = [...selectedCities]; // Create a copy of the selectedCities array
+        updatedCheckboxes[index] = !updatedCheckboxes[index]; // Toggle the value at the clicked index
+        setSelectedCities(updatedCheckboxes); // Update the state
+    };
+
+    // function to share selected cities
+    const handleShareModal = () => {
+        const isAnyCitySelected = selectedCities.some((isSelected) => isSelected);
+        if (!isAnyCitySelected) {
+            alert("You need to select a city to share.");
+            return;
+        }
+
+        setShareModal(true);
+        console.log(selectedCities);
+    }
+
+    const handleShareCancel = () => {
+        setShareModal(false);
+        setError('');
+        setRecipient('');
+    }
+
+    // function to share selected cities with the another user
+    const handleShare = async (recipient) => {
+        const exists = await checkExistingUser(recipient);
+        if (!exists) {
+            setError('The username you provided does not match any in our records. Please try again.');
+            return;
+        }
+
+        // TODO finish the send method
+
+    };
+
+    // function to check that the user exists
+    const checkExistingUser = async (recipient) => {
+        try {
+            const response = await fetch(`http://localhost:5050/profileRoute/check-username/${recipient}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                return !data.isAvailable;
+            }
+        } catch (error) {
+            console.error("Error checking username availability: ", error);
+            return false;
+        }
+    };
+   
 
 
     return (
@@ -125,26 +206,82 @@ export default function Favorites() {
                 
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Cities </h2>
-                    {getUser_favorite_cities}
-                    <ul>
-                    {favorite_cities.map((search, index) => (
-                        <li key={index}>
-                        <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                        {Object.entries(search).map(([key, value]) => {
+                    {isSelecting ? (
+                        <div>
+                            <button className="share-button" onClick={handleShareModal}>Share to</button>
+                            <Modal
+                                className={"password-change-modal"}
+                                isOpen={showShareModal}
+                                onRequestClose={() => {
+                                    setShareModal(false);
+                                    setError('');
+                                }}
+                                contentLabel="Change Password Modal"
+                >
+                                <div className="modal-content">
+                                    <h2>Who do you wanna share your favorite cities with?</h2>
+                                    {errorMessage && <p className="error-message">{errorMessage}</p>}
+                                    <input
+                                        type="username"
+                                        placeholder="recipient's username"
+                                        value={recipient}
+                                        onChange={(e) => setRecipient(e.target.value)}
+                                    />
+                                    <button className="save-button" onClick={() => handleShare(recipient)}>Share</button>
+                                    <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
+                                </div>
+                            </Modal>
+                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                            <ul>
+                            {favorite_cities.map((city, index) => (
+                                <li key={index}>
+                                <input
+                                    type="checkbox"
+                                    name="selectedCity"
+                                    checked={selectedCities[index]}
+                                    onChange={() => handleCheckboxChange(index)}
+                                />
+                                {Object.entries(city).map(([key, value]) => {
                             
                             
-                            return (
-                                <span key={key}>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                </span>
-                            );
+                                    return (
+                                        <span key={key}>
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                        </span>
+                                    );
                             
                            
-                        })}
-                        </li>
-                    ))}
-                    </ul>
-
+                                })}
+                                </li>
+                            ))}
+                            </ul>
+                        </div>
+                    ) : (
+                        <div>
+                            <button onClick={handleSelect}>Share Favorite</button>
+                            {/*{getUser_favorite_cities}*/}
+                            <ul>
+                            {favorite_cities.map((city, index) => (
+                                <li key={index}>
+                                <button onClick={() => removeFavoriteCity(index)}>delete</button>
+                                {Object.entries(city).map(([key, value]) => {
+                            
+                            
+                                    return (
+                                        <span key={key}>
+                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                        </span>
+                                    );
+                            
+                           
+                                })}
+                                </li>
+                            ))}
+                            </ul>
+                        </div>
+                    )}
+                    
+                    
 
                 </div>
 
