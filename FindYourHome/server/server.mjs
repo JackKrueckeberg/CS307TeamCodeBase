@@ -43,7 +43,7 @@ app.use("/recent_searches", recent_searches);
 
 app.use("/get_tweet", get_tweet);
 app.use("/bookmarked_discussions", bookmarked_discussions)
-
+app.use("/messageRoute", message);
 //app.use("/discussionPost", discussion);
 
 

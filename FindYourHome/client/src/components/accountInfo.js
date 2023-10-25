@@ -305,12 +305,14 @@ export default function AccountInfo() {
             const imageURL = URL.createObjectURL(file);
             setImage(imageURL);
             //console.log(imageURL);
-            setImage('/static/media/', file.name);
             try {
                 // Send a PATCH request to the server
                 const response = await fetch(`http://localhost:5050/profileRoute/update-image/${userProfile._id}`, {
                     method: "PATCH",
-                    body: formData,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ profile_image: profile_image }),
                 });
     
                 const data = await response.json();
