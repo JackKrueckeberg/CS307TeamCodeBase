@@ -22,13 +22,18 @@ export default function AccountInfo() {
     const storedUser = localStorage.getItem("currentUser");
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const [user, setInfo] = useState(storedUser || userProfile || initialInfo);
+    
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
     const [prevUser, setPrevUser] = useState(initialInfo); // Store a copy of user data to revert if editing is canceled
+    
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
+    
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
     const [errorMessage, setError] = useState(''); // errorMessage will display when there is an error
+    
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
+    
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false); // password change pop-up
     const [newPassword, setNewPassword] = useState(''); //new password
     const [confirmPassword, setConfirmPassword] = useState(''); //confirm new password
@@ -61,12 +66,6 @@ export default function AccountInfo() {
                 const userInfo = await response.json();
                 console.log(userInfo);
                 setInfo(userInfo); // Update the user state with the fetched data
-                if (userInfo.profile_image === "") {
-                    setInfo({
-                        ...user,
-                        profile_image: defaultImage,
-                    });
-                }
             }
         } catch (error) {
             console.error("Error fetching user info: ", error);
@@ -147,7 +146,6 @@ export default function AccountInfo() {
             return;
         }
 
-        //TODO save to the backend
         try {
             const response = await fetch(`http://localhost:5050/profileRoute/update-password/${userProfile._id}`, {
                 method: "PATCH",
@@ -302,21 +300,24 @@ export default function AccountInfo() {
         const file = e.target.files[0];
         console.log(file);
         if (file) {
-            const formData = new FormData();
-            formData.append('profile_image', file);
-            //console.log(imageURL);
+            //const imageURL = URL.createObjectURL(file);
             //setImage(imageURL);
+            //console.log(imageURL);
+            setImage('/static/media/', file.name);
             try {
                 // Send a PATCH request to the server
                 const response = await fetch(`http://localhost:5050/profileRoute/update-image/${userProfile._id}`, {
                     method: "PATCH",
-                    body: formData,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({profile_image: profile_image}),
                 });
     
                 const data = await response.json();
     
                 if (response.status === 200) {
-                    console.log(data.message);
+                    console.log(user.profile_image);
                     setSuccessMessage('Profile Image updated successfully');
                     setTimeout(() => {
                         setSuccessMessage('');
@@ -334,7 +335,7 @@ export default function AccountInfo() {
             <div className="profile-header">
                 {/* Profile Picture */}
                 <div className="profile-avatar">
-                    <img src={profile_image} width={150} height={150} alt="Profile"/>
+                    <img src={user.profile_image} width={150} height={150} alt="Profile"/>
                     <button className="upload-image" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"

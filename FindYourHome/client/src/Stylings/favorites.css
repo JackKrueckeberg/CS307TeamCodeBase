@@ -92,3 +92,50 @@
         margin-left: 10px;
     }
 }
+
+h2 {
+    padding: 1px;
+}
+
+h5 {
+    padding: 1px;
+}
+
+ul {
+    padding: 1px;
+}
+
+.view {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.share-favorite {
+    background-color: rgb(134, 190, 255);
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.share-button {
+    background-color: rgb(134, 190, 255);
+    margin-top: 10px;
+}
+
+.cancel-button {
+    color: black;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .shareTo-button {
+    background-color: rgb(134, 190, 255);
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
