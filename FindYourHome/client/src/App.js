@@ -16,6 +16,7 @@ import RecoverAccount from "./components/recover-account";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
+import AccountInfo from "./components/accountInfo";
 
 //We import any contexts used
 import { UserProvider } from "./contexts/UserContext";
@@ -33,6 +34,8 @@ const App = () => {
                 <Route path="/recover-account" element={<RecoverAccount />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/preferences" element={<Preferences />} />
+                <Route path="/accountInfo" element={<AccountInfo />} />
+                <Route path="/favorites" element={<Favorites />} />
             </Routes>
         </UserProvider>
     );

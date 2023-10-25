@@ -27,7 +27,7 @@ export default function Profile() {
             <div className="contents">
                 
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
-                    <AccountInfo/>
+                    <AccountInfo />
                 </div>
 
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
