@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import '../Stylings/favorites.css';
 import Modal from "react-modal";
+import { useUser } from "../contexts/UserContext";
 
 
 export default function Favorites() {
+
+    const {user: userProfile} = useUser();
     
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
     const [favorite_searches, setFavoriteSearches] = useState([]);
@@ -37,7 +40,7 @@ export default function Favorites() {
 
     async function getUser_favorite_searches() {
 
-        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+        const city_info = await fetch(`http://localhost:5050/users/${userProfile.email}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -64,7 +67,7 @@ export default function Favorites() {
             }
         }
 
-        await fetch("http://localhost:5050/favorite_searches/user@example.com", {
+        await fetch(`http://localhost:5050/favorite_searches/${userProfile.email}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -83,7 +86,7 @@ export default function Favorites() {
 
     async function getUser_favorite_cities() {
 
-        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+        const city_info = await fetch(`http://localhost:5050/users/${userProfile.email}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -112,7 +115,7 @@ export default function Favorites() {
             }
         }
 
-        await fetch("http://localhost:5050/favorite_cities/user@example.com", {
+        await fetch(`http://localhost:5050/favorite_cities/${userProfile.email}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",

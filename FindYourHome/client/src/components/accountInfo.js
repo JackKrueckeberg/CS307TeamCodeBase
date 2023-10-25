@@ -131,6 +131,10 @@ export default function AccountInfo() {
             setError("That password does not match our records. Please try again.");
             return;
         }
+        if (oldPassword === newPassword) {
+            setError("Your new password cannot be the same as your old password. Please try again.");
+            return;
+        }
         if (newPassword !== confirmPassword) {
             setError("Passwords do not match. Please try again.");
             return;
@@ -300,10 +304,10 @@ export default function AccountInfo() {
         const file = e.target.files[0];
         console.log(file);
         if (file) {
-            //const imageURL = URL.createObjectURL(file);
-            //setImage(imageURL);
+            const imageURL = URL.createObjectURL(file);
+            setImage(imageURL);
             //console.log(imageURL);
-            setImage('/static/media/', file.name);
+            //setImage('/static/media/', file.name);
             try {
                 // Send a PATCH request to the server
                 const response = await fetch(`http://localhost:5050/profileRoute/update-image/${userProfile._id}`, {
@@ -335,7 +339,7 @@ export default function AccountInfo() {
             <div className="profile-header">
                 {/* Profile Picture */}
                 <div className="profile-avatar">
-                    <img src={user.profile_image} width={150} height={150} alt="Profile"/>
+                    <img src={profile_image} width={150} height={150} alt="Profile"/>
                     <button className="upload-image" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"
