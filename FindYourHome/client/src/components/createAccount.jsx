@@ -110,10 +110,10 @@ export const CreateAccount = () => {
                             id="password"
                         />
                     </div>
-                <button onClick={() => signup().then(navigate("/")).then(alert("Account created successfully, you can now log in"))}>Register</button>
+                <button onClick={() => signup().then(navigate("/")).then(alert("Account created successfully, you can now log in."))}>Create Account</button>
             </form>
 
-            <button onClick={() => navigate("/")}id="login">Already have an Account? Click here to log in.</button>
+            <button onClick={() => navigate("/")}id="login">Return to Log In</button>
         </div>
     )
 }

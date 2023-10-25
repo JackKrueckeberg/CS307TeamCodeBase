@@ -376,8 +376,9 @@ export default function Create() {
   return (
     // name, population, region, state, zip code, county, median income
     <div>
-        <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
         <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+        <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
+        <button className="discussionButton">Discussions</button>
         <div>
         <form onSubmit={onSubmit}>
           <div className="padding" />

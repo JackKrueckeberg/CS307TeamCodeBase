@@ -230,12 +230,25 @@ const ViewCity = () => {
 
     return (
         <div>
+            <div class="profiletooltip">
+                <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+                <span class="profiletooltiptext">View your profile page and make edits</span>
+            </div>
+            <div class="advancedtooltip">
+                <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+                <span class="advancedtooltiptext">Search based on attributes of cities</span>
+            </div>
+            <div class="discussiontooltip">
+                <button className="discussionButton">Discussions</button>
+                <span class="discussiontooltiptext">View discussions about different cities</span>
+            </div>
+
             {!isVerified && (
                 <div className="verificationBanner">
-                    Your account is not verified
-                    <button onClick={handleVerification}>Click here to verify</button>
+                    Your account is not verified! <button onClick={handleVerification}>Click here to verify</button>
                 </div>
             )}
+
             <h1 className="header">View City Page</h1>
             {showResults && (
                 <div>
@@ -256,60 +269,53 @@ const ViewCity = () => {
             )}
 
             <div className="container">
-
-                <div className="result">
-                    {showResults && city && <CityModel model={cityModel} />}
-                    {showResults && city && <Map key={`${cityCoordinates.lat}-${cityCoordinates.lon}`} lat={cityCoordinates.lat} lon={cityCoordinates.lon} />}
-                </div>
-
-                {showResults && !city &&
-                    <div className="errorMessage">
-                        {searchTerm === "" ? <h2>No City Searched</h2> : <h2>Invalid Search</h2>}
+                <div className="leftColumn">
+                    <div className="recentlyViewedCities">
+                        <RecentCitiesQueue queue={recentCitiesQueue} />
                     </div>
-                }
-
-                <div className="mainContent">
-                    <div className="searchBar">
-                        <label htmlFor="city-input">Search</label>
-                        <Autosuggest // Use Autosuggest component
-                            suggestions={suggestions}
-                            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                            onSuggestionsClearRequested={onSuggestionsClearRequested}
-                            getSuggestionValue={(suggestion) => suggestion}
-                            renderSuggestion={(suggestion) => (
-                                <div
-                                    key={suggestion}
-                                    className="suggestion"
-                                    >
-                                    {suggestion}
-                                </div>
-                            )}
-                            inputProps={{
-                                type: "text",
-                                placeholder: "Enter a city",
-                                value: searchTerm,
-                                onChange: handleInputChange,
-                            }}
-                        />
+                </div>
+                <div className="rightColumn">
+                    <div className="searchSection">
+                        <div className="searchBar">
+                            <label htmlFor="city-input">Search</label>
+                            <Autosuggest // Use Autosuggest component
+                                suggestions={suggestions}
+                                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                                getSuggestionValue={(suggestion) => suggestion}
+                                renderSuggestion={(suggestion) => (
+                                    <div
+                                        key={suggestion}
+                                        className="suggestion"
+                                        >
+                                        {suggestion}
+                                    </div>
+                                )}
+                                inputProps={{
+                                    type: "text",
+                                    placeholder: "Enter a city",
+                                    value: searchTerm,
+                                    onChange: handleInputChange,
+                                }}
+                            />
+                        </div>
                         <div className="button-group">
                             <button className="submitButton" onClick={handleCombinedActions}>Submit</button>
                             <button className="clearButton" onClick={handleClear}>Clear</button>
                         </div>
-
-
+                    </div>
+                    <div className="result">
+                        {showResults && city && <CityModel model={cityModel} />}
+                        {showResults && city && <Map key={`${cityCoordinates.lat}-${cityCoordinates.lon}`} lat={cityCoordinates.lat} lon={cityCoordinates.lon} />}
+                        {showResults && !city &&
+                            <div className="errorMessage">
+                                {searchTerm === "" ? <h2>No City Searched</h2> : <h2>Invalid Search</h2>}
+                            </div>
+                        }
                     </div>
                 </div>
-
-                <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
-                <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-            </div>
-
-
-            <div className="recentlyViewedCities">
-                <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
         </div>
-
     );
 };
 

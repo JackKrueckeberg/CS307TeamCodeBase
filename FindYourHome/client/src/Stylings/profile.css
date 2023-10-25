@@ -109,3 +109,11 @@
 .preferences-button:hover {
   background-color: rgb(241, 197, 85);
 }
+
+.discussionButton {
+  background: rgb(224, 218, 201);
+}
+
+.discussionButton:hover {
+  background-color: rgb(241, 197, 85);
+}

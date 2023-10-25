@@ -7,17 +7,40 @@ body {
     padding: 0;
 }
 
-div.container {
+.container {
+    border: 1px solid-black;
     display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: nowrap;
     margin-top: 10px;
     padding: 40px;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     /* centers the container */
 }
 
+.leftColumn {
+    background-color: lightblue;
+    flex: 0 0 30px;
+    margin-right: 20px;
+}
+
+.rightColumn {
+    /* background-color: lightcoral; */
+    flex: 1;
+}
+
+.searchSection {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
 .header {
-    width: 100%;
+    /* width: 100%; */
+    background-color: rgb(199, 199, 199);
     text-align: center;
     font-size: 2em;
     margin-bottom: 20px;
@@ -26,20 +49,19 @@ div.container {
 
 .mainContent {
     flex: 1;
-    /* take the available space */
+    display: flex;
+    flex-direction: row;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
+    /* margin-right: 20px; */
 }
 
 .searchBar {
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    /* stretch to full width */
-    gap: 20px;
+    align-items: center;
+    gap: 15px;
 }
 
 .searchBar label {
@@ -50,6 +72,7 @@ div.container {
 .button-group {
     display: flex;
     gap: 15px;
+    align-items: center;
 }
 
 button {
@@ -64,6 +87,117 @@ button {
 button:hover {
     transform: scale(1.05);
     /* subtle grow effect */
+}
+
+.profiletooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.profiletooltip .profiletooltiptext {
+    visibility: hidden;
+    width: flex;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.profiletooltip:hover .profiletooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.discussiontooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.discussiontooltip .discussiontooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.discussiontooltip:hover .discussiontooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.advancedtooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.advancedtooltip .advancedtooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.advancedtooltip:hover .advancedtooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.discussionButton {
+    visibility: visible;
+    background-color: rgb(199, 199, 199);
+    margin: 10px;
+}
+
+.advancedSearch {
+    visibility: visible;
+    background-color: rgb(199, 199, 199);
+    margin: 10px;
+
+}
+
+.advancedSearch:hover {
+    background-color: rgb(145, 145, 145);
+
+}
+
+.profilebtn {
+    visibility: visible;
+    background-color: rgb(199, 199, 199);
+    margin: 10px;
+
+}
+
+.profilebtn:hover {
+    background-color: rgb(145, 145, 145);
+
 }
 
 .submitButton {
@@ -82,6 +216,7 @@ button:hover {
 }
 
 .result {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -93,12 +228,12 @@ button:hover {
 }
 
 .recentlyViewedCities {
-    width: 300px;
+    /* width: 300px; */
     /* fixed width for this section */
     background-color: #ffffff;
     padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
     overflow-y: auto;
 }
 
@@ -115,8 +250,9 @@ button:hover {
 
 
 .fav_icon {
-    scale: 5;
+    transform: scale(5);
 }
+
 .confirmButton {
     background-color: white;
     color: black;
@@ -127,20 +263,20 @@ button:hover {
     margin-top: 100px; /* Increase the top margin to move the button down */
   
     /* Other styles for the button in its default state */
-  }
+}
   
-  .confirmButton:hover {
+.confirmButton:hover {
     background-color: #2980b9; /* Change the background color on hover */
     /* Additional styles for the button on hover */
-  }
+}
   
-
 .errorMessage {
     font-size: 1.5rem; 
     color: red;
     margin-top: 20px;
     text-align: center; /* Centering the error message */
 }
+
 .verificationBanner {
     background-color: red;
     color: white;
@@ -148,5 +284,6 @@ button:hover {
     text-align: center;
     font-weight: bold;
     border-radius: 5px;
+    max-width: 40;
 }
 

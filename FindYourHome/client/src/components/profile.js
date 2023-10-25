@@ -16,8 +16,9 @@ export default function Profile() {
     return (
         <div className="container">
             <div className="nav-buttons">
-                <button className="viewCity-button" onClick={() => navigate('/view-city')}>Go to City Search</button>
-                <button className="preferences-button" onClick={() => navigate('/preferences')}>Go to Preferences</button>
+                <button className="viewCity-button" onClick={() => navigate('/view-city')}>City Search</button>
+                <button className="preferences-button" onClick={() => navigate('/preferences')}>Advanced Search</button>
+                <button className="discussionButton">Discussions</button>
             </div>
             <div className="tabs-block">
                 <div onClick={() => handleTabChange(1)} className={`${tabVal === 1 ? 'tab active-tab' : 'tab'}`}> Account Info </div>
