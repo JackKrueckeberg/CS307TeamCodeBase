@@ -5,15 +5,16 @@ import records from "./routes/record.mjs";
 import city_populator from "./routes/city_populator.mjs";
 import city_info from "./routes/city_info.mjs";
 import Users from "./routes/loginRoute.mjs";
-import EmailVerification from "./routes/emailVerification.mjs";;
+import EmailVerification from "./routes/emailVerification.mjs";
+import EmailResetPassword from "./routes/emailForgotPassword.mjs"
 import profile from "./routes/profileRoute.mjs";
 import usersData from "./routes/usersData.mjs";
-import createUser from "./routes/createUser.mjs";
 import favorite_searches from "./routes/favorite_searches.mjs";
 import favorite_cities from "./routes/favorite_cities.mjs";
 import recent_searches from "./routes/recent_searches.mjs";
 import get_tweet from "./routes/get_tweet.mjs"
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
+
 
 
 //import DiscussionHome from "./routes/discussionPost.mjs"
@@ -30,9 +31,10 @@ app.use("/city_populator", city_populator);
 app.use("/city_info", city_info);
 app.use("/loginRoute", Users);
 app.use("/emailVerification", EmailVerification)
+app.use("/emailForgotPassword", EmailResetPassword)
 app.use("/profileRoute", profile);
 app.use("/users", usersData);
-app.use("/createUser", createUser);
+app.use("/createUser", usersData);
 app.use("/favorite_searches", favorite_searches);
 app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);

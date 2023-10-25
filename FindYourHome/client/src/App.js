@@ -12,6 +12,7 @@ import Login from "./components/login";
 import ViewCity from "./ViewCity";
 import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
+import RecoverAccount from "./components/recover-account";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
@@ -20,19 +21,21 @@ import Favorites from "./components/favorites";
 import { UserProvider } from "./contexts/UserContext";
  
 const App = () => {
-  
- return (
-  <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/view-city" element={<ViewCity />} />
-        <Route path="/verification" element={<Verification />} />
-        <Route path="/create-account" element={<CreateAccount />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/preferences" element={<Preferences />} />
-      </Routes>
-  </UserProvider>
- );
+
+
+    return (
+        <UserProvider> {/* Keep this and put your stuff inside here to access current logged in user information*/}
+            <Routes>
+                <Route path="/" element={<Login />} />
+                <Route path="/view-city" element={<ViewCity />} />
+                <Route path="/verification" element={<Verification />} />
+                <Route path="/createAccount" element={<CreateAccount />} />
+                <Route path="/recover-account" element={<RecoverAccount />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/preferences" element={<Preferences />} />
+            </Routes>
+        </UserProvider>
+    );
 };
  
 export default App;
