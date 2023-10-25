@@ -37,16 +37,14 @@ export const Login = () => {
             const data = await response.json();
     
             if (response.status === 200) {
-                console.log(data.message);
                 setIncorrectAttempts(0);
                 if (rememberUser && data.token) { 
                     localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('currentUser', data.user._id); 
+                    localStorage.setItem('currentUser', JSON.stringify(data.user)); 
                 }
-                console.log('Received user object:', data.user);
                 if (data.user) {
+                    sessionStorage.setItem('currentUser', JSON.stringify(data.user));
                     setLoggedInUser(data.user);
-                    console.log(data.user._id);
                 }
                 navigate("/view-city");                  
             } else {
@@ -77,14 +75,6 @@ export const Login = () => {
         }
     };
 
-    const handleForgotPasswordSubmit = (e) => {
-        e.preventDefault();
-    
-        console.log('Forgot Password Email:', forgotPasswordEmail);
-    
-        setIsForgotPasswordPopupOpen(false);
-      }
-
     const validateToken = async (token) => {
         try {
             const response = await fetch("http://localhost:5050/loginRoute/validate-token", {
@@ -99,13 +89,13 @@ export const Login = () => {
             if (response.status === 200) {
                 if (data.user) {
                     setLoggedInUser(data.user);
-                    console.log(data.user._id);
                 }
                 navigate("/view-city");     
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('currentUser');
+                sessionStorage.removeItem('currentUser');
                 alert('Your session has expired. Please login again.');
             }
         } catch (error) {
@@ -114,13 +104,33 @@ export const Login = () => {
         }
     };        
 
-    function openRecoveryForm() {
-        document.getElementById("recoveryForm").style.display = "block";
+    const handleForgotPasswordSubmit = async (e) => {
+        e.preventDefault();
+    
+        try {
+            console.log("inside try catch");
+            const response = await fetch('http://localhost:5050/emailForgotPassword/send-reset-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: forgotPasswordEmail })
+            });
+            console.log("after post attempt");
+            const data = await response.json();
+            console.log("after await")
+    
+            if (response.status === 200) {
+                alert(data.message);
+                setIsForgotPasswordPopupOpen(false);
+            } else {
+                alert(data.error || 'Failed to send email');
+            }
+        } catch (error) {
+            console.error('There was an error:', error);
+        }
     }
-      
-    function closeRecoveryForm() {
-        document.getElementById("recoveryForm").style.display = "none";
-    }
+    
 
     useEffect(() => {
         
@@ -201,10 +211,10 @@ export const Login = () => {
                         onChange={(e) => setForgotPasswordEmail(e.target.value)}
                         value={forgotPasswordEmail}
                     />
-                    <button type="submit">Reset Password</button>
+                    <button type="submit">Send Reset Email</button>
                     </div>
                 </form>
-                <button onClick={() => setIsForgotPasswordPopupOpen(false)}>Close</button>
+                <button onClick={() => handleForgotPasswordSubmit}>Close</button>
                 </div>
             )}
 

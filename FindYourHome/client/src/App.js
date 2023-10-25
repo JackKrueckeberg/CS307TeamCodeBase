@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from "react";
 
 // We use Route in order to define the different routes of our application
 import { Route, Routes } from "react-router-dom";
@@ -12,18 +12,24 @@ import Login from "./components/login";
 import ViewCity from "./ViewCity";
 import Verification from "./components/verification";
 import CreateAccount from "./components/createAccount";
+import RecoverAccount from "./components/recover-account";
 import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import Favorites from "./components/favorites";
+
 import CityPage from "./components/citypage";
 
 import DiscussionHome from "./components/discussionHome";
 import { UserContext } from "./contexts/UserContext";
 import { CityContext } from './contexts/CityContext';
+
+import AccountInfo from "./components/accountInfo";
+
+//We import any contexts used
+import { UserProvider } from "./contexts/UserContext";
+
  
 const App = () => {
-  const storedUser = sessionStorage.getItem("currentUser");
-  const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
 
   useEffect(() => {
       if (user) {
@@ -47,6 +53,7 @@ const App = () => {
       setUser(null);
   };
 
+
     const setGlobalCity = (city) => {
         setCity(city);
     };
@@ -68,9 +75,8 @@ const App = () => {
                 </Routes>
             </CityContext.Provider>
         </UserContext.Provider>
+
     );
 };
  
 export default App;
-
-
