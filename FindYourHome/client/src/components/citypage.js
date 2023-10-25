@@ -5,19 +5,23 @@ import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
 import "../Stylings/ViewCity.css";
 import Twitter from "./twitter";
+import { useCity } from "../contexts/CityContext";
 
 
 export default function CityPage(props) {
+    const currentUser = localStorage.getItem("currentCity");
+    const {city: globalCity} = useCity();
+
 
 
   return (
     <div>
         <div className="result">
-            <label content={props.cityCoordinates.lon}></label>
-            {props.showResults && props.city && <CityModel model={props.cityModel} />}
-            {props.showResults && props.city && <Map key={`${props.cityCoordinates.lat}-${props.cityCoordinates.lon}`} lat={props.cityCoordinates.lat} lon={props.cityCoordinates.lon} />}
+            <label content={globalCity.lon}></label>
+            {globalCity.name && globalCity && <CityModel model={globalCity} />}
+            {globalCity.name && globalCity && <Map key={`${globalCity.lat}-${globalCity.lon}`} lat={globalCity.lat} lon={globalCity.lon} />}
         </div>
-        <Twitter cityName = {props.city.name}></Twitter>
+        <Twitter cityName = {globalCity.name}></Twitter>
 
     </div>
   );

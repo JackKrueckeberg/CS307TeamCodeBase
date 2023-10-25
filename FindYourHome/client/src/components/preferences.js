@@ -7,7 +7,9 @@ import Favorite from '@mui/icons-material/Favorite';
 import searchImage from "../ViewCity.js";
 import Model from "../ViewCity.js";
 import "../Stylings/ViewCity.css";
-import CityPage from "./citypage"
+import CityPage from "./citypage";
+import { useCity } from "../contexts/CityContext";
+import { useUser } from '../contexts/UserContext';
 
 
 export default function Create() {
@@ -35,6 +37,10 @@ export default function Create() {
   const [searchTerm, setSearchTerm] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
   const [showing, setShowing] = useState([]);
+  const {globalCity, setGlobalCity} = useCity();
+
+  const currentUser = localStorage.getItem("currentUser");
+  const {user: userProfile } = useUser(); // the id of the current logged in user
 
   // These methods will update the state properties.
   function updateForm(value) {
@@ -57,7 +63,7 @@ export default function Create() {
 
   async function getUser_favorites() {
 
-    const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+    const city_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +79,7 @@ export default function Create() {
   }  
 
   async function getUser_recentSearches() {
-    const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+    const city_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -165,7 +171,7 @@ export default function Create() {
     }
     favs.push(newFavorite);
 
-    await fetch("http://localhost:5050/favorite_searches/user@example.com", {
+    await fetch("http://localhost:5050/favorite_searches/" + userProfile.email, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -198,7 +204,7 @@ export default function Create() {
     }
     recent.push(newRecent);
 
-    await fetch("http://localhost:5050/recent_searches/user@example.com", {
+    await fetch("http://localhost:5050/recent_searches/" + userProfile.email, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -386,60 +392,13 @@ export default function Create() {
 
 
   const handleCity = async (value) => {
-
-    var temp = [];
-    var contains = false;
-
-    for (var i = 0; i < showing.length; i++) {
-      if (showing[i] === value) {
-        contains = true;
-      } else {
-        temp.push(showing[i]);
-      }
-    }
-
-    if (contains === true) {
-      setShowing(temp);
-      return;
-    }
-
-    var tempShow = showing;
-    tempShow.push(value);
-    setShowing(tempShow);
-    
-    setSearchTerm(value);
-    console.log(value);
-    setShowResults(false);
-    const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
-    setCity(matchedCity);
-    setCityIncome(matchedCity ? matchedCity.median_income : null);
-    setCityCoordinates(matchedCity ? { lat: matchedCity.lat, lon: matchedCity.lon } : null)
-    if (matchedCity) {
-        const img = await searchImage();
-        const med_income = matchedCity.median_income ? matchedCity.median_income : "N/A";
-
-        let nation_avg;
-        let nation_flag = false;
-        if (med_income !== "N/A") {
-            nation_avg = med_income - 74580;
-            if (nation_avg >= 0) {
-                nation_flag = true;
-            }
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].name === value) {
+          setGlobalCity(results[i]);
+          navigate("/cityPage", results[i]);
+          return;
         }
-        const cityModel = new Model(
-            matchedCity.name,
-            matchedCity.population,
-            matchedCity.region,
-            matchedCity.state,
-            med_income,
-            img,
-            nation_avg,
-            nation_flag
-        );
-
-        setImageUrl(img);
-        setCityModel(cityModel);
-    }
+      }
   }
 
   const navigate = useNavigate();
@@ -720,7 +679,6 @@ export default function Create() {
                     <span key={key}>
                       {key.charAt(0).toUpperCase() + key.slice(1)}: {value}{' '}
                       <button onClick={() => handleCity(value)}>View</button>
-                      {showResults && city && <CityPage showResults={showResults} city={city} cityModel={cityModel} cityCoordinates={cityCoordinates} testProp="Test"></CityPage>}
                     </span>
                   );
                 }
