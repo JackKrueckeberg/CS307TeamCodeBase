@@ -11,6 +11,8 @@ import Favorite from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import City_Info from "./components/city-info";
+import AccountInfo from "./components/accountInfo";
+
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
@@ -20,13 +22,15 @@ const ViewCity = () => {
     const [city, setCity] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
-    const [cityIncome, setCityIncome] = useState(null);
+    const [cityName, setCityName] = useState(null);
     const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [shouldFetchAttractions, setShouldFetchAttractions] = useState(false);
+
 
     const [favorite, setFavorite] = useState(false)
 
@@ -101,8 +105,6 @@ const ViewCity = () => {
 
     }
 
-
-
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
             const inputValue = value.trim().toLowerCase();
@@ -120,11 +122,30 @@ const ViewCity = () => {
         setSuggestions([]);
     };
 
+    const fetchCityAttractions = async (cityName) => {
+        try {
+            console.log(cityName);
+            const response = await fetch(`http://localhost:5050/cityAttractions/${cityName}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log(data); // Handle this data as needed in your frontend
+    
+        } catch (error) {
+            console.error("There was an error fetching the city attractions", error);
+        }
+    }
+    
+    
+
     const handleSubmit = async () => {
         setShowResults(false);
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
-        setCityIncome(matchedCity ? matchedCity.median_income : null);
+        setCityName(matchedCity.name);
         setCityCoordinates(matchedCity ? { lat: matchedCity.lat, lon: matchedCity.lon } : null)
         if (matchedCity) {
             const img = await searchImage();
@@ -220,7 +241,17 @@ const ViewCity = () => {
     function handleCombinedActions() {
         handleSubmit();
         handleQueueCity();
+        setShouldFetchAttractions(true);
     }
+
+    //used to call fetchCityAttractions
+    useEffect(() => {
+        if (shouldFetchAttractions && cityName) {
+            fetchCityAttractions(cityName);
+            setShouldFetchAttractions(false);  // reset the flag
+        }
+    }, [cityName, shouldFetchAttractions]);
+    
 
     const handleVerification = () => {
         navigate("/verification");
@@ -279,7 +310,7 @@ const ViewCity = () => {
                                 <div
                                     key={suggestion}
                                     className="suggestion"
-                                    >
+                                >
                                     {suggestion}
                                 </div>
                             )}
