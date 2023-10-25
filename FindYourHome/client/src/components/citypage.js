@@ -8,7 +8,6 @@ import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
 
 
-
 export default function CityPage(props) {
     const currentUser = localStorage.getItem("currentCity");
     const {city: globalCity} = useCity();

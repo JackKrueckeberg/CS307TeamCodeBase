@@ -11,6 +11,7 @@ import Favorite from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import CityPage from "./components/citypage"
+import { useCity } from "./contexts/CityContext";
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
@@ -33,6 +34,7 @@ const ViewCity = () => {
     const [isVerified, setIsVerified] = useState(false);
 
     const { user } = useUser();
+    const {globalCity, setGlobalCity} = useCity();
     const navigate = useNavigate();
 
 
@@ -155,8 +157,9 @@ const ViewCity = () => {
 
 
 
-
-
+        console.log("setting global city");
+        console.log(matchedCity);
+        setGlobalCity(matchedCity);
         setShowResults(true);
 
     };
@@ -219,9 +222,10 @@ const ViewCity = () => {
     };
 
     //allows the submit button to handle the submit and add the city to the queue
-    function handleCombinedActions() {
-        handleSubmit();
+    async function handleCombinedActions() {
+        await handleSubmit();
         handleQueueCity();
+        navigate("/citypage");
     }
 
     const handleVerification = () => {
