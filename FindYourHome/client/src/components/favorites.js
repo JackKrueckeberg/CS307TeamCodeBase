@@ -136,7 +136,6 @@ export default function Favorites() {
 
     // function to toggle between select and view mode
     const handleCancel = () => {
-        setSelectedCities(Array.from({ length: selectedCities.length }, () => false));
         setIsSelecting(false);
     };
 
@@ -149,7 +148,7 @@ export default function Favorites() {
 
     // function to share selected cities
     const handleShareModal = () => {
-        const isAnyCitySelected = selectedCities.some((isSelected) => isSelected); // Checks if there is at least one value in selected Cities that is true
+        const isAnyCitySelected = selectedCities.some((isSelected) => isSelected);
         if (!isAnyCitySelected) {
             alert("You need to select a city to share.");
             return;
@@ -212,10 +211,7 @@ export default function Favorites() {
                     <h2> Here are your Favorite Cities </h2>
                     {isSelecting ? (
                         <div>
-                            <div className="buttons">
-                                <button className="shareTo-button" onClick={handleShareModal}>Share to</button>
-                                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-                            </div>
+                            <button className="share-button" onClick={handleShareModal}>Share to</button>
                             <Modal
                                 className={"password-change-modal"}
                                 isOpen={showShareModal}
@@ -228,32 +224,17 @@ export default function Favorites() {
                                 <div className="modal-content">
                                     <h2>Who do you wanna share your favorite cities with?</h2>
                                     {errorMessage && <p className="error-message">{errorMessage}</p>}
-                                    <h5>Selected Cities to Share:</h5>
-                                    <ul>
-                                    {selectedCities.map((isSelected, index) => {
-                                        if (isSelected) {
-                                            return (
-                                                <li key={index}>
-                                                    {Object.entries(favorite_cities[index]).map(([key, value]) => (
-                                                        <span key={key}>
-                                                            {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                                        </span>
-                                                    ))}
-                                                </li>
-                                            );
-                                        }
-                                    })}
-                                    </ul>
                                     <input
                                         type="username"
-                                        placeholder="Recipient's username"
+                                        placeholder="recipient's username"
                                         value={recipient}
                                         onChange={(e) => setRecipient(e.target.value)}
                                     />
-                                    <button className="share-button" onClick={() => handleShare(recipient)}>Share</button>
+                                    <button className="save-button" onClick={() => handleShare(recipient)}>Share</button>
                                     <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
                                 </div>
                             </Modal>
+                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
                             <ul>
                             {favorite_cities.map((city, index) => (
                                 <li key={index}>
@@ -279,10 +260,8 @@ export default function Favorites() {
                             </ul>
                         </div>
                     ) : (
-                        <div className="view">
-                            <div className="buttons">
-                                <button className="share-favorite" onClick={handleSelect}>Share Favorite</button>
-                            </div>
+                        <div>
+                            <button onClick={handleSelect}>Share Favorite</button>
                             {/*{getUser_favorite_cities}*/}
                             <ul>
                             {favorite_cities.map((city, index) => (

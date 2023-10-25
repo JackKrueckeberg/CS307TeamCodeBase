@@ -1,55 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import { useUser } from '../contexts/UserContext';
 
-export default function MessageBoard() {
-    const [messages, setMessages] = useState([]);
-    const {user: userProfile } = useUser(); // the id of the current logged in user
+function MessageBoard() {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
-    useEffect(() => {
-        fetchUserMessages();
-    }, []);
+  const handleSendMessage = () => {
+    // Create a new message object with user info and message content
+    const message = {
+      user: 'User1', // Replace with actual user data
+      content: newMessage,
+    };
 
-    // get the messages that the user has
-    const fetchUserMessages = async () => {
-        try {
-            const response = await fetch(`http://localhost:5050/messageRoute/${userProfile._id}`, {
-                method: "GET",
-                headers: {
-                    "Accept": "application/json"
-                }
-            })
+    // Add the message to the state
+    setMessages([...messages, message]);
 
-            const resp = await response.json();
+    // Clear the input field
+    setNewMessage('');
+  };
 
-            setMessages(resp.favorite_searches);
+  return (
+    <div>
+      <div className="message-display">
+        {messages.map((message, index) => (
+          <div key={index}>
+            <strong>{message.user}:</strong> {message.content}
+          </div>
+        ))}
+      </div>
+      <div className="message-input">
+        <input
+          type="text"
+          placeholder="Type your message"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        <button onClick={handleSendMessage}>Send</button>
+      </div>
+    </div>
+  );
+}
 
-            console.log(resp.favorite_searches);
-    
-            return resp.favorite_searches;
-        } catch (error) {
-            console.error("Error fetching user info: ", error);
-        }
-    }
-
-    return (
-        <div>
-          <h2>Chat Messages</h2>
-          <ul>
-                {messages.map((message, index) => (
-                    <li key={index}>
-                        {Object.entries(message).map(([key, value]) => {
-                            if (value !== null && value !== "" && value !== false) {
-                            return (
-                                <span key={key}>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                </span>
-                            );
-                            }
-                            return null; // Don't display if the field is not populated
-                        })}
-                    </li>
-                ))}
-            </ul>
-        </div>
-      );
-};
+export default MessageBoard;
