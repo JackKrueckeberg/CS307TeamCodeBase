@@ -33,7 +33,7 @@ router.get("/:email", async (req, res) => {
 });
 
 //route the create a new user
-router.post("/", async (req, res) => {
+router.post("/createUser", async (req, res) => {
   let newDocument = {
     username: req.body.username,
     password: req.body.password,
@@ -41,6 +41,7 @@ router.post("/", async (req, res) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName
   };
+  console.log("in user post");
   let collection = db.collection("users");
   let result = await collection.insertOne(newDocument);
   res.send(result).status(204);

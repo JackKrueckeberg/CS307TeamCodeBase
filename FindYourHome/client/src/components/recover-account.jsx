@@ -6,6 +6,7 @@ export const RecoverAccount = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [token, setToken] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -16,11 +17,12 @@ export const RecoverAccount = () => {
         }
     }, []);
     
-    const submission = (e) => {
+    const resetPasswordAndLogin = (e) => {
+        console.log("in function");
         e.preventDefault();
+        navigate("/");
     }
 
-    
     // const togglePasswordVisibility = () => {
     //     // If password is currently being shown, we hide it
     //     if (showPassword) {
@@ -42,7 +44,7 @@ export const RecoverAccount = () => {
     return (
         <div className={styles.recoverAccount}>
             <h1>Home is Where Your Journey Begins.</h1>
-            <form onSubmit={submission}>
+            <form>
                 {/* descriptive header */}
                 <h2>Enter a new password for your account:</h2>
                 {/* Password accaptance form */}
@@ -62,7 +64,7 @@ export const RecoverAccount = () => {
                 </div>
             </form>
 
-            <button id="login">Reset Password and Return to Login Page</button>
+            <button onClick={() => resetPasswordAndLogin} id="login">Reset Password and Return to Login Page</button>
         </div>
     )
 }

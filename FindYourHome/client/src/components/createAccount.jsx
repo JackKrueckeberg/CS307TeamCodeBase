@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import styles from '../Stylings/createAccountStyle.module.css';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+// import login from "./components/login";
 
 
 export const CreateAccount = () => {
@@ -32,20 +33,22 @@ export const CreateAccount = () => {
     const [isLoading, setIsLoading] = useState(null)
     //const { dispatch } = useAuthContext()
 
-    const signup = async (e) => {
-        e.preventDefault();
+    const signup = async () => {
+        // e.preventDefault();
+        console.log("in signup post");
 
         try {
-            const response = await fetch("http://localhost:5050/createUser", {
+            const response = await fetch("http://localhost:5050/users/createUser", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username, firstName, lastName, email, password }),
-            });
+            }
+            );
+            
     
-            if (response.ok) {
-                login_submission();
+            if (response.status == 200) {
                 console.log('User account created successfully');
             } else {
                 console.error('An error occurred:', response.statusText);
@@ -55,48 +58,7 @@ export const CreateAccount = () => {
         }
     }
 
-    const login_submission = async (e) => {
-        e.preventDefault();
-
-        const userCredentials = {
-            email: email,
-            password: password
-        };
     
-        try {
-            // Send a POST request to the server
-            const response = await fetch("http://localhost:5050/loginRoute/login", { 
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userCredentials)
-            });
-    
-            const data = await response.json();
-    
-            if (response.status === 200) {
-                console.log(data.message);
-                setIncorrectAttempts(0);
-                if (rememberUser && data.token) { 
-                    localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('currentUser', data.user._id); 
-                }
-                console.log('Received user object:', data.user);
-                if (data.user) {
-                    setLoggedInUser(data.user);
-                    console.log(data.user._id);
-                }
-                navigate("/view-city");                  
-            } else {
-                console.error(data.error);
-                setIncorrectAttempts(prev => prev + 1);
-            }
-    
-        } catch (error) {
-            console.error("There was an error logging in:", error);
-        }
-    };
 
     return (
         <div className={styles.accountCreation}>
@@ -148,7 +110,7 @@ export const CreateAccount = () => {
                             id="password"
                         />
                     </div>
-                <button onClick={() => signup}type="submit">Register and Log In</button>
+                <button onClick={() => signup().then(navigate("/"))}>Register and Log In</button>
             </form>
 
             <button onClick={() => navigate("/")}id="login">Already have an Account? Click here to log in.</button>
