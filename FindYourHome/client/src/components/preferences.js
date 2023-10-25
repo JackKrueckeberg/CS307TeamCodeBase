@@ -10,11 +10,16 @@ import "../Stylings/ViewCity.css";
 import CityPage from "./citypage";
 import { useCity } from "../contexts/CityContext";
 import { useUser } from '../contexts/UserContext';
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 
 export default function Create() {
   const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
-  const [form, setForm] = useState({
+  const {globalCity, setGlobalCity} = useCity();
+
+  console.log(useLocalStorage("form"));
+
+  const [form, setForm] = useLocalStorage("form", {
     population: "",
     east_coast: false,
     west_coast: false,
@@ -27,7 +32,7 @@ export default function Create() {
     favorited: false
   });
 
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useLocalStorage("results", []);
   const [showResults, setShowResults] = useState(false);
   const [cityIncome, setCityIncome] = useState(null);
   const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
@@ -37,9 +42,7 @@ export default function Create() {
   const [searchTerm, setSearchTerm] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
   const [showing, setShowing] = useState([]);
-  const {globalCity, setGlobalCity} = useCity();
 
-  const currentUser = localStorage.getItem("currentUser");
   const {user: userProfile } = useUser(); // the id of the current logged in user
 
   // These methods will update the state properties.
@@ -375,25 +378,14 @@ export default function Create() {
   setRecentSearches(recentSearches);
   console.log('Recent searches updated');
 
-
-    setForm({
-      population: "",
-      east_coast: false,
-      west_coast: false,
-      central: false,
-      mountain_west: false,
-      state: "",
-      zip_code: "",
-      county: "",
-      median_income: "",
-      favorited:  false
-    });
   }
 
 
   const handleCity = async (value) => {
       for (var i = 0; i < results.length; i++) {
         if (results[i].name === value) {
+          var tempCity = results[i];
+          results[i].form = form;
           setGlobalCity(results[i]);
           navigate("/cityPage", results[i]);
           return;

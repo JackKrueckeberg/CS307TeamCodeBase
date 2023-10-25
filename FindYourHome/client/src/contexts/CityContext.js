@@ -11,10 +11,10 @@ export const useCity = () => {
 };
 
 export const CityProvider = ({ children }) => {
-    const [city, setGlobalCity] = useState(null);
+    const [globalCity, setGlobalCity] = useState();
 
     return (
-        <CityContext.Provider value={{ city, setGlobalCity }}>
+        <CityContext.Provider value={{ globalCity, setGlobalCity }}>
             {children}
         </CityContext.Provider>
     );
