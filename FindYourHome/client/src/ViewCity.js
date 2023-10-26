@@ -145,7 +145,6 @@ const ViewCity = () => {
         setShowResults(false);
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
-        setCityName(matchedCity.name);
         setCityCoordinates(matchedCity ? { lat: matchedCity.lat, lon: matchedCity.lon } : null)
         if (matchedCity) {
             const img = await searchImage();
