@@ -3,7 +3,11 @@ import "./RecentCitiesQueue.css"
 
 const RecentCitiesQueue = ({ queue }) => {
     const [queueItems, setQueueItems] = useState({});
-    let email = "nick@example.com"
+    const [citiesToCompare, setCitiesToCompare] = useState([]);
+    let email = "user2@example.com"
+    const [selectedCities, setSelectedCities] = useState(new Set());
+    const [errorMessage, setErrorMessage] = useState("");
+
     useEffect(() => {
         // Define the function inside useEffect
         async function fillQueueFromDB() {
@@ -24,16 +28,60 @@ const RecentCitiesQueue = ({ queue }) => {
 
         fillQueueFromDB();  // Call the function on component mount
     }, []);
+
+    function addCity(item) {
+        setCitiesToCompare([...citiesToCompare, item]);
+    }
+
+    function removeCites(itemToRemove) {
+        setCitiesToCompare(citiesToCompare.filter(item => item !== itemToRemove));
+    }
+
+    const handleCityClick = (city) => {
+        const newSelectedCities = new Set(selectedCities);
+        if (newSelectedCities.has(city)) {
+            newSelectedCities.delete(city);
+            removeCites(city)
+        } else {
+            newSelectedCities.add(city);
+            addCity(city);
+        }
+        setSelectedCities(newSelectedCities);
+        console.log(citiesToCompare);
+    };
+
+    const handleCompareClick = (citiesToCompare) => {
+        if (citiesToCompare.length > 2) {
+            setErrorMessage("You've selected more than 2 cities. Please select only 2 cities to compare.");
+        } else if (citiesToCompare.length < 2) {
+            setErrorMessage("You've selected less than 2 cities. Please select 2 cities to compare.");
+        } else {
+            setErrorMessage(""); // Clear the error message when exactly 2 cities are selected
+        }
+    }
+
+
     return (
         <div>
             <h2>Recent Cities:</h2>
-            <ul>
+            <ul className="recently_viewed_cities">
                 {Object.values(queue.items).map(city => (
-                    <li key={city}>{city}</li>
+                    <li
+                        key={city}
+                        onClick={() => handleCityClick(city)}
+                        style={selectedCities.has(city) ? { color: 'blue' } : {}}
+                    >
+                        {city}
+                    </li>
                 ))}
             </ul>
+    
+            {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+    
+            <button onClick={() => handleCompareClick(citiesToCompare)}>Compare Cities</button>
         </div>
     );
+    
 }
 
 export class Queue {
@@ -45,7 +93,7 @@ export class Queue {
 
     //add the contents of the queue to the recent_cities field of a user based of their email
     async addToQueue(cityName) {
-        let email = "nick@example.com"; //mock email
+        let email = "user2@example.com"; //mock email
         try {
             const updateData = {
                 action: "addRecentCity",
