@@ -37,6 +37,13 @@ const ViewCity = () => {
     const {globalCity, setGlobalCity} = useCity();
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+    
+        navigate("/", { state: { loggedOut: true }, replace: true });
+    };
 
     useEffect(() => {
         const verificationStatus = localStorage.getItem('isVerified');
@@ -305,8 +312,8 @@ const ViewCity = () => {
 
                 <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
                 <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+                <button className="logout" onClick={handleLogout}>Logout</button>
             </div>
-
 
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />
