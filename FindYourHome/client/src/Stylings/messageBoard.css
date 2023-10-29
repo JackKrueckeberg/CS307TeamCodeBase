@@ -1,0 +1,109 @@
+.message-board-container {
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.message-board {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
+.message.sent {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    color: #fff;
+    margin: 0;
+    padding: 0%;
+}
+
+.message.received {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+.message-content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.message-sender {
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 1px; /* Add space below the sender's name */
+}
+
+.message-content.sent {
+    flex: 1;
+    background-color: #007bff;
+    padding-bottom: 0%;
+    border-radius: 10px;
+    margin: 0;
+}
+
+.message-content.received {
+    flex: 1;
+    background-color: #f1f0f0;
+    padding-bottom: 0%;
+    border-radius: 10px;
+    margin: 0;
+}
+
+.message-timestamp {
+    font-size: 12px;
+    color: #888;
+    margin-top: 1px; /* Add space above the timestamp */
+}
+
+.message-sender {
+    font-weight: bold; /* Make the sender's name bold */
+    color: #555; /* Choose a color for the sender's name */
+}
+
+.message-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.message-input input[type="text"] {
+    flex: 1; /* Expand the input field to fill the available space */
+    padding: 10px;
+    border: none;
+    outline: none;
+}
+
+.message-input button {
+    padding: 10px 20px;
+    background-color: #007bff; /* Background color for the Send button */
+    color: #fff; /* Text color for the Send button */
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.message-input button:hover {
+    background-color: #0056b3; /* Change color on hover for the Send button */
+}
+
+.scrollable {
+    max-height: 500px; /* Set your desired maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}

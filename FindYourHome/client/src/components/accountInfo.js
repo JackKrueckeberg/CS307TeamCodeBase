@@ -19,9 +19,11 @@ export default function AccountInfo() {
     };
 
     // Create state variables for user info ad editing mode
-    const storedUser = localStorage.getItem("currentUser");
+    const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
+
     const {user: userProfile } = useUser(); // the id of the current logged in user
-    const [user, setInfo] = useState(storedUser || userProfile || initialInfo);
+    const [user, setInfo] = useState(storedSesUser || storedLocUser || userProfile || initialInfo);
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
     const [prevUser, setPrevUser] = useState(initialInfo); // Store a copy of user data to revert if editing is canceled
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
@@ -42,15 +44,17 @@ export default function AccountInfo() {
         numeral: false,
     });
 
+
     useEffect(() => {
         // fetch user data from the backend when the component mounts
         fetchUserInfo();
     }, []);
-
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
         try {
-            const response = await fetch(`http://localhost:5050/profileRoute/${userProfile._id}`, {
+
+            console.log(`This is value of user ${user._id}`);
+            const response = await fetch(`http://localhost:5050/profileRoute/profile/${user._id}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
@@ -149,7 +153,7 @@ export default function AccountInfo() {
 
         //TODO save to the backend
         try {
-            const response = await fetch(`http://localhost:5050/profileRoute/update-password/${userProfile._id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/update-password/${user._id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
@@ -268,7 +272,7 @@ export default function AccountInfo() {
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/update-info/${userProfile._id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/update-info/${user._id}`, {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
@@ -281,6 +285,7 @@ export default function AccountInfo() {
             if (response.status === 200) {
                 console.log(data.message);
                 setSuccessMessage('Profile updated successfully');
+                sessionStorage.setItem("currentUser", JSON.stringify(userInfo));
                 setTimeout(() => {
                     setSuccessMessage('');
                 }, 5000); // Clear the message after 5 seconds
@@ -307,7 +312,7 @@ export default function AccountInfo() {
             //console.log(imageURL);
             try {
                 // Send a PATCH request to the server
-                const response = await fetch(`http://localhost:5050/profileRoute/update-image/${userProfile._id}`, {
+                const response = await fetch(`http://localhost:5050/profileRoute/update-image/${user._id}`, {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",

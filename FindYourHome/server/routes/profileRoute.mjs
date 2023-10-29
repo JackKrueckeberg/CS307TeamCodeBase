@@ -29,7 +29,7 @@ router.get("/check-username/:username", async (req, res) => {
 });
 
 // Get user info
-router.get("/:id", async (req, res) => {
+router.get("/profile/:id", async (req, res) => {
     try {
         let collection = await db.collection("users");
 

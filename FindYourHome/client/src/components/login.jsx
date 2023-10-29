@@ -37,16 +37,14 @@ export const Login = () => {
             const data = await response.json();
     
             if (response.status === 200) {
-                console.log(data.message);
                 setIncorrectAttempts(0);
                 if (rememberUser && data.token) { 
                     localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('currentUser', data.user._id); 
+                    localStorage.setItem('currentUser', JSON.stringify(data.user)); 
                 }
-                console.log('Received user object:', data.user);
                 if (data.user) {
+                    sessionStorage.setItem('currentUser', JSON.stringify(data.user));
                     setLoggedInUser(data.user);
-                    console.log(data.user._id);
                 }
                 navigate("/view-city");                  
             } else {
@@ -91,13 +89,13 @@ export const Login = () => {
             if (response.status === 200) {
                 if (data.user) {
                     setLoggedInUser(data.user);
-                    console.log(data.user._id);
                 }
                 navigate("/view-city");     
             } else {
                 // The token is invalid. Remove it from local storage.
                 localStorage.removeItem('authToken');
                 localStorage.removeItem('currentUser');
+                sessionStorage.removeItem('currentUser');
                 alert('Your session has expired. Please login again.');
             }
         } catch (error) {

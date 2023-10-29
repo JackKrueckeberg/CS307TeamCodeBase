@@ -15,6 +15,7 @@ import recent_searches from "./routes/recent_searches.mjs";
 import get_tweet from "./routes/get_tweet.mjs";
 
 import message from "./routes/messageRoute.mjs";
+import messageBoard from "./routes/message_board.mjs";
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
 
 
@@ -44,6 +45,7 @@ app.use("/recent_searches", recent_searches);
 app.use("/get_tweet", get_tweet);
 app.use("/bookmarked_discussions", bookmarked_discussions)
 app.use("/messageRoute", message);
+app.use("/messageBoard", messageBoard);
 //app.use("/discussionPost", discussion);
 
 

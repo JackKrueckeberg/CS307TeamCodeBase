@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import '../Stylings/favorites.css';
 import Modal from "react-modal";
+import { useUser } from '../contexts/UserContext';
 
 
 export default function Favorites() {
     
+    const {user: userProfile } = useUser(); // the id of the current logged in user
+    const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
+    const [user, setInfo] = useState(storedSesUser || storedLocUser || userProfile);
+
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
     const [favorite_searches, setFavoriteSearches] = useState([]);
     const [favorite_cities, setFavoriteCities] = useState([]);
@@ -171,6 +177,29 @@ export default function Favorites() {
         }
 
         // TODO finish the send method
+        const citiesToSend = favorite_cities.filter((city, index) => selectedCities[index]);
+
+        const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                senderUsername: 'user1',
+                recipientUsername: recipient,
+                content: `Here are my favorite cities: ${citiesToSend}`,
+                timeSent: new Date(),
+            }),
+        });
+
+        if (response.status === 200) {
+            setSuccessMessage('Your favorites have been sent to ', recipient, '!');
+            handleCancel();
+            handleShareCancel();
+            return;
+        } else {
+            setError('There was an error sending your favorites to ', recipient, '. Please try again.');
+        }
 
     };
 
@@ -214,17 +243,18 @@ export default function Favorites() {
                                 <button className="cancel-button" onClick={handleCancel}>Cancel</button>
                             </div>
                             <Modal
-                                className={"password-change-modal"}
+                                className={"share-modal"}
                                 isOpen={showShareModal}
                                 onRequestClose={() => {
                                     setShareModal(false);
                                     setError('');
                                 }}
-                                contentLabel="Change Password Modal"
+                                contentLabel="Share Favorite Modal"
                 >
                                 <div className="modal-content">
                                     <h2>Who do you wanna share your favorite cities with?</h2>
                                     {errorMessage && <p className="error-message">{errorMessage}</p>}
+                                    {successMessage && <p className="success-message">{successMessage}</p>}
                                     <h5>Selected Cities to Share:</h5>
                                     <ul>
                                     {selectedCities.map((isSelected, index) => {
