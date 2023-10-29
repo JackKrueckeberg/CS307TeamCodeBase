@@ -66,7 +66,7 @@ export default function CityPage(props) {
         {globalCity.name && globalCity && <Map key={`${globalCity.lat}-${globalCity.lon}`} lat={globalCity.lat} lon={globalCity.lon} />}
       </div>
       <div>
-        <h3>Top 10 City Attractions:</h3>
+        <h3>Top 10 City Attractions: (takes a second to load)</h3>
         <p>{apiResponse}</p>  {/* Render the response */}
       </div>
       <Twitter cityName={globalCity.name}></Twitter>
