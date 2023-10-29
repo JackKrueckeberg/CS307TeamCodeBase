@@ -252,18 +252,8 @@ const ViewCity = () => {
     async function handleCombinedActions() {
         await handleSubmit();
         handleQueueCity();
-        setShouldFetchAttractions(true);
         navigate("/citypage");
     }
-
-    //used to call fetchCityAttractions
-    useEffect(() => {
-        if (shouldFetchAttractions && cityName) {
-            fetchCityAttractions(cityName);
-            setShouldFetchAttractions(false);  // reset the flag
-        }
-    }, [cityName, shouldFetchAttractions]);
-    
 
     const handleVerification = () => {
         navigate("/verification");

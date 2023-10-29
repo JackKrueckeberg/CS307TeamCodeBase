@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import "./RecentCitiesQueue.css"
 import { useNavigate } from "react-router-dom";
+import { useCompareCities } from "../../contexts/CityContext";
 
 const RecentCitiesQueue = ({ queue }) => {
     const navigate = useNavigate();
     const [queueItems, setQueueItems] = useState({});
-    const [citiesToCompare, setCitiesToCompare] = useState([]);
     let email = "user2@example.com"
     const [selectedCities, setSelectedCities] = useState(new Set());
     const [errorMessage, setErrorMessage] = useState("");
+    const { compareCities, setCompareCities } = useCompareCities();
 
     useEffect(() => {
         // Define the function inside useEffect
@@ -32,36 +33,42 @@ const RecentCitiesQueue = ({ queue }) => {
     }, []);
 
     function addCity(item) {
-        setCitiesToCompare([...citiesToCompare, item]);
+        if (!compareCities.includes(item)) {
+            setCompareCities(prevCities => [...prevCities, item]);
+        }
     }
 
     function removeCites(itemToRemove) {
-        setCitiesToCompare(citiesToCompare.filter(item => item !== itemToRemove));
+        setCompareCities(prevCities => prevCities.filter(item => item !== itemToRemove));
     }
 
     const handleCityClick = (city) => {
-        const newSelectedCities = new Set(selectedCities);
-        if (newSelectedCities.has(city)) {
-            newSelectedCities.delete(city);
-            removeCites(city)
+        if (compareCities.includes(city)) {
+            removeCites(city);
         } else {
-            newSelectedCities.add(city);
             addCity(city);
         }
-        setSelectedCities(newSelectedCities);
-        console.log(citiesToCompare);
+        setSelectedCities(prevSelectedCities => {
+            const newSelectedCities = new Set(prevSelectedCities);
+            if (newSelectedCities.has(city)) {
+                newSelectedCities.delete(city);
+            } else {
+                newSelectedCities.add(city);
+            }
+            return newSelectedCities;
+        });
     };
 
-    const handleCompareClick = (citiesToCompare) => {
-        if (citiesToCompare.length > 2) {
+    const handleCompareClick = () => {
+        if (compareCities.length > 2) {
             setErrorMessage("You've selected more than 2 cities. Please select only 2 cities to compare.");
-        } else if (citiesToCompare.length < 2) {
+        } else if (compareCities.length < 2 || compareCities.length == 0) {
             setErrorMessage("You've selected less than 2 cities. Please select 2 cities to compare.");
         } else {
-            setErrorMessage(""); // Clear the error message when exactly 2 cities are selected
+            setErrorMessage(""); 
             navigate("/compare")
         }
-    }
+    };
 
 
     return (
@@ -78,13 +85,13 @@ const RecentCitiesQueue = ({ queue }) => {
                     </li>
                 ))}
             </ul>
-    
+
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-    
-            <button onClick={() => handleCompareClick(citiesToCompare)}>Compare Cities</button>
+
+            <button onClick={() => handleCompareClick(compareCities)}>Compare Cities</button>
         </div>
     );
-    
+
 }
 
 export class Queue {
