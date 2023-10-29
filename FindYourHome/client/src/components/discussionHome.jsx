@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Stylings/discussionStyle.module.css';
-import DiscussNav from './discussNav.js';
+import Autosuggest from 'react-autosuggest';
+// import DiscussNav from './discussNav.js';
 
 
 const DiscussionHome = () => {
     const [discussions, setDiscussions] = useState([]);
+    const [allDiscussions, setAllDiscussions] = useState([]);
+    const [discussion, setDiscussion] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
     const [showForm, setShowForm] = useState(false);
+    const [showResults, setShowResults] = useState(false);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [city, setCity] = useState('');
     const [error, setError] = useState('');
     const [selectorChoice, setSelectorChoice] = useState("");
     const [dropdownSelection, setDropdownSelection] = useState("");
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [suggestions, setSuggestions] = useState([]);
 
     
     const getUniqueCitiesWithCasePreserved = (discussions) => {
@@ -34,6 +41,28 @@ const DiscussionHome = () => {
     const capitalizeFirstLetter = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
     }
+
+    const onSuggestionsFetchRequested = ({ value }) => {
+        if (value) {
+            const inputValue = value.trim().toLowerCase();
+            const matchingDiscussions = allDiscussions.filter((discussion) =>
+                discussion.name.toLowerCase().startsWith(inputValue)
+            );
+
+            setSuggestions(matchingDiscussions.map((discussion) => discussion.name).slice(0, 10));
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+        setIsDropdownOpen(true);
+    };
+
+    const onSuggestionsClearRequested = () => {
+        setSuggestions([]);
+    };
     
     const handleCancel = () => {
         setShowForm(false);  // Hide the form
@@ -103,10 +132,32 @@ const DiscussionHome = () => {
         <div className={styles.DiscussionHome}>
             <h2>Discussions</h2>
 
-            {!showForm && <DiscussNav />}
+            {/* {!showForm && <DiscussNav />} */}
             
             {error && <div className="error">{error}</div>}
             
+            <div className="searchBar">
+                <Autosuggest // Use Autosuggest component
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={onSuggestionsClearRequested}
+                    getSuggestionValue={(suggestion) => suggestion}
+                    renderSuggestion={(suggestion) => (
+                        <div
+                            key={suggestion}
+                            className="suggestion"
+                        >
+                            {suggestion}
+                        </div>
+                    )}
+                    inputProps={{
+                        type: "text",
+                        placeholder: "Search for a discussion",
+                        value: searchTerm,
+                        onChange: handleInputChange,
+                    }}
+                />
+            </div>
             {!showForm && <button onClick={() => setShowForm(true)} className={styles.createNew}>Create New Discussion</button>}
             {!showForm && 
                 <select

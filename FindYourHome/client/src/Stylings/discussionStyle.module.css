@@ -53,6 +53,19 @@ body {
     border: 0;
 }
 
+.searchBar {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    /* stretch to full width */
+    gap: 20px;
+}
+
+.searchBar label {
+    font-size: 1.1em;
+    color: #555;
+}
+
 .choiceGroup {
     display: flex;
     flex-direction: row;

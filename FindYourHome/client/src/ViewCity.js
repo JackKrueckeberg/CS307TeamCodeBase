@@ -342,6 +342,7 @@ const ViewCity = () => {
 
                 <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
                 <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+                <button className="profilebtn" onClick={() => navigate("/discussions")}>Discussions</button>
                 <button className="logout" onClick={handleLogout}>Logout</button>
             </div>
 
