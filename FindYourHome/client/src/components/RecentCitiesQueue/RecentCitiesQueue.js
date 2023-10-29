@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./RecentCitiesQueue.css"
+import { useNavigate } from "react-router-dom";
 
 const RecentCitiesQueue = ({ queue }) => {
+    const navigate = useNavigate();
     const [queueItems, setQueueItems] = useState({});
     const [citiesToCompare, setCitiesToCompare] = useState([]);
     let email = "user2@example.com"
@@ -57,6 +59,7 @@ const RecentCitiesQueue = ({ queue }) => {
             setErrorMessage("You've selected less than 2 cities. Please select 2 cities to compare.");
         } else {
             setErrorMessage(""); // Clear the error message when exactly 2 cities are selected
+            navigate("/compare")
         }
     }
 

@@ -16,6 +16,7 @@ import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
+import CompareCities from './components/compareCities';
 
 import DiscussionHome from "./components/discussionHome";
 import { UserContext } from "./contexts/UserContext";
@@ -51,6 +52,7 @@ const App = () => {
                 <Route path="/preferences" element={<Preferences />} />
                 <Route path="/discussion-home" element={<DiscussionHome />} />
                 <Route path="/city-information" element={<City_Info />} />
+                <Route path="/compare" element={<CompareCities />} />
             </Routes>
         </UserContext.Provider>
     );

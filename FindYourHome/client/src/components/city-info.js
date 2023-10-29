@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CityModel } from "./CityModel/CityModel";
 
+
 export default function City_Info(props) {
     const navigate = useNavigate();
     const location = useLocation();
