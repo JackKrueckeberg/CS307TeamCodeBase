@@ -16,10 +16,10 @@ import Profile from "./components/profile";
 import Preferences from "./components/preferences";
 import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
-import CompareCities from './components/compareCities';
+import CityPage from "./components/citypage";
 
-import DiscussionHome from "./components/discussionHome";
 import { UserContext } from "./contexts/UserContext";
+import { CityContext } from './contexts/CityContext';
  
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -31,6 +31,12 @@ const App = () => {
       } else {
           sessionStorage.removeItem("currentUser");
       }
+
+      if (city) {
+        sessionStorage.setItem("currentCity", JSON.stringify(city));
+      } else {
+        sessionStorage.removeItem("currentCity");
+      }
   }, [user]);
 
   const setLoggedInUser = (userData) => {
@@ -41,23 +47,27 @@ const App = () => {
       setUser(null);
   };
 
+    const setGlobalCity = (city) => {
+        setCity(city);
+    };
+  const storedCity = sessionStorage.getItem("currentCity");
+  const [city, setCity] = useState(storedCity ? JSON.parse(storedCity) : null);
+
     return (
         <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
-            <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/view-city" element={<ViewCity />} />
-                <Route path="/verification" element={<Verification />} />
-                <Route path="/createAccount" element={<CreateAccount />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/preferences" element={<Preferences />} />
-                <Route path="/discussion-home" element={<DiscussionHome />} />
-                <Route path="/city-information" element={<City_Info />} />
-                <Route path="/compare" element={<CompareCities />} />
-            </Routes>
+            <CityContext.Provider value={{city, setGlobalCity}}>
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/view-city" element={<ViewCity />} />
+                    <Route path="/preferences" element={<Preferences />} />
+                    <Route path="/verification" element={<Verification />} />
+                    <Route path="/createAccount" element={<CreateAccount />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/citypage" element={<CityPage />} />
+                </Routes>
+            </CityContext.Provider>
         </UserContext.Provider>
     );
 };
  
 export default App;
-
-

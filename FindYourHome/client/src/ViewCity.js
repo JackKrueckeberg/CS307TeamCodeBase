@@ -10,12 +10,11 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
-import City_Info from "./components/city-info";
-import AccountInfo from "./components/accountInfo";
+import CityPage from "./components/citypage"
+import { useCity } from "./contexts/CityContext";
 
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
-
 
 const ViewCity = () => {
     const [allCities, setAllCities] = useState([]);
@@ -37,8 +36,16 @@ const ViewCity = () => {
     const [isVerified, setIsVerified] = useState(false);
 
     const { user } = useUser();
+    const {globalCity, setGlobalCity} = useCity();
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+    
+        navigate("/", { state: { loggedOut: true }, replace: true });
+    };
 
     useEffect(() => {
         const verificationStatus = localStorage.getItem('isVerified');
@@ -125,7 +132,7 @@ const ViewCity = () => {
     const fetchCityAttractions = async (cityName) => {
         try {
             console.log(cityName);
-            const response = await fetch(`http://localhost:5050/cityAttractions/${cityName}`);
+            const response = await fetch(`http://localhost:5050/attractions/${cityName}`);
             
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
@@ -175,6 +182,11 @@ const ViewCity = () => {
             setCityModel(cityModel);
         }
 
+
+
+        console.log("setting global city");
+        console.log(matchedCity);
+        setGlobalCity(matchedCity);
         setShowResults(true);
 
     };
@@ -237,10 +249,11 @@ const ViewCity = () => {
     };
 
     //allows the submit button to handle the submit and add the city to the queue
-    function handleCombinedActions() {
-        handleSubmit();
+    async function handleCombinedActions() {
+        await handleSubmit();
         handleQueueCity();
         setShouldFetchAttractions(true);
+        navigate("/citypage");
     }
 
     //used to call fetchCityAttractions
@@ -286,10 +299,8 @@ const ViewCity = () => {
 
             <div className="container">
 
-                <div className="result">
-                    {showResults && city && <CityModel model={cityModel} />}
-                    {showResults && city && <Map key={`${cityCoordinates.lat}-${cityCoordinates.lon}`} lat={cityCoordinates.lat} lon={cityCoordinates.lon} />}
-                </div>
+                {showResults && city && <CityPage showResults={showResults} city={city} cityModel={cityModel} cityCoordinates={cityCoordinates} testProp="Test"></CityPage>}
+
 
                 {showResults && !city &&
                     <div className="errorMessage">
@@ -331,8 +342,8 @@ const ViewCity = () => {
 
                 <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
                 <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+                <button className="logout" onClick={handleLogout}>Logout</button>
             </div>
-
 
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />

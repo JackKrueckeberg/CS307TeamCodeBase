@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
-import styles from '../Stylings/createAccountStyle.module.css'; 
+import styles from '../Stylings/createAccountStyle.module.css';
+import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+// import login from "./components/login";
 
 
 export const CreateAccount = () => {
@@ -9,8 +11,11 @@ export const CreateAccount = () => {
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [rememberUser, setRememberUser] = useState(false);
+    const [incorrectAttempts, setIncorrectAttempts] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+    const { user, setLoggedInUser } = useUser();
     const timeoutRef = useRef(null);
     
     const submission = (e) => {
@@ -28,19 +33,22 @@ export const CreateAccount = () => {
     const [isLoading, setIsLoading] = useState(null)
     //const { dispatch } = useAuthContext()
 
-    const signup = async (e) => {
-        e.preventDefault();
+    const signup = async () => {
+        // e.preventDefault();
+        console.log("in signup post");
 
         try {
-            const response = await fetch("http://localhost:5050/createUser", {
+            const response = await fetch("http://localhost:5050/users/createUser", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ username, firstName, lastName, email, password }),
-            });
+            }
+            );
+            
     
-            if (response.ok) {
+            if (response.status == 200) {
                 console.log('User account created successfully');
             } else {
                 console.error('An error occurred:', response.statusText);
@@ -49,6 +57,8 @@ export const CreateAccount = () => {
             console.error('An error occurred:', error);
         }
     }
+
+    
 
     return (
         <div className={styles.accountCreation}>
@@ -100,7 +110,7 @@ export const CreateAccount = () => {
                             id="password"
                         />
                     </div>
-                <button onClick={() => signup}type="submit">Register</button>
+                <button onClick={() => signup().then(navigate("/")).then(alert("Account created successfully, you can now log in"))}>Register</button>
             </form>
 
             <button onClick={() => navigate("/")}id="login">Already have an Account? Click here to log in.</button>
