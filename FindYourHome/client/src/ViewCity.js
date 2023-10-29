@@ -10,6 +10,8 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
+import CityPage from "./components/citypage"
+import { useCity } from "./contexts/CityContext";
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
@@ -32,8 +34,16 @@ const ViewCity = () => {
     const [isVerified, setIsVerified] = useState(false);
 
     const { user } = useUser();
+    const {globalCity, setGlobalCity} = useCity();
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+    
+        navigate("/", { state: { loggedOut: true }, replace: true });
+    };
 
     useEffect(() => {
         const verificationStatus = localStorage.getItem('isVerified');
@@ -154,8 +164,9 @@ const ViewCity = () => {
 
 
 
-
-
+        console.log("setting global city");
+        console.log(matchedCity);
+        setGlobalCity(matchedCity);
         setShowResults(true);
 
     };
@@ -218,9 +229,10 @@ const ViewCity = () => {
     };
 
     //allows the submit button to handle the submit and add the city to the queue
-    function handleCombinedActions() {
-        handleSubmit();
+    async function handleCombinedActions() {
+        await handleSubmit();
         handleQueueCity();
+        navigate("/citypage");
     }
 
     const handleVerification = () => {
@@ -272,6 +284,12 @@ const ViewCity = () => {
                 <div className="leftColumn">
                     <div className="recentlyViewedCities">
                         <RecentCitiesQueue queue={recentCitiesQueue} />
+
+                {showResults && city && <CityPage showResults={showResults} city={city} cityModel={cityModel} cityCoordinates={cityCoordinates} testProp="Test"></CityPage>}
+
+                {showResults && !city &&
+                    <div className="errorMessage">
+                        {searchTerm === "" ? <h2>No City Searched</h2> : <h2>Invalid Search</h2>}
                     </div>
                 </div>
                 <div className="rightColumn">
@@ -314,6 +332,7 @@ const ViewCity = () => {
                         }
                     </div>
                 </div>
+                <button className="logout" onClick={handleLogout}>Logout</button>
             </div>
         </div>
     );

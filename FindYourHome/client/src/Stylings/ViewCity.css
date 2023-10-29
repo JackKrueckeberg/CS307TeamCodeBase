@@ -287,3 +287,6 @@ button:hover {
     max-width: 40;
 }
 
+.logout {
+    background-color: rgb(255, 91, 91);
+}
