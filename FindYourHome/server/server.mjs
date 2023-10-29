@@ -15,8 +15,6 @@ import favorite_cities from "./routes/favorite_cities.mjs";
 import recent_searches from "./routes/recent_searches.mjs";
 import get_tweet from "./routes/get_tweet.mjs"
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
-import get_attractions from "./routes/get_attractions.mjs"
-
 
 //import DiscussionHome from "./routes/discussionPost.mjs"
 
