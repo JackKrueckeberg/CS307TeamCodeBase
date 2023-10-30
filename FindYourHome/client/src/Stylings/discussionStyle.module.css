@@ -66,6 +66,13 @@ body {
     color: #555;
 }
 
+.suggestion {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
 .choiceGroup {
     display: flex;
     flex-direction: row;

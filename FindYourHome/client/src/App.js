@@ -18,6 +18,7 @@ import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
 import DiscussionHome from './components/discussionHome';
+import RecoverAccount from "./components/recover-account";
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext } from './contexts/CityContext';
@@ -63,6 +64,7 @@ const App = () => {
                     <Route path="/preferences" element={<Preferences />} />
                     <Route path="/verification" element={<Verification />} />
                     <Route path="/createAccount" element={<CreateAccount />} />
+                    <Route path="/recover-account" element={<RecoverAccount />} />
                     <Route path="/discussions" element={<DiscussionHome />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/citypage" element={<CityPage />} />

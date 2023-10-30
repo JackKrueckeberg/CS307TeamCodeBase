@@ -19,7 +19,7 @@ export const RecoverAccount = () => {
     
     const resetPasswordAndLogin = (e) => {
         console.log("in function");
-        e.preventDefault();
+        // e.preventDefault();
         navigate("/");
     }
 
@@ -64,7 +64,7 @@ export const RecoverAccount = () => {
                 </div>
             </form>
 
-            <button onClick={() => resetPasswordAndLogin} id="login">Reset Password and Return to Login Page</button>
+            <button onClick={() => resetPasswordAndLogin()} id="login">Reset Password and Return to Login Page</button>
         </div>
     )
 }
