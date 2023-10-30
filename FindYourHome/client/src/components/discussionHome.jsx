@@ -7,8 +7,12 @@ import { useNavigate } from "react-router-dom";
 
 const DiscussionHome = () => {
     const [discussions, setDiscussions] = useState([]);
-    const [allDiscussions, setAllDiscussions] = useState([]);
-    const [discussion, setDiscussion] = useState(null);
+    const [searchByTitle, setSearchByTitle] = useState(false);
+    const [searchBySorting, setSearchBySorting] = useState(false);
+    const [sortByCategory, setSortByCategory] = useState(false);
+    const [sortByTitle, setSortByTitle] = useState(false);
+    const [sortByCity, setSortByCity] = useState(false);
+    const [sortByDate, setSortByDate] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [showForm, setShowForm] = useState(false);
     const [showResults, setShowResults] = useState(false);
@@ -54,12 +58,19 @@ const DiscussionHome = () => {
 
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
-            const inputValue = value.trim().toLowerCase();
-            const matchingDiscussions = allDiscussions.filter((discussion) =>
-                discussion.name.toLowerCase().startsWith(inputValue)
-            );
-
-            setSuggestions(matchingDiscussions.map((discussion) => discussion.name).slice(0, 10));
+            if (searchByTitle) {
+                const inputValue = value.trim().toLowerCase();
+                const matchingDiscussions = discussions.filter((discussion) =>
+                    discussion.title.toLowerCase().startsWith(inputValue)
+                );
+                setSuggestions(matchingDiscussions.map((discussion) => discussion.title).slice(0, 10));
+            } else {
+                const inputValue = value.trim().toLowerCase();
+                const matchingDiscussions = discussions.filter((discussion) =>
+                    discussion.city.toLowerCase().startsWith(inputValue)
+                );
+                setSuggestions(matchingDiscussions.map((discussion) => discussion.city).slice(0, 10));
+            }
         } else {
             setSuggestions([]);
         }
@@ -93,6 +104,13 @@ const DiscussionHome = () => {
         dropdownSelection: dropdownSelection
     };
 
+    const setAllFalse = async () => {
+        setSortByCity(false);
+        setSortByTitle(false);
+        setSortByCategory(false);
+        setSortByDate(false);
+    }
+
     const handleSubmit = async () => {
         try {
             // Send a POST request to the server
@@ -123,7 +141,7 @@ const DiscussionHome = () => {
     useEffect(() => {
         async function fetchDiscussions() {
             try {
-                const response = await fetch("http://localhost:5050/discussionPost/getDiscussions");
+                const response = await fetch("http://localhost:5050/discussion/getDiscussions");
                 const data = await response.json();
     
                 if (response.status === 200) {
@@ -143,36 +161,54 @@ const DiscussionHome = () => {
         <div className={styles.DiscussionHome}>
             <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
             <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-            <button className="profilebtn" onClick={() => navigate("/discussions")}>Discussions</button>
+            <button className="profilebtn" onClick={() => navigate("/view-city")}>Search</button>
             <button className="logout" onClick={handleLogout}>Logout</button>
             <h2>Discussions</h2>
 
             {/* {!showForm && <DiscussNav />} */}
             
             {error && <div className="error">{error}</div>}
-            
-            <div className="searchBar">
-                <Autosuggest // Use Autosuggest component
-                    suggestions={suggestions}
-                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                    onSuggestionsClearRequested={onSuggestionsClearRequested}
-                    getSuggestionValue={(suggestion) => suggestion}
-                    renderSuggestion={(suggestion) => (
-                        <div
-                            key={suggestion}
-                            className="suggestion"
-                        >
-                            {suggestion}
-                        </div>
-                    )}
-                    inputProps={{
-                        type: "text",
-                        placeholder: "Search for a discussion",
-                        value: searchTerm,
-                        onChange: handleInputChange,
-                    }}
-                />
-            </div>
+            {searchBySorting && (
+                <div className="sorting">
+                    <button onClick={() => setSearchBySorting(false)}>Change to Type Search</button>
+                    <div className="sortBar">
+                        <h2>Sort by City, Title, Category, or Date</h2>
+                        <button onClick={() => setAllFalse().then(setSortByCity(true))}>City</button>
+                        <button onClick={() => setAllFalse().then(setSortByTitle(true))}>Title</button>
+                        <button onClick={() => setAllFalse().then(setSortByCategory(true))}>Category</button>
+                        <button onClick={() => setAllFalse().then(setSortByDate(true))}>Date</button>
+                    </div>
+                </div>
+            )}
+            {!searchBySorting && (
+                <div className="searchBar">
+                    <button onClick={() => setSearchBySorting(true)}>Change to Sort Search</button>
+                    <h2>Type to Search by City or Title</h2>
+                    <Autosuggest // Use Autosuggest component
+                        suggestions={suggestions}
+                        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                        onSuggestionsClearRequested={onSuggestionsClearRequested}
+                        getSuggestionValue={(suggestion) => suggestion}
+                        renderSuggestion={(suggestion) => (
+                            <div
+                                key={suggestion}
+                                className="suggestion"
+                            >
+                                {suggestion}
+                            </div>
+                        )}
+                        inputProps={{
+                            type: "text",
+                            placeholder: "Search for a discussion",
+                            value: searchTerm,
+                            onChange: handleInputChange,
+                        }}
+                    />
+                    {!searchByTitle && <button onClick={() => setSearchByTitle(true)}>Searching by City (click to change)</button>}
+                    {searchByTitle && <button onClick={() => setSearchByTitle(false)}>Searching by Title (click to change)</button>}
+
+                </div>
+            )}
             {!showForm && <button onClick={() => setShowForm(true)} className={styles.createNew}>Create New Discussion</button>}
             {!showForm && 
                 <select

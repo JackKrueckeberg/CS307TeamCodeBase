@@ -15,6 +15,7 @@ import favorite_cities from "./routes/favorite_cities.mjs";
 import recent_searches from "./routes/recent_searches.mjs";
 import get_tweet from "./routes/get_tweet.mjs"
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
+import discussions from "./routes/discussionPost.mjs";
 
 //import DiscussionHome from "./routes/discussionPost.mjs"
 
@@ -39,7 +40,8 @@ app.use("/favorite_searches", favorite_searches);
 app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);
 app.use("/get_tweet", get_tweet);
-app.use("/bookmarked_discussions", bookmarked_discussions)
+app.use("/bookmarked_discussions", bookmarked_discussions);
+app.use("/discussion", discussions);
 
 //app.use("/discussionPost", discussion);
 

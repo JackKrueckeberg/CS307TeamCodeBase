@@ -145,8 +145,6 @@ const ViewCity = () => {
             console.error("There was an error fetching the city attractions", error);
         }
     }
-    
-    
 
     const handleSubmit = async () => {
         setShowResults(false);
