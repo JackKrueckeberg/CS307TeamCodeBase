@@ -16,16 +16,17 @@ export default function DeleteAccount() {
 
   async function deleteAccount() {
 
-    await fetch("http://localhost:5050/recent_searches/" + userProfile.id, {
+    await fetch("http://localhost:5050/profileRoute/" + userProfile._id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
     }).catch((error) => {
       window.alert(error);
-      console.log("HERE")
       return;
     });
+
+    navigate("/createAccount");
 
     
   }
@@ -33,6 +34,7 @@ export default function DeleteAccount() {
   async function handleDelete() {
     if (username === confirm && username === userProfile.email) {
         console.log("deleting account");
+        console.log(userProfile._id);
         deleteAccount();
     } else {
         alert("Could not delete account. Incorrect email or confirm.");
