@@ -21,6 +21,7 @@ import DeleteAccount from './components/delete-account';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext } from './contexts/CityContext';
+import DiscussionHome from './components/discussionHome';
  
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -58,7 +59,7 @@ const App = () => {
         <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
             <CityContext.Provider value={{city, setGlobalCity}}>
                 <Routes>
-                    <Route path="/" element={<Login />} />
+                    <Route path="/" element={<DiscussionHome />} />
                     <Route path="/view-city" element={<ViewCity />} />
                     <Route path="/preferences" element={<Preferences />} />
                     <Route path="/verification" element={<Verification />} />
