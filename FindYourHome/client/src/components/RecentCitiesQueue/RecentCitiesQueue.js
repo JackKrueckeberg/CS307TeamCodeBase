@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./RecentCitiesQueue.css"
 import { useNavigate } from "react-router-dom";
 import { useCompareCities } from "../../contexts/CityContext";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const RecentCitiesQueue = ({ queue }) => {
     const navigate = useNavigate();
@@ -9,7 +10,16 @@ const RecentCitiesQueue = ({ queue }) => {
     let email = "user2@example.com"
     const [selectedCities, setSelectedCities] = useState(new Set());
     const [errorMessage, setErrorMessage] = useState("");
-    const { compareCities, setCompareCities } = useCompareCities();
+
+    const getCompareCitiesFromLocalStorage = () => {
+        return JSON.parse(localStorage.getItem('compareCities') || '[]');
+    };
+
+    const setCompareCitiesToLocalStorage = (cities) => {
+        localStorage.setItem('compareCities', JSON.stringify(cities));
+    };
+
+    const compareCities = getCompareCitiesFromLocalStorage();
 
     useEffect(() => {
         // Define the function inside useEffect
@@ -23,7 +33,8 @@ const RecentCitiesQueue = ({ queue }) => {
                 }
 
                 const data = await response.json();
-                queue.items = data.recent_cities; // update the state
+                // queue.items = data.recent_cities; // update the state
+                setQueueItems(data.recent_cities);
             } catch (error) {
                 console.error("There was an error fetching the cities", error);
             }
@@ -34,12 +45,14 @@ const RecentCitiesQueue = ({ queue }) => {
 
     function addCity(item) {
         if (!compareCities.includes(item)) {
-            setCompareCities(prevCities => [...prevCities, item]);
+            const newCompareCities = [...compareCities, item];
+            setCompareCitiesToLocalStorage(newCompareCities);
         }
     }
 
     function removeCites(itemToRemove) {
-        setCompareCities(prevCities => prevCities.filter(item => item !== itemToRemove));
+        const newCompareCities = compareCities.filter(item => item !== itemToRemove);
+        setCompareCitiesToLocalStorage(newCompareCities);
     }
 
     const handleCityClick = (city) => {
@@ -65,7 +78,7 @@ const RecentCitiesQueue = ({ queue }) => {
         } else if (compareCities.length < 2 || compareCities.length == 0) {
             setErrorMessage("You've selected less than 2 cities. Please select 2 cities to compare.");
         } else {
-            setErrorMessage(""); 
+            setErrorMessage("");
             navigate("/compare")
         }
     };
@@ -74,17 +87,16 @@ const RecentCitiesQueue = ({ queue }) => {
     return (
         <div>
             <h2>Recent Cities:</h2>
-            <ul className="recently_viewed_cities">
-                {Object.values(queue.items).map(city => (
-                    <li
-                        key={city}
-                        onClick={() => handleCityClick(city)}
-                        style={selectedCities.has(city) ? { color: 'blue' } : {}}
-                    >
-                        {city}
-                    </li>
-                ))}
-            </ul>
+            {Object.values(queueItems).map(cityModel => (
+                <li
+                    key={cityModel.name}
+                    onClick={() => handleCityClick(cityModel.name)}
+                    style={selectedCities.has(cityModel.name) ? { color: 'blue' } : {}}
+                >
+                    {cityModel.name}
+                </li>
+            ))}
+
 
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
 
@@ -102,14 +114,15 @@ export class Queue {
     }
 
     //add the contents of the queue to the recent_cities field of a user based of their email
-    async addToQueue(cityName) {
+    async addToQueue(cityModel) {
         let email = "user2@example.com"; //mock email
+        console.log(cityModel);
         try {
             const updateData = {
                 action: "addRecentCity",
-                cityName: cityName
+                cityModel: cityModel
             };
-
+    
             const response = await fetch(`http://localhost:5050/users/${email}`, {
                 method: "PATCH",
                 headers: {
@@ -117,9 +130,7 @@ export class Queue {
                 },
                 body: JSON.stringify(updateData)
             });
-
-            console.log(response);
-
+    
             if (!response.ok) {
                 console.error(`Error while adding city to recentViewed: ${response.statusText}`);
             }
@@ -127,31 +138,32 @@ export class Queue {
             console.error("There was an error adding the city to recentViewed", error);
         }
     }
+    
 
-    enqueue(element) {
+    enqueue(cityModel) {
         const newItems = { ...this.items };
         for (const value of Object.values(newItems)) {
-            if (value === element) {
-                console.warn("Element already exists in the queue.");
+            if (value.name === cityModel.name) {
+                console.warn("City model already exists in the queue.");
                 return this;
             }
         }
-
-        newItems[this.rear] = element;
-        this.addToQueue(element);  // Add to user's recentViewed cities list
-
+    
+        newItems[this.rear] = cityModel;
+        this.addToQueue(cityModel);  // Add to user's recentViewed cities list
+    
         let newFront = this.front;
         let newRear = this.rear + 1;
-
+    
         if ((newRear - newFront) > 10) {
             delete newItems[newFront];
             newFront++;
         }
-
+    
         const newQueue = new Queue(newItems, newRear, newFront);
         return newQueue;
     }
-
+    
     dequeue() {
         const newItems = { ...this.items };
         delete newItems[this.front];

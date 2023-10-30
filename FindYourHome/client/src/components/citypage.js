@@ -37,7 +37,7 @@ export default function CityPage(props) {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(data.choices[0].message.content);
+         // console.log(data.choices[0].message.content);
           setApiResponse(data.choices[0].message.content);  // Set the fetched data to the state
         } else {
           console.log('Error: Unable to process your request.');
