@@ -17,6 +17,7 @@ import Preferences from "./components/preferences";
 import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
+import DeleteAccount from './components/delete-account';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext } from './contexts/CityContext';
@@ -64,6 +65,7 @@ const App = () => {
                     <Route path="/createAccount" element={<CreateAccount />} />
                     <Route path="/profile" element={<Profile />} />
                     <Route path="/citypage" element={<CityPage />} />
+                    <Route path="/delete-account" element={<DeleteAccount />} />
                 </Routes>
             </CityContext.Provider>
         </UserContext.Provider>
