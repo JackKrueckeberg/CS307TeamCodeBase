@@ -4,10 +4,22 @@ import "../Stylings/advancedPrefs.css";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
+import searchImage from "../ViewCity.js";
+import Model from "../ViewCity.js";
+import "../Stylings/ViewCity.css";
+import CityPage from "./citypage";
+import { useCity } from "../contexts/CityContext";
+import { useUser } from '../contexts/UserContext';
+import { useLocalStorage } from "@uidotdev/usehooks";
+
 
 export default function Create() {
   const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
-  const [form, setForm] = useState({
+  const {globalCity, setGlobalCity} = useCity();
+
+  console.log(useLocalStorage("form"));
+
+  const [form, setForm] = useLocalStorage("form", {
     population: "",
     east_coast: false,
     west_coast: false,
@@ -19,7 +31,19 @@ export default function Create() {
     median_income: "",
     favorited: false
   });
-  const [results, setResults] = useState([]);
+
+  const [results, setResults] = useLocalStorage("results", []);
+  const [showResults, setShowResults] = useState(false);
+  const [cityIncome, setCityIncome] = useState(null);
+  const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
+  const [cityModel, setCityModel] = useState(null);
+  const [allCities, setAllCities] = useState([]);
+  const [city, setCity] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
+  const [showing, setShowing] = useState([]);
+
+  const {user: userProfile } = useUser(); // the id of the current logged in user
 
   // These methods will update the state properties.
   function updateForm(value) {
@@ -42,7 +66,7 @@ export default function Create() {
 
   async function getUser_favorites() {
 
-    const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+    const city_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -58,7 +82,7 @@ export default function Create() {
   }  
 
   async function getUser_recentSearches() {
-    const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+    const city_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -150,7 +174,7 @@ export default function Create() {
     }
     favs.push(newFavorite);
 
-    await fetch("http://localhost:5050/favorite_searches/user@example.com", {
+    await fetch("http://localhost:5050/favorite_searches/" + userProfile.email, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -183,7 +207,7 @@ export default function Create() {
     }
     recent.push(newRecent);
 
-    await fetch("http://localhost:5050/recent_searches/user@example.com", {
+    await fetch("http://localhost:5050/recent_searches/" + userProfile.email, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -217,7 +241,6 @@ export default function Create() {
     
   }
 
-
   async function getCities() {
     const city_info = await fetch("http://localhost:5050/city_info", {
       method: "GET",
@@ -230,6 +253,7 @@ export default function Create() {
     });
 
     const resp = await city_info.json();
+    setAllCities(resp);
     return resp;
   }  
 
@@ -354,19 +378,19 @@ export default function Create() {
   setRecentSearches(recentSearches);
   console.log('Recent searches updated');
 
+  }
 
-    setForm({
-      population: "",
-      east_coast: false,
-      west_coast: false,
-      central: false,
-      mountain_west: false,
-      state: "",
-      zip_code: "",
-      county: "",
-      median_income: "",
-      favorited:  false
-    });
+
+  const handleCity = async (value) => {
+      for (var i = 0; i < results.length; i++) {
+        if (results[i].name === value) {
+          var tempCity = results[i];
+          results[i].form = form;
+          setGlobalCity(results[i]);
+          navigate("/cityPage", results[i]);
+          return;
+        }
+      }
   }
 
   const navigate = useNavigate();
@@ -640,12 +664,13 @@ export default function Create() {
             <li key={index}>
               {Object.entries(search).map(([key, value]) => {
                 if (value !== null && value !== "" && value !== false) {
-                  if (key !== 'state' && key !== 'name') {
+                  if (key !== 'name') {
                     return null; // Don't display State: default
                   }
                   return (
                     <span key={key}>
-                      {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                      {key.charAt(0).toUpperCase() + key.slice(1)}: {value}{' '}
+                      <button onClick={() => handleCity(value)}>View</button>
                     </span>
                   );
                 }

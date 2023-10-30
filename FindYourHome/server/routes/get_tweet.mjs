@@ -29,7 +29,7 @@ router.get("/:city", async (req, res) => {
 
         res.send(resp.html).status(200);
     } catch {
-        res.send("<h1>Error lading tweets for this city.</h1>").status(200);
+        res.send("<h1>Error loading tweets for this city.</h1>").status(200);
     }
 
 })
