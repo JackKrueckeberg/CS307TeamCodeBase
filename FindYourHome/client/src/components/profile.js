@@ -12,12 +12,21 @@ export default function Profile() {
         setTabVal(index);
         console.log(index);
     };
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+    
+        navigate("/", { state: { loggedOut: true }, replace: true });
+    };
 
     return (
         <div className="container">
             <div className="nav-buttons">
                 <button className="viewCity-button" onClick={() => navigate('/view-city')}>Go to City Search</button>
                 <button className="preferences-button" onClick={() => navigate('/preferences')}>Go to Preferences</button>
+                <button className="logout" onClick={handleLogout}>Logout</button>
+                <button className="logout" onClick={() => navigate('/delete-account')}>Delete Account</button>
             </div>
             <div className="tabs-block">
                 <div onClick={() => handleTabChange(1)} className={`${tabVal === 1 ? 'tab active-tab' : 'tab'}`}> Account Info </div>

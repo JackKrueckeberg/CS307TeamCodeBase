@@ -61,6 +61,7 @@ body {
 
 .togglePassword {
     transition: color 0.3s;
+    padding-bottom: 5px;
 }
 
 .togglePassword:hover {
@@ -140,4 +141,15 @@ body {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path d="M16.28 6.29a1 1 0 0 0-1.41 0L9 11.59l-2.29-2.3a1 1 0 0 0-1.42 1.42l3 3a1 1 0 0 0 1.42 0l6-6a1 1 0 0 0 0-1.41z" fill="white"></path></svg>');
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.logoutMessage{
+    background-color: rgb(62, 202, 62);
+    color: white;
+    margin-top: 40px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 5px;
+    width: 1000px;
+    text-align: center;
 }

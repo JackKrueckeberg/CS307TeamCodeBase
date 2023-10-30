@@ -13,21 +13,23 @@ import { useUser } from "./contexts/UserContext";
 import CityPage from "./components/citypage"
 import { useCity } from "./contexts/CityContext";
 
-const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
+const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 const ViewCity = () => {
     const [allCities, setAllCities] = useState([]);
     const [city, setCity] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
-    const [cityIncome, setCityIncome] = useState(null);
+    const [cityName, setCityName] = useState(null);
     const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [shouldFetchAttractions, setShouldFetchAttractions] = useState(false);
+
 
     const [favorite, setFavorite] = useState(false)
 
@@ -37,6 +39,13 @@ const ViewCity = () => {
     const {globalCity, setGlobalCity} = useCity();
     const navigate = useNavigate();
 
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+    
+        navigate("/", { state: { loggedOut: true }, replace: true });
+    };
 
     useEffect(() => {
         const verificationStatus = localStorage.getItem('isVerified');
@@ -103,8 +112,6 @@ const ViewCity = () => {
 
     }
 
-
-
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
             const inputValue = value.trim().toLowerCase();
@@ -122,11 +129,29 @@ const ViewCity = () => {
         setSuggestions([]);
     };
 
+    const fetchCityAttractions = async (cityName) => {
+        try {
+            console.log(cityName);
+            const response = await fetch(`http://localhost:5050/attractions/${cityName}`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log(data); // Handle this data as needed in your frontend
+    
+        } catch (error) {
+            console.error("There was an error fetching the city attractions", error);
+        }
+    }
+    
+    
+
     const handleSubmit = async () => {
         setShowResults(false);
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
-        setCityIncome(matchedCity ? matchedCity.median_income : null);
         setCityCoordinates(matchedCity ? { lat: matchedCity.lat, lon: matchedCity.lon } : null)
         if (matchedCity) {
             const img = await searchImage();
@@ -148,7 +173,9 @@ const ViewCity = () => {
                 med_income,
                 img,
                 nation_avg,
-                nation_flag
+                nation_flag,
+                matchedCity.lon,
+                matchedCity.lat
             );
 
             setImageUrl(img);
@@ -225,8 +252,18 @@ const ViewCity = () => {
     async function handleCombinedActions() {
         await handleSubmit();
         handleQueueCity();
+        setShouldFetchAttractions(true);
         navigate("/citypage");
     }
+
+    //used to call fetchCityAttractions
+    useEffect(() => {
+        if (shouldFetchAttractions && cityName) {
+            fetchCityAttractions(cityName);
+            setShouldFetchAttractions(false);  // reset the flag
+        }
+    }, [cityName, shouldFetchAttractions]);
+    
 
     const handleVerification = () => {
         navigate("/verification");
@@ -283,7 +320,7 @@ const ViewCity = () => {
                                 <div
                                     key={suggestion}
                                     className="suggestion"
-                                    >
+                                >
                                     {suggestion}
                                 </div>
                             )}
@@ -305,8 +342,8 @@ const ViewCity = () => {
 
                 <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
                 <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+                <button className="logout" onClick={handleLogout}>Logout</button>
             </div>
-
 
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />

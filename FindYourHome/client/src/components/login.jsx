@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../Stylings/loginStyle.module.css';
 import { useUser } from '../contexts/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 export const Login = () => {
     const [email, setEmail] = useState('');
@@ -15,6 +16,20 @@ export const Login = () => {
     const timeoutRef = useRef(null);
     const { user, setLoggedInUser } = useUser();
     const navigate = useNavigate();
+    const location = useLocation();
+    const [showLogoutMessage, setShowLogoutMessage] = useState(false);
+
+    useEffect(() => {
+        if (location.state?.loggedOut) {
+            setShowLogoutMessage(true);
+            setTimeout(() => {
+                setShowLogoutMessage(false);
+                // Reset the loggedOut state to prevent showing the message on refresh
+                navigate(location.pathname, { state: { loggedOut: false }, replace: true });
+            }, 2500); // Hide message after 5 seconds
+        }
+    }, [location, navigate]);
+    
 
     const submission = async (e) => {
         e.preventDefault();
@@ -149,6 +164,11 @@ export const Login = () => {
 
     return (
         <div className={styles.userAuthentication}>
+            {showLogoutMessage && (
+                <div className={styles.logoutMessage}>
+                    <h3>Logged Out Successfully</h3>
+                </div>
+            )}
             <h1>Home is Where Your Journey Begins.</h1>
             <form onSubmit={submission} className={styles.form}>
                 
