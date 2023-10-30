@@ -243,7 +243,6 @@ const ViewCity = () => {
 
     const handleQueueCity = () => {
         // Check if there's a valid city to enqueue
-        console.log(cityModel);
         if (cityModel) {
             // Enqueue the city name to the recent cities queue
             const updatedQueue = recentCitiesQueue.enqueue(cityModel);

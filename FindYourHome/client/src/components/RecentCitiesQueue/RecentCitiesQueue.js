@@ -33,8 +33,8 @@ const RecentCitiesQueue = ({ queue }) => {
                 }
 
                 const data = await response.json();
-                // queue.items = data.recent_cities; // update the state
-                setQueueItems(data.recent_cities);
+                queue.items = data.recent_cities; // update the state
+                //setQueueItems(data.recent_cities);
             } catch (error) {
                 console.error("There was an error fetching the cities", error);
             }
@@ -87,7 +87,7 @@ const RecentCitiesQueue = ({ queue }) => {
     return (
         <div>
             <h2>Recent Cities:</h2>
-            {Object.values(queueItems).map(cityModel => (
+            {Object.values(queue.items).map(cityModel => (
                 <li
                     key={cityModel.name}
                     onClick={() => handleCityClick(cityModel.name)}
@@ -116,7 +116,6 @@ export class Queue {
     //add the contents of the queue to the recent_cities field of a user based of their email
     async addToQueue(cityModel) {
         let email = "user2@example.com"; //mock email
-        console.log(cityModel);
         try {
             const updateData = {
                 action: "addRecentCity",
@@ -143,6 +142,7 @@ export class Queue {
     enqueue(cityModel) {
         const newItems = { ...this.items };
         for (const value of Object.values(newItems)) {
+            console.log(value);
             if (value.name === cityModel.name) {
                 console.warn("City model already exists in the queue.");
                 return this;
@@ -163,7 +163,7 @@ export class Queue {
         const newQueue = new Queue(newItems, newRear, newFront);
         return newQueue;
     }
-    
+
     dequeue() {
         const newItems = { ...this.items };
         delete newItems[this.front];
