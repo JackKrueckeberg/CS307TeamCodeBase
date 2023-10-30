@@ -16,6 +16,9 @@ import recent_searches from "./routes/recent_searches.mjs";
 import get_tweet from "./routes/get_tweet.mjs"
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
 
+import strikes from "./routes/strikes.mjs"
+
+
 //import DiscussionHome from "./routes/discussionPost.mjs"
 
 
@@ -34,12 +37,15 @@ app.use("/emailVerification", EmailVerification)
 app.use("/emailForgotPassword", EmailResetPassword)
 app.use("/profileRoute", profile);
 app.use("/users", usersData);
+
 app.use("/createUser", usersData);
+
 app.use("/favorite_searches", favorite_searches);
 app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);
 app.use("/get_tweet", get_tweet);
 app.use("/bookmarked_discussions", bookmarked_discussions)
+app.use("/strikes", strikes)
 
 //app.use("/discussionPost", discussion);
 
