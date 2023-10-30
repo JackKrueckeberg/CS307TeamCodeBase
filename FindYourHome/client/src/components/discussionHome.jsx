@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Stylings/discussionStyle.module.css';
 import Autosuggest from 'react-autosuggest';
+import { useNavigate } from "react-router-dom";
 // import DiscussNav from './discussNav.js';
 
 
@@ -19,6 +20,7 @@ const DiscussionHome = () => {
     const [dropdownSelection, setDropdownSelection] = useState("");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [suggestions, setSuggestions] = useState([]);
+    const navigate = useNavigate();
 
     
     const getUniqueCitiesWithCasePreserved = (discussions) => {
@@ -34,6 +36,14 @@ const DiscussionHome = () => {
         });
     
         return uniqueCityList;
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        sessionStorage.removeItem('currentUser');
+    
+        navigate("/", { state: { loggedOut: true }, replace: true });
     };
     
     const uniqueCities = getUniqueCitiesWithCasePreserved(discussions);
@@ -56,6 +66,7 @@ const DiscussionHome = () => {
     };
 
     const handleInputChange = (e) => {
+        console.log("input changed");
         setSearchTerm(e.target.value);
         setIsDropdownOpen(true);
     };
@@ -130,6 +141,10 @@ const DiscussionHome = () => {
 
     return (
         <div className={styles.DiscussionHome}>
+            <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+            <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+            <button className="profilebtn" onClick={() => navigate("/discussions")}>Discussions</button>
+            <button className="logout" onClick={handleLogout}>Logout</button>
             <h2>Discussions</h2>
 
             {/* {!showForm && <DiscussNav />} */}

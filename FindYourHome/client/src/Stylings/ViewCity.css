@@ -117,6 +117,7 @@ button:hover {
 .fav_icon {
     scale: 5;
 }
+
 .confirmButton {
     background-color: white;
     color: black;
@@ -127,12 +128,12 @@ button:hover {
     margin-top: 100px; /* Increase the top margin to move the button down */
   
     /* Other styles for the button in its default state */
-  }
+}
   
-  .confirmButton:hover {
+.confirmButton:hover {
     background-color: #2980b9; /* Change the background color on hover */
     /* Additional styles for the button on hover */
-  }
+}
   
 
 .errorMessage {
@@ -141,6 +142,7 @@ button:hover {
     margin-top: 20px;
     text-align: center; /* Centering the error message */
 }
+
 .verificationBanner {
     background-color: red;
     color: white;

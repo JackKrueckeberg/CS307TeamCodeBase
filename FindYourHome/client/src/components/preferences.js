@@ -393,6 +393,14 @@ export default function Create() {
       }
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
+
+    navigate("/", { state: { loggedOut: true }, replace: true });
+};
+
   const navigate = useNavigate();
   
 
@@ -402,6 +410,8 @@ export default function Create() {
     <div>
         <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
         <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+        <button className="profilebtn" onClick={() => navigate("/discussions")}>Discussions</button>
+        <button className="logout" onClick={handleLogout}>Logout</button>
         <div>
         <form onSubmit={onSubmit}>
           <div className="padding" />
