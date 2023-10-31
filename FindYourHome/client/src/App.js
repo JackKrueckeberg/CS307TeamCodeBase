@@ -18,6 +18,8 @@ import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
 import CompareCities from './components/compareCities';
+import DeleteAccount from './components/delete-account';
+import Flags from './components/strikes/flagComment';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
@@ -73,6 +75,22 @@ const App = () => {
                 </CompareCitiesProvider>
             </CityContext.Provider>
         </UserContext.Provider>
+      <Flags/>
+        // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
+        //     <CityContext.Provider value={{city, setGlobalCity}}>
+        //         <Routes>
+        //             <Route path="/" element={<Login />} />
+        //             <Route path="/view-city" element={<ViewCity />} />
+        //             <Route path="/preferences" element={<Preferences />} />
+        //             <Route path="/verification" element={<Verification />} />
+        //             <Route path="/createAccount" element={<CreateAccount />} />
+        //             <Route path="/profile" element={<Profile />} />
+        //             <Route path="/citypage" element={<CityPage />} />
+        //             <Route path="/delete-account" element={<DeleteAccount />} />
+        //         </Routes>
+        //     </CityContext.Provider>
+        // </UserContext.Provider>
+
     );
 };
  
