@@ -3,7 +3,12 @@ import { useUser } from '../contexts/UserContext';
 import '../Stylings/messageBoard.css';
 import Modal from "react-modal";
 
+import io from "socket.io-client";
+
+const socket = io.connect("http://localhost:5050");
+
 export default function MessageList() {
+
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const [messageBoards, setMessageBoards] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -27,7 +32,12 @@ export default function MessageList() {
     useEffect(() => {
         fetchUsername(user._id);
         fetchUserMessageBoards();
-    }, []);
+
+        socket.on("receive_message", (data) => {
+            fetchUserMessageBoards();
+        })
+        
+    }, [socket]);
 
     // get the current user's username
     const fetchUsername = async (id) => {
@@ -139,6 +149,9 @@ export default function MessageList() {
             setShowModal(false);
             setInputRecipient('');
         } else {
+
+            socket.emit("new_message_board", recipient);
+
             // Create a new message board and add it to the messageBoards state
             setNewBoardMessages([...newBoardMessages, `Hello! ${username} wants to start a conversation!`]);
 
@@ -225,6 +238,16 @@ export default function MessageList() {
         console.log(newMessage);
 
         if (newMessage && recipient !== "") {
+
+            const messageData = {
+                senderUsername: username,
+                recipientUsername: recipient,
+                content: newMessage,
+                timeSent: new Date(),
+            };
+
+            await socket.emit("send_message", messageData);
+
             const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
                 method: "POST",
                 headers: {

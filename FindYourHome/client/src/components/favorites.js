@@ -10,6 +10,7 @@ export default function Favorites() {
     const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
     const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
     const [user, setInfo] = useState(storedSesUser || storedLocUser || userProfile);
+    const [username, setUsername] = useState('');
 
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
     const [favorite_searches, setFavoriteSearches] = useState([]);
@@ -28,9 +29,32 @@ export default function Favorites() {
 
     useEffect(() => {
         // Call the function to get favorite cities when the component mounts
+        fetchUsername(user._id);
         getUser_favorite_cities();
         getUser_favorite_searches();
     }, []); 
+
+    const fetchUsername = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5050/profileRoute/profile/${id}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            })
+
+            const resp = await response.json();
+
+            setUsername(resp.username);
+
+            console.log(resp.username);
+    
+            return resp.username;
+        } catch (error) {
+            console.error("Error fetching user info: ", error);
+        }
+    }
+
 
     const handleTabChange = (index) => {
         if(tabVal === 1) {
@@ -184,6 +208,9 @@ export default function Favorites() {
 
         // TODO finish the send method
         const citiesToSend = favorite_cities.filter((city, index) => selectedCities[index]);
+        const message = `Here are my favorite cites: ${citiesToSend.join(', ')}`;
+
+        console.log(message);
 
         const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
             method: "POST",
@@ -191,9 +218,9 @@ export default function Favorites() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                senderUsername: 'user1',
+                senderUsername: username,
                 recipientUsername: recipient,
-                content: `Here are my favorite cities: ${citiesToSend}`,
+                content: message,
                 timeSent: new Date(),
             }),
         });

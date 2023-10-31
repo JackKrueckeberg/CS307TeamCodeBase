@@ -79,14 +79,13 @@ router.post("/share-favorite-cities", async (req, res) => {
     const recipient = await collection.findOne({ username: recipientUsername});
     const sender = await collection.findOne({ username: senderUsername });
 
-    if (recipient && sender) {
-      const message = {
+    const message = {
         sender: senderUsername,
         recipient: recipientUsername,
         content: content,
         timeSent: timeSent,
-      };
-
+    };
+    if (recipient && sender) {
       const senderMessageBoard = sender.messageList.find(
         (entry) => entry.messagesWith === recipientUsername
       );
@@ -114,6 +113,63 @@ router.post("/share-favorite-cities", async (req, res) => {
         );
 
         return res.status(200).send("Message shared successfully.");
+      }
+
+      if (!recipientMessageBoard && !senderMessageBoard) {
+        const messageBoard_1 = {
+          messagesWith: recipientUsername,
+          time: timeSent,
+          messages: [],
+          hasNewMessage: false,
+        };
+
+        const messageBoard_2 = {
+          messagesWith: senderUsername,
+          time: timeSent,
+          messages: [],
+          hasNewMessage: true,
+        };
+
+        sender.messageList = sender.messageList || [];
+        recipient.messageList = recipient.messageList || [];
+
+        sender.messageList.push(messageBoard_1);
+        recipient.messageList.push(messageBoard_2);
+
+        await collection.updateOne(
+          { username: senderUsername },
+          { $set: {messageList: sender.messageList } }
+        );
+
+        await collection.updateOne(
+          { username: recipientUsername },
+          { $set: {messageList: recipient.messageList } }
+        );
+
+        const senderBoard = sender.messageList.find(
+          (entry) => entry.messagesWith === recipientUsername
+        );
+  
+        const recipientBoard = recipient.messageList.find(
+          (entry) => entry.messagesWith === senderUsername
+        );
+
+        if (recipientBoard && senderBoard) {
+          recipientBoard.messages.push(message);
+          senderBoard.messages.push(message);
+          
+          await collection.updateOne(
+            { username: recipientUsername },
+            { $set: { messageList: recipient.messageList } }
+          );
+  
+          await collection.updateOne(
+            { username: senderUsername },
+            { $set: { messageList: sender.messageList } }
+          );
+  
+          return res.status(200).send("Message shared successfully.");
+        }
       }
     }
     return res.status(400).send("Recipient or sender not found.");
