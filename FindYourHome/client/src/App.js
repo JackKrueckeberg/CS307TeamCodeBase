@@ -75,7 +75,7 @@ const App = () => {
                 </CompareCitiesProvider>
             </CityContext.Provider>
         </UserContext.Provider>
-      <Flags/>
+    //   <Flags/>
         // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
         //     <CityContext.Provider value={{city, setGlobalCity}}>
         //         <Routes>
