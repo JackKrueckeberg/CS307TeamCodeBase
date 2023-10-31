@@ -84,6 +84,10 @@ const DiscussionHome = () => {
             console.error("There was an error posting the discussion:", error);
         }
     };
+
+    const handleNewDiscussion = (e) => {
+        setShowForm(true);
+    };
     
     useEffect(() => {
         async function fetchDiscussions() {
@@ -102,6 +106,24 @@ const DiscussionHome = () => {
             }
         }
         fetchDiscussions();
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`http://localhost:5050/record/cities_full_2`);
+                if (!response.ok) {
+                    const message = `An error occurred: ${response.statusText}`;
+                    window.alert(message);
+                    return;
+                }
+
+                const cities = await response.json();
+                setAllCities(cities);
+            } catch (error) {
+                console.error("There was an error fetching the cities", error);
+            }
+        }
+
+        fetchData();
     }, []);
 
     const handleClear = () => {
@@ -112,7 +134,9 @@ const DiscussionHome = () => {
 
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
+        setCity(e.target.value);
         setIsDropdownOpen(true);
+        console.log(city);
     };
 
     const onSuggestionsFetchRequested = ({ value }) => {
@@ -140,16 +164,8 @@ const DiscussionHome = () => {
             
             {error && <div className="error">{error}</div>}
             {!showForm &&
-            <div className="searchBar">
+            <div>
                 <span>Find a City</span>
-                {/* <input 
-                    type="text" 
-                    value={city} 
-                    onChange={(e) => setCity(e.target.value)} 
-                    placeholder="Enter a city to discuss"
-                    className={styles.inputField}
-                    required
-                /> */}
                 <Autosuggest
                     suggestions={suggestions}
                     onSuggestionsFetchRequested={onSuggestionsFetchRequested}
@@ -171,7 +187,7 @@ const DiscussionHome = () => {
                     }}
                 />
             </div>}
-            {!showForm && <button onClick={() => setShowForm(true).then(setCity(searchTerm))} className={styles.createNew}>Create New Discussion</button>}
+            {!showForm && <button onClick={() => handleNewDiscussion()} className={styles.createNew}>Create New Discussion</button>}
             {!showForm && 
                 <select
                     className={styles.filter} 

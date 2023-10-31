@@ -44,6 +44,17 @@ body {
     color: white;
 }
 
+.searchBar {
+    background-color: rgb(171, 171, 171);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    padding: 0;
+    border-radius: 20px;
+    height: 40px;
+}
+
 .inputField {
     border-radius: 20px;
     height: 40px;
