@@ -19,6 +19,8 @@ import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
 import DeleteAccount from './components/delete-account';
 import Flags from './components/strikes/flagComment';
+import DiscussionHome from './components/discussionHome';
+import DiscussNav from './components/discussNav';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext } from './contexts/CityContext';
@@ -56,21 +58,22 @@ const App = () => {
   const [city, setCity] = useState(storedCity ? JSON.parse(storedCity) : null);
 
     return (
-      <Flags/>
-        // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
-        //     <CityContext.Provider value={{city, setGlobalCity}}>
-        //         <Routes>
-        //             <Route path="/" element={<Login />} />
-        //             <Route path="/view-city" element={<ViewCity />} />
-        //             <Route path="/preferences" element={<Preferences />} />
-        //             <Route path="/verification" element={<Verification />} />
-        //             <Route path="/createAccount" element={<CreateAccount />} />
-        //             <Route path="/profile" element={<Profile />} />
-        //             <Route path="/citypage" element={<CityPage />} />
-        //             <Route path="/delete-account" element={<DeleteAccount />} />
-        //         </Routes>
-        //     </CityContext.Provider>
-        // </UserContext.Provider>
+      // <Flags/>
+        <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
+            <CityContext.Provider value={{city, setGlobalCity}}>
+                <Routes>
+                    <Route path="/" element={<Login />} />
+                    <Route path="/view-city" element={<ViewCity />} />
+                    <Route path="/preferences" element={<Preferences />} />
+                    <Route path="/verification" element={<Verification />} />
+                    <Route path="/createAccount" element={<CreateAccount />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/citypage" element={<CityPage />} />
+                    <Route path="/delete-account" element={<DeleteAccount />} />
+                    <Route path="/discussionHome" element={<DiscussionHome />} />
+                </Routes>
+            </CityContext.Provider>
+        </UserContext.Provider>
     );
 };
  

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Stylings/discussionStyle.module.css';
 import DiscussNav from './discussNav.js';
+import Autosuggest from 'react-autosuggest';
 
 
 const DiscussionHome = () => {
@@ -12,7 +13,11 @@ const DiscussionHome = () => {
     const [error, setError] = useState('');
     const [selectorChoice, setSelectorChoice] = useState("");
     const [dropdownSelection, setDropdownSelection] = useState("");
-
+    const [allCities, setAllCities] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [showResults, setShowResults] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     
     const getUniqueCitiesWithCasePreserved = (discussions) => {
         const uniqueCitySet = new Set();
@@ -99,6 +104,34 @@ const DiscussionHome = () => {
         fetchDiscussions();
     }, []);
 
+    const handleClear = () => {
+        setCity(null);
+        setShowResults(false);
+        setSearchTerm("");
+    };
+
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+        setIsDropdownOpen(true);
+    };
+
+    const onSuggestionsFetchRequested = ({ value }) => {
+        if (value) {
+            const inputValue = value.trim().toLowerCase();
+            const matchingCities = allCities.filter((city) =>
+                city.name.toLowerCase().startsWith(inputValue)
+            );
+
+            setSuggestions(matchingCities.map((city) => city.name).slice(0, 10));
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    const onSuggestionsClearRequested = () => {
+        setSuggestions([]);
+    };
+
     return (
         <div className={styles.DiscussionHome}>
             <h2>Discussions</h2>
@@ -106,8 +139,39 @@ const DiscussionHome = () => {
             {!showForm && <DiscussNav />}
             
             {error && <div className="error">{error}</div>}
-            
-            {!showForm && <button onClick={() => setShowForm(true)} className={styles.createNew}>Create New Discussion</button>}
+            {!showForm &&
+            <div className="searchBar">
+                <span>Find a City</span>
+                {/* <input 
+                    type="text" 
+                    value={city} 
+                    onChange={(e) => setCity(e.target.value)} 
+                    placeholder="Enter a city to discuss"
+                    className={styles.inputField}
+                    required
+                /> */}
+                <Autosuggest
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={onSuggestionsClearRequested}
+                    getSuggestionValue={(suggestion) => suggestion}
+                    renderSuggestion={(suggestion) => (
+                        <div
+                            key={suggestion}
+                            className="suggestion"
+                        >
+                            {suggestion}
+                        </div>
+                    )}
+                    inputProps={{
+                        type: "text",
+                        placeholder: "Enter a city",
+                        value: searchTerm,
+                        onChange: handleInputChange,
+                    }}
+                />
+            </div>}
+            {!showForm && <button onClick={() => setShowForm(true).then(setCity(searchTerm))} className={styles.createNew}>Create New Discussion</button>}
             {!showForm && 
                 <select
                     className={styles.filter} 
@@ -142,10 +206,9 @@ const DiscussionHome = () => {
 
             {showForm && (
                 <div className={styles.discussionForm}>
-                    <h3>Create New Discussion</h3>
-                
+                    <h3>Discuss {city}</h3>
                     <label>
-                        <span>Title of Post:</span>
+                        <span>Title of Discussion</span>
                         <input 
                             type="text" 
                             value={title} 
@@ -155,19 +218,6 @@ const DiscussionHome = () => {
                             required
                         />
                     </label>
-
-                    <label>
-                        <span>City Name:</span>
-                        <input 
-                            type="text" 
-                            value={city} 
-                            onChange={(e) => setCity(e.target.value)} 
-                            placeholder="Which city are you discussing"
-                            className={styles.inputField}
-                            required
-                        />
-                    </label>
-
                     <label>
                         <span>Post as:</span>
                         <div className={styles.choiceGroup}>
@@ -181,7 +231,6 @@ const DiscussionHome = () => {
                                 />
                                 <span>Anonymous</span>
                             </label>
-
                             <label>
                                 <input
                                     type="radio"
@@ -194,10 +243,8 @@ const DiscussionHome = () => {
                             </label>
                         </div>
                     </label>
-
-
                     <label>
-                        <span>Select an item:</span>
+                        <span>Select a topic:</span>
                         <select
                             value={dropdownSelection}
                             onChange={(e) => setDropdownSelection(e.target.value)} required>
@@ -209,9 +256,8 @@ const DiscussionHome = () => {
                             <option value="Other">Other</option>
                         </select>
                     </label>
-
                     <label>
-                        <span>Tell us about your Thoughts:</span>
+                        <span>Tell us your thoughts...</span>
                         <textarea 
                             value={content} 
                             onChange={(e) => setContent(e.target.value)} 
