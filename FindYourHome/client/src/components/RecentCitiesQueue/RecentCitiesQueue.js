@@ -12,12 +12,14 @@ const RecentCitiesQueue = ({ queue }) => {
     const [errorMessage, setErrorMessage] = useState("");
 
     const getCompareCitiesFromLocalStorage = () => {
-        return JSON.parse(localStorage.getItem('compareCities') || '[]');
+        return JSON.parse(localStorage.getItem('compareCities') || '[]').filter(city => city); // Filters out null, undefined, and other falsy values
     };
-
+    
     const setCompareCitiesToLocalStorage = (cities) => {
-        localStorage.setItem('compareCities', JSON.stringify(cities));
+        const filteredCities = cities.filter(city => city); // Ensure no null or undefined values
+        localStorage.setItem('compareCities', JSON.stringify(filteredCities));
     };
+    
 
     const compareCities = getCompareCitiesFromLocalStorage();
 
@@ -43,43 +45,48 @@ const RecentCitiesQueue = ({ queue }) => {
         fillQueueFromDB();  // Call the function on component mount
     }, []);
 
-    function addCity(item) {
-        if (!compareCities.includes(item)) {
-            const newCompareCities = [...compareCities, item];
+    function addCity(cityModel) {
+        if (cityModel && !compareCities.some(city => city.name === cityModel.name)) {
+            const newCompareCities = [...compareCities, cityModel];
             setCompareCitiesToLocalStorage(newCompareCities);
         }
     }
-
-    function removeCites(itemToRemove) {
-        const newCompareCities = compareCities.filter(item => item !== itemToRemove);
+    
+    function removeCites(cityModelToRemove) {
+        const newCompareCities = compareCities.filter(city => city.name !== cityModelToRemove.name);
         setCompareCitiesToLocalStorage(newCompareCities);
     }
-
-    const handleCityClick = (city) => {
-        if (compareCities.includes(city)) {
-            removeCites(city);
+    
+    const handleCityClick = (cityName) => {
+        const cityModel = Object.values(queue.items).find(city => city.name === cityName);
+    
+        if (compareCities.some(city => city.name === cityName)) {
+            removeCites(cityModel);
         } else {
-            addCity(city);
+            addCity(cityModel);
         }
         setSelectedCities(prevSelectedCities => {
             const newSelectedCities = new Set(prevSelectedCities);
-            if (newSelectedCities.has(city)) {
-                newSelectedCities.delete(city);
+            if (newSelectedCities.has(cityName)) {
+                newSelectedCities.delete(cityName);
             } else {
-                newSelectedCities.add(city);
+                newSelectedCities.add(cityName);
             }
             return newSelectedCities;
         });
     };
+    
 
     const handleCompareClick = () => {
-        if (compareCities.length > 2) {
+        const selectedCount = selectedCities.size; // Get the size of the selectedCities set
+    
+        if (selectedCount > 2) {
             setErrorMessage("You've selected more than 2 cities. Please select only 2 cities to compare.");
-        } else if (compareCities.length < 2 || compareCities.length == 0) {
+        } else if (selectedCount < 2) { // Check if less than 2 cities are selected
             setErrorMessage("You've selected less than 2 cities. Please select 2 cities to compare.");
         } else {
             setErrorMessage("");
-            navigate("/compare")
+            navigate("/compare");
         }
     };
 
