@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Stylings/discussionStyle.module.css';
 import DiscussNav from './discussNav.js';
+import { Queue } from "./components/RecentDiscussionsQueue/RecentDiscussionsQueue";
+import RecentDiscussionsQueue from "./components/RecentDiscussionsQueue/RecentDiscussionsQueue";
 import Autosuggest from 'react-autosuggest';
 
 
@@ -18,6 +20,7 @@ const DiscussionHome = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());
     
     const getUniqueCitiesWithCasePreserved = (discussions) => {
         const uniqueCitySet = new Set();
@@ -75,6 +78,7 @@ const DiscussionHome = () => {
             if (response.status === 200) {
                 console.log(data.message);
                 setDiscussions([...discussions, data.discussion]);
+                handleQueueDiscussion(data.discussion);
                 setShowForm(false);
             } else {
                 setError("Failed to add discussion. " + data.error);
@@ -82,6 +86,17 @@ const DiscussionHome = () => {
     
         } catch (error) {
             console.error("There was an error posting the discussion:", error);
+        }
+    };
+
+    const handleQueueDiscussion = (discussion) => {
+        // Check if there's a valid ??? DISCUSSION ??? to enqueue
+        if (discussion) {
+            // Enqueue the city name to the recent cities queue
+            const updatedQueue = recentDiscussionsQueue.enqueue(discussion);
+            setRecentDiscussionsQueue(updatedQueue);
+        } else {
+            console.warn("No valid discussion selected to queue.");
         }
     };
 
@@ -187,6 +202,9 @@ const DiscussionHome = () => {
                     }}
                 />
             </div>}
+            <div className="recentlySearchedDiscussions">
+                <RecentDiscussionsQueue queue={recentDiscussionsQueue} />
+            </div>
             {!showForm && <button onClick={() => handleNewDiscussion()} className={styles.createNew}>Create New Discussion</button>}
             {!showForm && 
                 <select
