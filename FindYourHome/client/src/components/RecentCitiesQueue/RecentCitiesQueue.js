@@ -1,14 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "./RecentCitiesQueue.css"
 import { useNavigate } from "react-router-dom";
+import { useCompareCities } from "../../contexts/CityContext";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const RecentCitiesQueue = ({ queue }) => {
     const navigate = useNavigate();
     const [queueItems, setQueueItems] = useState({});
-    const [citiesToCompare, setCitiesToCompare] = useState([]);
     let email = "user2@example.com"
     const [selectedCities, setSelectedCities] = useState(new Set());
     const [errorMessage, setErrorMessage] = useState("");
+
+    const getCompareCitiesFromLocalStorage = () => {
+        return JSON.parse(localStorage.getItem('compareCities') || '[]').filter(city => city); // Filters out null, undefined, and other falsy values
+    };
+    
+    const setCompareCitiesToLocalStorage = (cities) => {
+        const filteredCities = cities.filter(city => city); // Ensure no null or undefined values
+        localStorage.setItem('compareCities', JSON.stringify(filteredCities));
+    };
+    
+
+    const compareCities = getCompareCitiesFromLocalStorage();
 
     useEffect(() => {
         // Define the function inside useEffect
@@ -23,6 +36,7 @@ const RecentCitiesQueue = ({ queue }) => {
 
                 const data = await response.json();
                 queue.items = data.recent_cities; // update the state
+                //setQueueItems(data.recent_cities);
             } catch (error) {
                 console.error("There was an error fetching the cities", error);
             }
@@ -31,60 +45,72 @@ const RecentCitiesQueue = ({ queue }) => {
         fillQueueFromDB();  // Call the function on component mount
     }, []);
 
-    function addCity(item) {
-        setCitiesToCompare([...citiesToCompare, item]);
-    }
-
-    function removeCites(itemToRemove) {
-        setCitiesToCompare(citiesToCompare.filter(item => item !== itemToRemove));
-    }
-
-    const handleCityClick = (city) => {
-        const newSelectedCities = new Set(selectedCities);
-        if (newSelectedCities.has(city)) {
-            newSelectedCities.delete(city);
-            removeCites(city)
-        } else {
-            newSelectedCities.add(city);
-            addCity(city);
+    function addCity(cityModel) {
+        if (cityModel && !compareCities.some(city => city.name === cityModel.name)) {
+            const newCompareCities = [...compareCities, cityModel];
+            setCompareCitiesToLocalStorage(newCompareCities);
         }
-        setSelectedCities(newSelectedCities);
-        console.log(citiesToCompare);
+    }
+    
+    function removeCites(cityModelToRemove) {
+        const newCompareCities = compareCities.filter(city => city.name !== cityModelToRemove.name);
+        setCompareCitiesToLocalStorage(newCompareCities);
+    }
+    
+    const handleCityClick = (cityName) => {
+        const cityModel = Object.values(queue.items).find(city => city.name === cityName);
+    
+        if (compareCities.some(city => city.name === cityName)) {
+            removeCites(cityModel);
+        } else {
+            addCity(cityModel);
+        }
+        setSelectedCities(prevSelectedCities => {
+            const newSelectedCities = new Set(prevSelectedCities);
+            if (newSelectedCities.has(cityName)) {
+                newSelectedCities.delete(cityName);
+            } else {
+                newSelectedCities.add(cityName);
+            }
+            return newSelectedCities;
+        });
     };
+    
 
-    const handleCompareClick = (citiesToCompare) => {
-        if (citiesToCompare.length > 2) {
+    const handleCompareClick = () => {
+        const selectedCount = selectedCities.size; // Get the size of the selectedCities set
+    
+        if (selectedCount > 2) {
             setErrorMessage("You've selected more than 2 cities. Please select only 2 cities to compare.");
-        } else if (citiesToCompare.length < 2) {
+        } else if (selectedCount < 2) { // Check if less than 2 cities are selected
             setErrorMessage("You've selected less than 2 cities. Please select 2 cities to compare.");
         } else {
-            setErrorMessage(""); // Clear the error message when exactly 2 cities are selected
-            navigate("/compare")
+            setErrorMessage("");
+            navigate("/compare");
         }
-    }
+    };
 
 
     return (
         <div>
             <h2>Recent Cities:</h2>
-            <ul className="recently_viewed_cities">
-                {Object.values(queue.items).map(city => (
-                    <li
-                        key={city}
-                        onClick={() => handleCityClick(city)}
-                        style={selectedCities.has(city) ? { color: 'blue' } : {}}
-                    >
-                        {city}
-                    </li>
-                ))}
-            </ul>
-    
+            {Object.values(queue.items).map(cityModel => (
+                <li
+                    key={cityModel.name}
+                    onClick={() => handleCityClick(cityModel.name)}
+                    style={selectedCities.has(cityModel.name) ? { color: 'blue' } : {}}
+                >
+                    {cityModel.name}
+                </li>
+            ))}
+
+
             {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-    
-            <button onClick={() => handleCompareClick(citiesToCompare)}>Compare Cities</button>
+
+            <button onClick={() => handleCompareClick(compareCities)}>Compare Cities</button>
         </div>
     );
-    
+
 }
 
 export class Queue {
@@ -95,14 +121,14 @@ export class Queue {
     }
 
     //add the contents of the queue to the recent_cities field of a user based of their email
-    async addToQueue(cityName) {
+    async addToQueue(cityModel) {
         let email = "user2@example.com"; //mock email
         try {
             const updateData = {
                 action: "addRecentCity",
-                cityName: cityName
+                cityModel: cityModel
             };
-
+    
             const response = await fetch(`http://localhost:5050/users/${email}`, {
                 method: "PATCH",
                 headers: {
@@ -110,9 +136,7 @@ export class Queue {
                 },
                 body: JSON.stringify(updateData)
             });
-
-            console.log(response);
-
+    
             if (!response.ok) {
                 console.error(`Error while adding city to recentViewed: ${response.statusText}`);
             }
@@ -120,27 +144,29 @@ export class Queue {
             console.error("There was an error adding the city to recentViewed", error);
         }
     }
+    
 
-    enqueue(element) {
+    enqueue(cityModel) {
         const newItems = { ...this.items };
         for (const value of Object.values(newItems)) {
-            if (value === element) {
-                console.warn("Element already exists in the queue.");
+            console.log(value);
+            if (value.name === cityModel.name) {
+                console.warn("City model already exists in the queue.");
                 return this;
             }
         }
-
-        newItems[this.rear] = element;
-        this.addToQueue(element);  // Add to user's recentViewed cities list
-
+    
+        newItems[this.rear] = cityModel;
+        this.addToQueue(cityModel);  // Add to user's recentViewed cities list
+    
         let newFront = this.front;
         let newRear = this.rear + 1;
-
+    
         if ((newRear - newFront) > 10) {
             delete newItems[newFront];
             newFront++;
         }
-
+    
         const newQueue = new Queue(newItems, newRear, newFront);
         return newQueue;
     }

@@ -59,42 +59,43 @@ router.delete("/:email", async (req, res) => {
 });
 
 //update an existing user
-router.patch('/:email', async (req, res) => {
-  const email = req.params.email;
+  router.patch('/:email', async (req, res) => {
+    const email = req.params.email;
 
-  // Access the action and cityName from the request body
-  const { action, cityName } = req.body;
+    // Access the action and cityModel from the request body
+    const { action, cityModel } = req.body;
+    console.log(cityModel);
+    if (action === "addRecentCity") {
+      try {
+        // Use MongoDB's updateOne to add the cityModel to a user's recent cities
+        // Here, I'm assuming 'recentCities' is an array field in your user's document
+        const result = await db.collection('users').updateOne(
+          { email: email },
 
-  if (action === "addRecentCity") {
-    try {
-      // Use MongoDB's updateOne to add the city to a user's recent cities
-      // Here, I'm assuming 'recentCities' is an array field in your user's document
-      const result = await db.collection('users').updateOne(
-        { email: email },
-
-        {
-          $push: {
-            recent_cities: {
-              $each: [cityName],
-              $slice: -10
+          {
+            $push: {
+              recent_cities: {
+                $each: [cityModel], // Store the entire model
+                $slice: -10 // Keep the last 10 cities
+              }
             }
           }
+        );
+
+        if (result.matchedCount === 0) {
+          res.status(404).send({ message: 'User not found' });
+          return;
         }
-      );
 
-      if (result.matchedCount === 0) {
-        res.status(404).send({ message: 'User not found' });
-        return;
+        res.status(200).send({ message: 'City model added to recent cities' });
+
+      } catch (error) {
+        res.status(500).send({ message: 'Internal Server Error' });
       }
-
-      res.status(200).send({ message: 'City added to recent cities' });
-
-    } catch (error) {
-      res.status(500).send({ message: 'Internal Server Error' });
+    } else {
+      res.status(400).send({ message: 'Invalid action' });
     }
-  } else {
-    res.status(400).send({ message: 'Invalid action' });
-  }
-});
+  });
+
 
 export default router;
