@@ -182,8 +182,6 @@ const ViewCity = () => {
             setCityModel(cityModel);
         }
 
-
-
         console.log("setting global city");
         console.log(matchedCity);
         setGlobalCity(matchedCity);
@@ -237,11 +235,17 @@ const ViewCity = () => {
         return (results[0].urls.small);
     }
 
+    useEffect(() => {
+        if (cityModel) {
+            handleQueueCity();
+        }
+    }, [cityModel]);
+
     const handleQueueCity = () => {
         // Check if there's a valid city to enqueue
-        if (city) {
+        if (cityModel) {
             // Enqueue the city name to the recent cities queue
-            const updatedQueue = recentCitiesQueue.enqueue(city.name);
+            const updatedQueue = recentCitiesQueue.enqueue(cityModel);
             setRecentCitiesQueue(updatedQueue);
         } else {
             console.warn("No valid city selected to queue.");
@@ -251,19 +255,8 @@ const ViewCity = () => {
     //allows the submit button to handle the submit and add the city to the queue
     async function handleCombinedActions() {
         await handleSubmit();
-        handleQueueCity();
-        setShouldFetchAttractions(true);
         navigate("/citypage");
     }
-
-    //used to call fetchCityAttractions
-    useEffect(() => {
-        if (shouldFetchAttractions && cityName) {
-            fetchCityAttractions(cityName);
-            setShouldFetchAttractions(false);  // reset the flag
-        }
-    }, [cityName, shouldFetchAttractions]);
-    
 
     const handleVerification = () => {
         navigate("/verification");

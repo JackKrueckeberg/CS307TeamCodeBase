@@ -29,12 +29,20 @@ export default function AccountInfo() {
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
+    const [errorMessage, setError] = useState(''); // errorMessage will display when there is an error
     const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
     const [showChangePasswordModal, setShowChangePasswordModal] = useState(false); // password change pop-up
     const [newPassword, setNewPassword] = useState(''); //new password
-    const [confrimPassword, setConfirmPassword] = useState(''); //confirm new password
-    const oldPassword = user.password; //old password
+    const [confirmPassword, setConfirmPassword] = useState(''); //confirm new password
+    const [oldPassword, setOldPassword] = useState(''); //old password
     const [checkOldPassword, setCheckOldPassword] = useState(''); //check the old password
+    const [requirementsMet, setRequirementsMet] = useState({
+        minLength: false,
+        specialChar: false,
+        capitalLetter: false,
+        lowerCaseLetter: false,
+        numeral: false,
+    });
 
 
     useEffect(() => {
@@ -46,7 +54,7 @@ export default function AccountInfo() {
         try {
 
             console.log(`This is value of user ${user._id}`);
-            const response = await fetch(`http://localhost:5050/profileRoute/${user._id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/profile/${user._id}`, {
                 method: "GET",
                 headers: {
                     "Accept": "application/json"
@@ -81,13 +89,111 @@ export default function AccountInfo() {
         setShowChangePasswordModal(true);
     }
 
-    // Function to save the new password
-    const saveNewPassword = () => {
-        // You can add logic to send the new password to your backend
-        // and update it in the database.
+    // Function to test minimum length of a password
+    const hasMinLength = (password) => {
+        return password.length >= 8;
+    }
 
-        // For now, let's just log the new password:
+    // Function to check for speacial characters in the password
+    const hasSpecialCharacters = (password) => {
+        const specialCharacters = /[!@#$%&*]/; 
+        return specialCharacters.test(password);
+    }
+
+    // Function to check for capital letters in the password
+    const hasCapitalLetters = (password) => {
+        const capitalLetters = /[A-Z]/;
+        return capitalLetters.test(password);
+    }
+
+    // Function to check for lower case letters in the password
+    const hasLowerCase = (password) => {
+        const lowerCase = /[a-z]/;
+        return lowerCase.test(password);
+    }
+
+    // Function to check for the numeral in the password
+    const hasNumeral = (password) => {
+        const numeral = /[0-9]/;
+        return numeral.test(password);
+    }
+
+    // Function to check that the password requirements were met
+    const checkPasswordRequirements = (password) => {
+        setRequirementsMet((prevRequirements) => ({
+            ...prevRequirements,
+            minLength: hasMinLength(password),
+            specialChar: hasSpecialCharacters(password),
+            capitalLetter: hasCapitalLetters(password),
+            lowerCaseLetter: hasLowerCase(password),
+            numeral: hasNumeral(password),
+        }));
+    }
+
+    // Function to save the new password
+    const saveNewPassword = async () => {
+        if (oldPassword !== user.password) {
+            setError("That password does not match our records. Please try again.");
+            return;
+        }
+        if (newPassword !== confirmPassword) {
+            setError("Passwords do not match. Please try again.");
+            return;
+        }
+
+        if (!hasMinLength(newPassword)) {
+            setError('New password must have a minimum of 8 characters.');
+            return;
+        }
+
+        if (!hasCapitalLetters(newPassword) || !hasSpecialCharacters(newPassword) || !hasNumeral(newPassword) || !hasLowerCase(newPassword)) {
+            setError('New password is not strong enough. Make sure your new password meets the passsword requirements.')
+            return;
+        }
+
+        //TODO save to the backend
+        try {
+            const response = await fetch(`http://localhost:5050/profileRoute/update-password/${user._id}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ password: newPassword }),
+            });
+
+            console.log(newPassword);
+
+            if (response.status === 200) {
+                const data = await response.json();
+                console.log(data.message);
+                setSuccessMessage('Password updated successfully');
+                setTimeout(() => {
+                    setSuccessMessage('');
+                }, 5000); // Clear the message after 5 seconds
+            } else {
+                console.error("Password update failed");
+            }
+        } catch (error) {
+            console.error("Error updating password:", error);
+        }
+
         console.log("New Password:", newPassword);
+        handlePasswordCancel();
+    }
+
+    const handlePasswordCancel = () => {
+        setShowChangePasswordModal(false);
+        setRequirementsMet({
+            minLength: false,
+            specialChar: false,
+            capitalLetter: false,
+            lowerCaseLetter: false,
+            numeral: false,
+        });
+        setOldPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setError('');
     }
 
     // function to handle input changes and update the user state
@@ -162,13 +268,11 @@ export default function AccountInfo() {
             username: user.username,
             email: user.email,
             bio: user.bio,
-            profile_image: profile_image,
-            password: user.password,
         };
 
         try {
             // Send a PATCH request to the server
-            const response = await fetch(`http://localhost:5050/profileRoute/${user._id}`, {
+            const response = await fetch(`http://localhost:5050/profileRoute/update-info/${user._id}`, {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
@@ -198,19 +302,37 @@ export default function AccountInfo() {
 
     // function to edit the profile image
     // TODO fix this 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         console.log(e.target.files);
         const file = e.target.files[0];
         console.log(file);
         if (file) {
             const imageURL = URL.createObjectURL(file);
-            console.log(imageURL);
             setImage(imageURL);
-            setInfo({
-                ...user,
-                profile_image: imageURL,
-            });
-            console.log(user.profile_image);
+            //console.log(imageURL);
+            try {
+                // Send a PATCH request to the server
+                const response = await fetch(`http://localhost:5050/profileRoute/update-image/${user._id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ profile_image: profile_image }),
+                });
+    
+                const data = await response.json();
+    
+                if (response.status === 200) {
+                    console.log(data.message);
+                    setSuccessMessage('Profile Image updated successfully');
+                    setTimeout(() => {
+                        setSuccessMessage('');
+                    }, 5000); // Clear the message after 5 seconds
+                }
+    
+            } catch (error) {
+                console.error("There was an error updating your info: ", error);
+            }
         }
     };
 
@@ -313,31 +435,46 @@ export default function AccountInfo() {
                 <Modal
                     className={"password-change-modal"}
                     isOpen={showChangePasswordModal}
-                    onRequestClose={() => setShowChangePasswordModal(false)}
+                    onRequestClose={() => {
+                        setShowChangePasswordModal(false);
+                        setError('');
+                    }}
                     contentLabel="Change Password Modal"
                 >
                     <div className="modal-content">
                         <h2>Password Change</h2>
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
+                        <p>Password requirements:</p>
+                        <ul>
+                            <li className={requirementsMet.minLength ? 'fulfilled' : 'unfulfilled'}>Minimum of 8 characters</li>
+                            <li className={requirementsMet.specialChar ? 'fulfilled' : 'unfulfilled'}>At least one special character [!@#$%^&*]</li>
+                            <li className={requirementsMet.capitalLetter ? 'fulfilled' : 'unfulfilled'}>At least one capital letter [A-Z]</li>
+                            <li className={requirementsMet.lowerCaseLetter ? 'fulfilled' : 'unfulfilled'}>At least one lower case letter [a-z]</li>
+                            <li className={requirementsMet.numeral ? 'fulfilled' : 'unfulfilled'}>At least one numeral [0-9]</li>
+                        </ul>
                         <input
                             type="password"
                             placeholder="Old Password"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
+                            value={oldPassword}
+                            onChange={(e) => setOldPassword(e.target.value)}
                         />
                         <input
                             type="password"
                             placeholder="New Password"
                             value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
+                            onChange={(e) => {
+                                setNewPassword(e.target.value);
+                                checkPasswordRequirements(e.target.value);
+                            }}
                         />
                         <input
                             type="password"
                             placeholder="Confirm New Password"
-                            value={newPassword}
+                            value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                         <button className="save-button" onClick={() => saveNewPassword(newPassword)}>Save Password</button>
-                        <button className="cancel-button" onClick={() => setShowChangePasswordModal(false)}>Cancel</button>
+                        <button className="cancel-button" onClick={() => handlePasswordCancel()}>Cancel</button>
                     </div>
                 </Modal>
 
