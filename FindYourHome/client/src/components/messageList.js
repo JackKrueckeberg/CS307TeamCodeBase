@@ -152,6 +152,7 @@ export default function MessageList() {
                     user2: recipient,
                     time: new Date(),
                     messages: newBoardMessages,
+                    hasNewMessage: true,
                 }),
             });
 
@@ -178,10 +179,45 @@ export default function MessageList() {
     }
 
     const handleSelectMessageBoard = (messageBoard) => {
+        if (messageBoard.hasNewMessage) {
+            // Update the message board's state to mark the new message as read
+            const updatedMessageBoards = messageBoards.map(board => {
+                if (board.messagesWith === messageBoard.messagesWith) {
+                    return { ...board, hasNewMessage: false };
+                }
+                return board;
+            });
+            setMessageBoards(updatedMessageBoards);
+    
+            // Add code to update the backend with the read status if needed
+            updateMessageBoard(messageBoard);
+        }
+
+
         setSelectedMessageBoard(messageBoard);
         setRecipient(messageBoard.messagesWith);
         fetchUserMessages(messageBoard);
         console.log(messages);
+    }
+
+    const updateMessageBoard = async (messageBoard) => {
+        console.log(messageBoard.messagesWith);
+        const response = await fetch('http://localhost:5050/messageBoard/update-board', {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: username,
+                messagesWith: messageBoard.messagesWith,
+            }),
+        });
+
+        if (response.status === 200) {            
+            return;
+        } else {
+            alert("Something went wrong");
+        }
     }
 
     // function to send a message back
@@ -250,7 +286,7 @@ export default function MessageList() {
                     {messageBoards.map((messageBoard, index) => (
                         <button
                             key={index}
-                            className={`message ${username === messageBoard.messagesWith ? 'sent' : 'received'}`}
+                            className={`message ${messageBoard.hasNewMessage ? 'new-message' : ''}`}
                             onClick={() => handleSelectMessageBoard(messageBoard)}
                         >
                             <p className="message-sender">{messageBoard.messagesWith}</p>

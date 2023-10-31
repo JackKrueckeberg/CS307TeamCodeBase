@@ -13,6 +13,12 @@
     margin: 0;
 }
 
+.message.new-message {
+    background-color: #ffd49c; /* Change to your desired color */
+    color: #fff; /* Text color for new messages */
+    /* Add any other styling you want for new messages */
+}
+
 .message.sent {
     display: flex;
     flex-direction: column;

@@ -15,6 +15,9 @@ export default function Profile() {
     const handleTabChange = (index) => {
         setTabVal(index);
         localStorage.setItem('activeTab', index.toString());
+        if (index === 2) {
+            window.location.reload();
+        }
         console.log(index);
     };
     const handleLogout = () => {
