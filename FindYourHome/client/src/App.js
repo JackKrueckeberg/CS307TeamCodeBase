@@ -17,6 +17,7 @@ import Preferences from "./components/preferences";
 import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
+import MessageList from "./components/messageList";
 import CompareCities from './components/compareCities';
 import DeleteAccount from './components/delete-account';
 import Flags from './components/strikes/flagComment';
@@ -71,7 +72,8 @@ const App = () => {
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/citypage" element={<CityPage />} />
                         <Route path="/compare" element={<CompareCities />} />
-                    </Routes>
+                        <Route path="/messageBoards" element={<MessageList/>} />
+            </Routes>
                 </CompareCitiesProvider>
             </CityContext.Provider>
         </UserContext.Provider>
