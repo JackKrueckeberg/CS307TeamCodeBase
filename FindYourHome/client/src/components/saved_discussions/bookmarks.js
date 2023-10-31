@@ -7,16 +7,13 @@ export default function Bookmarks() {
 
 
 
-    useEffect(() => {
-        // Call the function to get favorite cities when the component mounts
-        get_bookmarks();
-    }, []); 
+  
 
     
 
     async function get_bookmarks() {
 
-        const city_info = await fetch("http://localhost:5050/users/user2@example.com", {
+        const bookmarks = await fetch("http://localhost:5050/bookmarked_discussions/user2@example.com", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -26,13 +23,13 @@ export default function Bookmarks() {
           return;
         });
     
-        const resp = await city_info.json();
+        const resp = await bookmarks.json();
 
-        setBookmarks(resp.bookmared_discussions);
+        setBookmarks(resp.bookmarked_discussions);
 
-        console.log(resp.bookmared_discussions);
-    
-        return resp.bookmared_discussions;
+        //console.log(resp.bookmarked_discussions);
+        console.log(bookmarks)
+        return resp.bookmarked_discussions;
     }
 
 
@@ -69,7 +66,7 @@ export default function Bookmarks() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({bookmared_discussions: bookmarks})
+        body: JSON.stringify({bookmarked_discussions: bookmarks})
       }).catch((error) => {
         window.alert(error);
         return;
@@ -89,9 +86,10 @@ export default function Bookmarks() {
 
     async function removeBookmark(index) {
         await get_bookmarks()
+        console.log(bookmarks)
         bookmarks.splice(index, 1)
 
-        await fetch("http://localhost:5050/bookmarked_discussions/user@example.com", {
+        await fetch("http://localhost:5050/bookmarked_discussions/user2@example.com", {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",

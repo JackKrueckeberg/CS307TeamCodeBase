@@ -4,6 +4,17 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
+
+
+
+router.get("/:email", async (req, res) => {
+  let collection = await db.collection("users");
+  let q = {email: req.params.email};
+  let query = await collection.findOne(q);
+  res.send(query).status(200);
+});
+
+
 // update the favorite searches list
 router.patch("/:email", async (req, res) => {
   let collection = await db.collection("users");
