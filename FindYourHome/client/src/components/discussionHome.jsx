@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Stylings/discussionStyle.module.css';
 import DiscussNav from './discussNav.js';
-import { Queue } from "./components/RecentDiscussionsQueue/RecentDiscussionsQueue";
-import RecentDiscussionsQueue from "./components/RecentDiscussionsQueue/RecentDiscussionsQueue";
+import { Queue } from "./recentDiscussionsQueue.js";
+import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
 import Autosuggest from 'react-autosuggest';
-
 
 const DiscussionHome = () => {
     const [discussions, setDiscussions] = useState([]);
@@ -90,6 +89,7 @@ const DiscussionHome = () => {
     };
 
     const handleQueueDiscussion = (discussion) => {
+        console.log("discussion queueing");
         // Check if there's a valid ??? DISCUSSION ??? to enqueue
         if (discussion) {
             // Enqueue the city name to the recent cities queue
@@ -100,7 +100,8 @@ const DiscussionHome = () => {
         }
     };
 
-    const handleNewDiscussion = (e) => {
+    const handleNewDiscussion = () => {
+        handleQueueDiscussion(city);
         setShowForm(true);
     };
     
@@ -202,9 +203,9 @@ const DiscussionHome = () => {
                     }}
                 />
             </div>}
-            <div className="recentlySearchedDiscussions">
-                <RecentDiscussionsQueue queue={recentDiscussionsQueue} />
-            </div>
+            {!showForm && <div className="recentlyViewedDiscussions">
+                <RecentDiscussionsQueue queue={recentDiscussionsQueue}/>
+            </div>}
             {!showForm && <button onClick={() => handleNewDiscussion()} className={styles.createNew}>Create New Discussion</button>}
             {!showForm && 
                 <select
