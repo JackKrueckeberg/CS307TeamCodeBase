@@ -98,7 +98,6 @@ router.delete("/:email", async (req, res) => {
   });
 
   //update users achievement(s) counter
-  router.patch('/achievements/:email', async (req, res) => {
     router.patch('/achievements/:email', async (req, res) => {
       const email = req.params.email;
   
@@ -129,7 +128,6 @@ router.delete("/:email", async (req, res) => {
       }
   });
   
-});
 
 
 
