@@ -17,13 +17,14 @@ import Preferences from "./components/preferences";
 import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
+import CompareCities from './components/compareCities';
 import DeleteAccount from './components/delete-account';
 import Flags from './components/strikes/flagComment';
 import DiscussionHome from './components/discussionHome';
 import DiscussNav from './components/discussNav';
 
 import { UserContext } from "./contexts/UserContext";
-import { CityContext } from './contexts/CityContext';
+import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
  
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -54,25 +55,45 @@ const App = () => {
     const setGlobalCity = (city) => {
         setCity(city);
     };
+
   const storedCity = sessionStorage.getItem("currentCity");
   const [city, setCity] = useState(storedCity ? JSON.parse(storedCity) : null);
+  const [compareCities, setCompareCities] = useState([]);
 
     return (
-      <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
-          <CityContext.Provider value={{city, setGlobalCity}}>
-              <Routes>
-                  <Route path="/" element={<Login />} />
-                  <Route path="/view-city" element={<ViewCity />} />
-                  <Route path="/preferences" element={<Preferences />} />
-                  <Route path="/verification" element={<Verification />} />
-                  <Route path="/createAccount" element={<CreateAccount />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/citypage" element={<CityPage />} />
-                  <Route path="/delete-account" element={<DeleteAccount />} />
-                  <Route path="/discussionHome" element={<DiscussionHome />} />
-              </Routes>
-          </CityContext.Provider>
-      </UserContext.Provider>
+        <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
+            <CityContext.Provider value={{city, setGlobalCity}}>
+                <CompareCitiesProvider value={{ compareCities, setCompareCities }}>
+                    <Routes>
+                        <Route path="/" element={<Login />} />
+                        <Route path="/view-city" element={<ViewCity />} />
+                        <Route path="/preferences" element={<Preferences />} />
+                        <Route path="/verification" element={<Verification />} />
+                        <Route path="/createAccount" element={<CreateAccount />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/citypage" element={<CityPage />} />
+                        <Route path="/compare" element={<CompareCities />} />
+                        <Route path="/delete-account" element={<DeleteAccount />} />
+                        <Route path="/discussionHome" element={<DiscussionHome />} />
+                    </Routes>
+                </CompareCitiesProvider>
+            </CityContext.Provider>
+        </UserContext.Provider>
+    //   <Flags/>
+        // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
+        //     <CityContext.Provider value={{city, setGlobalCity}}>
+        //         <Routes>
+        //             <Route path="/" element={<Login />} />
+        //             <Route path="/view-city" element={<ViewCity />} />
+        //             <Route path="/preferences" element={<Preferences />} />
+        //             <Route path="/verification" element={<Verification />} />
+        //             <Route path="/createAccount" element={<CreateAccount />} />
+        //             <Route path="/profile" element={<Profile />} />
+        //             <Route path="/citypage" element={<CityPage />} />
+        //             <Route path="/delete-account" element={<DeleteAccount />} />
+        //         </Routes>
+        //     </CityContext.Provider>
+        // </UserContext.Provider>
     );
 };
  
