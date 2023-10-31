@@ -107,3 +107,47 @@
     max-height: 500px; /* Set your desired maximum height */
     overflow-y: auto; /* Enable vertical scrolling */
 }
+
+.share-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background overlay */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Adjust the z-index as needed */
+
+    /* Style the modal content */
+    .modal-content {
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        width: 600px;
+        text-align: center;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+    }
+}

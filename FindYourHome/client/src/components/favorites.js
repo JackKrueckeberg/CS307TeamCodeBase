@@ -43,7 +43,7 @@ export default function Favorites() {
 
     async function getUser_favorite_searches() {
 
-        const city_info = await fetch("http://localhost:5050/users/user2@example.com", {
+        const city_info = await fetch(`http://localhost:5050/users/${user.email}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export default function Favorites() {
             }
         }
 
-        await fetch("http://localhost:5050/favorite_searches/user2@example.com", {
+        await fetch(`http://localhost:5050/favorite_searches/${user.email}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export default function Favorites() {
 
     async function getUser_favorite_cities() {
 
-        const city_info = await fetch("http://localhost:5050/users/user2@example.com", {
+        const city_info = await fetch(`http://localhost:5050/users/${user.email}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -118,7 +118,7 @@ export default function Favorites() {
             }
         }
 
-        await fetch("http://localhost:5050/favorite_cities/user2@example.com", {
+        await fetch(`http://localhost:5050/favorite_cities/${user.email}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -236,128 +236,140 @@ export default function Favorites() {
                 
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Cities </h2>
-                    {isSelecting ? (
+                    {favorite_cities.length > 0 ? (
                         <div>
-                            <div className="buttons">
-                                <button className="shareTo-button" onClick={handleShareModal}>Share to</button>
-                                <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-                            </div>
-                            <Modal
-                                className={"share-modal"}
-                                isOpen={showShareModal}
-                                onRequestClose={() => {
-                                    setShareModal(false);
-                                    setError('');
-                                }}
-                                contentLabel="Share Favorite Modal"
-                >
-                                <div className="modal-content">
-                                    <h2>Who do you wanna share your favorite cities with?</h2>
-                                    {errorMessage && <p className="error-message">{errorMessage}</p>}
-                                    {successMessage && <p className="success-message">{successMessage}</p>}
-                                    <h5>Selected Cities to Share:</h5>
+                            {isSelecting ? (
+                                <div>
+                                    <div className="buttons">
+                                        <button className="shareTo-button" onClick={handleShareModal}>Share to</button>
+                                        <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                                    </div>
+                                    <Modal
+                                        className={"share-modal"}
+                                        isOpen={showShareModal}
+                                        onRequestClose={() => {
+                                            setShareModal(false);
+                                            setError('');
+                                        }}
+                                        contentLabel="Share Favorite Modal"
+                                    >
+                                        <div className="modal-content">
+                                            <h2>Who do you wanna share your favorite cities with?</h2>
+                                            {errorMessage && <p className="error-message">{errorMessage}</p>}
+                                            {successMessage && <p className="success-message">{successMessage}</p>}
+                                            <h5>Selected Cities to Share:</h5>
+                                            <ul>
+                                                {selectedCities.map((isSelected, index) => {
+                                                    if (isSelected) {
+                                                        return (
+                                                            <li key={index}>
+                                                                {Object.entries(favorite_cities[index]).map(([key, value]) => (
+                                                                    <span key={key}>
+                                                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                                                    </span>
+                                                                ))}
+                                                            </li>
+                                                        );
+                                                    }
+                                                })}
+                                            </ul>
+                                            <input
+                                                type="username"
+                                                placeholder="Recipient's username"
+                                                value={recipient}
+                                                onChange={(e) => setRecipient(e.target.value)}
+                                            />
+                                            <button className="share-button" onClick={() => handleShare(recipient)}>Share</button>
+                                            <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
+                                        </div>
+                                    </Modal>
+                                <ul>
+                                    {favorite_cities.map((city, index) => (
+                                        <li key={index}>
+                                            <input
+                                                type="checkbox"
+                                                name="selectedCity"
+                                                checked={selectedCities[index]}
+                                                onChange={() => handleCheckboxChange(index)}
+                                            />
+                                            {Object.entries(city).map(([key, value]) => {
+                            
+                            
+                                                return (
+                                                    <span key={key}>
+                                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                                    </span>
+                                                );
+                            
+                           
+                                             })}
+                                        </li>
+                                    ))}
+                                </ul>
+                                </div>
+                            ) : (
+                                <div className="view">
+                                    <div className="buttons">
+                                        <button className="share-favorite" onClick={handleSelect}>Share Favorite</button>
+                                    </div>
+                                    {/*{getUser_favorite_cities}*/}
                                     <ul>
-                                    {selectedCities.map((isSelected, index) => {
-                                        if (isSelected) {
-                                            return (
-                                                <li key={index}>
-                                                    {Object.entries(favorite_cities[index]).map(([key, value]) => (
+                                        {favorite_cities.map((city, index) => (
+                                            <li key={index}>
+                                                <button onClick={() => removeFavoriteCity(index)}>delete</button>
+                                                {Object.entries(city).map(([key, value]) => {
+                            
+                                                    return (
                                                         <span key={key}>
                                                             {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
                                                         </span>
-                                                    ))}
-                                                </li>
-                                            );
-                                        }
-                                    })}
-                                    </ul>
-                                    <input
-                                        type="username"
-                                        placeholder="Recipient's username"
-                                        value={recipient}
-                                        onChange={(e) => setRecipient(e.target.value)}
-                                    />
-                                    <button className="share-button" onClick={() => handleShare(recipient)}>Share</button>
-                                    <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
-                                </div>
-                            </Modal>
-                            <ul>
-                            {favorite_cities.map((city, index) => (
-                                <li key={index}>
-                                <input
-                                    type="checkbox"
-                                    name="selectedCity"
-                                    checked={selectedCities[index]}
-                                    onChange={() => handleCheckboxChange(index)}
-                                />
-                                {Object.entries(city).map(([key, value]) => {
-                            
-                            
-                                    return (
-                                        <span key={key}>
-                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                        </span>
-                                    );
+                                                    );
                             
                            
-                                })}
-                                </li>
-                            ))}
-                            </ul>
+                                                })}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                         </div>
                     ) : (
-                        <div className="view">
-                            <div className="buttons">
-                                <button className="share-favorite" onClick={handleSelect}>Share Favorite</button>
-                            </div>
-                            {/*{getUser_favorite_cities}*/}
-                            <ul>
-                            {favorite_cities.map((city, index) => (
-                                <li key={index}>
-                                <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                                {Object.entries(city).map(([key, value]) => {
-                            
-                            
-                                    return (
-                                        <span key={key}>
-                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                        </span>
-                                    );
-                            
-                           
-                                })}
-                                </li>
-                            ))}
-                            </ul>
+                        <div>
+                            <h5> No favorites cities yet </h5>
+                            <p> Mark your favorite cities and you will always have them here!</p>
                         </div>
                     )}
-                    
-                    
-
                 </div>
 
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Searches </h2>
-                    <ul>
-                    {favorite_searches.map((search, index) => (
-                        <li key={index}>
-                        <button onClick={() => removeFavoriteSearch(index)}>delete</button>
-                        {Object.entries(search).map(([key, value]) => {
-                            if (value !== null && value !== "" && value !== false) {
-                            if (key === 'state' && value === 'default') {
-                                return null; // Don't display State: default
-                            }
-                            return (
-                                <span key={key}>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                </span>
-                            );
-                            }
-                            return null; // Don't display if the field is not populated
-                        })}
-                        </li>
-                    ))}
-                    </ul>
+                    {favorite_searches.length > 0 ? (
+                        <ul>
+                        {favorite_searches.map((search, index) => (
+                            <li key={index}>
+                            <button onClick={() => removeFavoriteSearch(index)}>delete</button>
+                            {Object.entries(search).map(([key, value]) => {
+                                if (value !== null && value !== "" && value !== false) {
+                                if (key === 'state' && value === 'default') {
+                                    return null; // Don't display State: default
+                                }
+                                return (
+                                    <span key={key}>
+                                    {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                    </span>
+                                );
+                                }
+                                return null; // Don't display if the field is not populated
+                            })}
+                            </li>
+                        ))}
+                        </ul>
+                    ) : (
+                        <div>
+                            <h5> No favorites searches yet </h5>
+                            <p> Mark your favorite searches and you will always have them here!</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
