@@ -16,7 +16,7 @@ export default function Bookmarks() {
 
     async function get_bookmarks() {
 
-        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+        const city_info = await fetch("http://localhost:5050/users/user2@example.com", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -28,11 +28,11 @@ export default function Bookmarks() {
     
         const resp = await city_info.json();
 
-        setBookmarks(resp.bookmarked_discussions);
+        setBookmarks(resp.bookmared_discussions);
 
-        console.log(resp.bookmarked_discussions);
+        console.log(resp.bookmared_discussions);
     
-        return resp.bookmarked_discussions;
+        return resp.bookmared_discussions;
     }
 
 
@@ -64,12 +64,12 @@ export default function Bookmarks() {
   
       bookmarks.push(new_bookmarks);
   
-      await fetch("http://localhost:5050/bookmarked_discussions/user@example.com", {
+      await fetch("http://localhost:5050/bookmarked_discussions/user2@example.com", {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({bookmarked_discussions: bookmarks})
+        body: JSON.stringify({bookmared_discussions: bookmarks})
       }).catch((error) => {
         window.alert(error);
         return;
@@ -87,34 +87,29 @@ export default function Bookmarks() {
 
 
 
-    async function removeBookmark(bookmark) {
-        var newBookmarks = [];
-        for (var i = 0; i < bookmarks.length; i++) {
-            if (bookmarks[i] != bookmark) {
-                newBookmarks.push(bookmarks[i]);
-            }
-        }
+    async function removeBookmark(index) {
+        await get_bookmarks()
+        bookmarks.splice(index, 1)
 
         await fetch("http://localhost:5050/bookmarked_discussions/user@example.com", {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({bookmarked_discussions: newBookmarks})
+            body: JSON.stringify({bookmarked_discussions: bookmarks})
           }).catch((error) => {
             window.alert(error);
             return;
           });
 
-        setBookmarks(newBookmarks);
     }
     
-    console.log(bookmarks);
+ 
 
 return (
   <div>
-      <button onClick={() => addBookmark("example_discussion")}>Add Bookmark</button>
-      <button onClick={() => removeBookmark("new_discussion")}>Remove Bookmark</button>
+      <button onClick={() => addBookmark("New York City")}>Add Bookmark</button>
+      <button onClick={() => removeBookmark(0)}>Remove Bookmark</button>
     </div>
 )
 }

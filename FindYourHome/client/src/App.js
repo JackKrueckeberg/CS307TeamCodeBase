@@ -4,25 +4,26 @@ import React, { useState, useEffect } from 'react';
 import { Route, Routes } from "react-router-dom";
  
 // We import all the components we need in our app
-import Navbar from "./components/navbar";
-import RecordList from "./components/recordList";
-import Edit from "./components/edit";
-import Create from "./components/create";
-import Login from "./components/login";
-import ViewCity from "./ViewCity";
-import Verification from "./components/verification";
-import CreateAccount from "./components/createAccount";
-import Profile from "./components/profile";
-import Preferences from "./components/preferences";
-import City_Info from './components/city-info';
-import Favorites from "./components/favorites";
-import CityPage from "./components/citypage";
-import CompareCities from './components/compareCities';
-import DeleteAccount from './components/delete-account';
-import Flags from './components/strikes/flagComment';
+// import Navbar from "./components/navbar";
+// import RecordList from "./components/recordList";
+// import Edit from "./components/edit";
+// import Create from "./components/create";
+// import Login from "./components/login";
+// import ViewCity from "./ViewCity";
+// import Verification from "./components/verification";
+// import CreateAccount from "./components/createAccount";
+// import Profile from "./components/profile";
+// import Preferences from "./components/preferences";
+// import City_Info from './components/city-info';
+// import Favorites from "./components/favorites";
+// import CityPage from "./components/citypage";
+// import CompareCities from './components/compareCities';
+// import DeleteAccount from './components/delete-account';
+// import Flags from './components/strikes/flagComment';
 
-import { UserContext } from "./contexts/UserContext";
-import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
+// import { UserContext } from "./contexts/UserContext";
+// import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
+import Bookmarks from './components/saved_discussions/bookmarks';
  
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -59,22 +60,23 @@ const App = () => {
   const [compareCities, setCompareCities] = useState([]);
 
     return (
-        <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
-            <CityContext.Provider value={{city, setGlobalCity}}>
-                <CompareCitiesProvider value={{ compareCities, setCompareCities }}>
-                    <Routes>
-                        <Route path="/" element={<Login />} />
-                        <Route path="/view-city" element={<ViewCity />} />
-                        <Route path="/preferences" element={<Preferences />} />
-                        <Route path="/verification" element={<Verification />} />
-                        <Route path="/createAccount" element={<CreateAccount />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/citypage" element={<CityPage />} />
-                        <Route path="/compare" element={<CompareCities />} />
-                    </Routes>
-                </CompareCitiesProvider>
-            </CityContext.Provider>
-        </UserContext.Provider>
+      <Bookmarks/>
+        // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
+        //     <CityContext.Provider value={{city, setGlobalCity}}>
+        //         <CompareCitiesProvider value={{ compareCities, setCompareCities }}>
+        //             <Routes>
+        //                 <Route path="/" element={<Login />} />
+        //                 <Route path="/view-city" element={<ViewCity />} />
+        //                 <Route path="/preferences" element={<Preferences />} />
+        //                 <Route path="/verification" element={<Verification />} />
+        //                 <Route path="/createAccount" element={<CreateAccount />} />
+        //                 <Route path="/profile" element={<Profile />} />
+        //                 <Route path="/citypage" element={<CityPage />} />
+        //                 <Route path="/compare" element={<CompareCities />} />
+        //             </Routes>
+        //         </CompareCitiesProvider>
+        //     </CityContext.Provider>
+        // </UserContext.Provider>
     //   <Flags/>
         // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
         //     <CityContext.Provider value={{city, setGlobalCity}}>
