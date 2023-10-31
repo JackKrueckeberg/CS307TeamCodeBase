@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import '../Stylings/profile.css';
 import { useNavigate } from 'react-router-dom';
 import AccountInfo from "./accountInfo.js";
+import MessageList from "./messageList";
 
 export default function Profile() {
 
-    const [tabVal, setTabVal] = useState(1);
+    const [tabVal, setTabVal] = useState(() => {
+        return parseInt(localStorage.getItem('activeTab')) || 1;
+    });
+
     const navigate = useNavigate();
 
     const handleTabChange = (index) => {
         setTabVal(index);
+        localStorage.setItem('activeTab', index.toString());
+        if (index === 2) {
+            window.location.reload();
+        }
         console.log(index);
     };
     const handleLogout = () => {
@@ -40,7 +48,7 @@ export default function Profile() {
                 </div>
 
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
-                    <p2>Messages</p2>
+                    <p2><MessageList/></p2>
                 </div>
             </div>
         </div>
