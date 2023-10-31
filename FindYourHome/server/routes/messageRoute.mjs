@@ -98,7 +98,9 @@ router.post("/share-favorite-cities", async (req, res) => {
       if (recipientMessageBoard && senderMessageBoard) {
         recipientMessageBoard.messages.push(message);
         senderMessageBoard.messages.push(message);
-
+        recipientMessageBoard.time = timeSent;
+        senderMessageBoard.time = timeSent;
+        
         await collection.updateOne(
           { username: recipientUsername },
           { $set: { messageList: recipient.messageList } }

@@ -1,7 +1,7 @@
 import React from "react";
 import { CityModel } from "./CityModel/CityModel";
 import { useNavigate } from "react-router-dom";
-import "../Stylings/compareCities.css";
+//import "../Stylings/compareCities.css";
 
 export default function CompareCities() {
     // Retrieve cities from localStorage

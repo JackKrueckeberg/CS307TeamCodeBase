@@ -29,6 +29,7 @@ export default function Favorites() {
     useEffect(() => {
         // Call the function to get favorite cities when the component mounts
         getUser_favorite_cities();
+        getUser_favorite_searches();
     }, []); 
 
     const handleTabChange = (index) => {
@@ -54,8 +55,9 @@ export default function Favorites() {
         });
     
         const resp = await city_info.json();
-
-        setFavoriteSearches(resp.favorite_searches);
+        if (resp.favorite_searches) {
+            setFavoriteSearches(resp.favorite_searches);
+        }
 
         console.log(resp.favorite_searches);
     
@@ -101,9 +103,13 @@ export default function Favorites() {
     
         const resp = await city_info.json();
 
-        setFavoriteCities(resp.favorite_cities);
+        if (resp.favorite_cities) {
 
-        setSelectedCities(Array.from({ length: resp.favorite_cities.length }, () => false));
+            setFavoriteCities(resp.favorite_cities);
+
+            setSelectedCities(Array.from({ length: resp.favorite_cities.length }, () => false));
+
+        }
 
         console.log(resp.favorite_cities);
     

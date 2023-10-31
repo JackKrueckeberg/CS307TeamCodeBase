@@ -19,6 +19,7 @@ export default function MessageList() {
 
     const [username, setUsername] = useState('');
     const [recipient, setRecipient] = useState('');
+    const [inputRecipient, setInputRecipient] = useState('');
     const messageInputRef = useRef(); // Reference to the message input field
     const [newMessage, setNewMessage] = useState(""); // State to store the new message
     const [newBoardMessages, setNewBoardMessages] = useState([]);
@@ -129,30 +130,40 @@ export default function MessageList() {
 
         console.log(recipient);
 
-        setNewBoardMessages([...newBoardMessages, `Hello! ${username} wants to start a conversation!`]);
+        // Check if a message board with the recipient already exists
+        const existingMessageBoard = messageBoards.find((board) => board.messagesWith === recipient);
 
-        console.log(newBoardMessages);
-
-        const response = await fetch('http://localhost:5050/messageBoard/create-board', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                user1: username, 
-                user2: recipient,
-                time: new Date(),
-                messages: newBoardMessages,
-            }),
-        });
-
-        if (response.status === 200) {
-            console.log(response);
+        if (existingMessageBoard) {
+            // A message board with the recipient already exists; select it.
+            handleSelectMessageBoard(existingMessageBoard);
             setShowModal(false);
-            window.location.reload();
-            return;
+            setInputRecipient('');
         } else {
-            alert('There was an error.');
+            // Create a new message board and add it to the messageBoards state
+            setNewBoardMessages([...newBoardMessages, `Hello! ${username} wants to start a conversation!`]);
+
+            const response = await fetch('http://localhost:5050/messageBoard/create-board', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    user1: username, 
+                    user2: recipient,
+                    time: new Date(),
+                    messages: newBoardMessages,
+                }),
+            });
+
+            if (response.status === 200) {
+                console.log(response);
+                setShowModal(false);
+                setInputRecipient('');
+                window.location.reload();
+                return;
+            } else {
+                alert('There was an error.');
+            }
         }
     }
 
@@ -226,8 +237,8 @@ export default function MessageList() {
                         <input
                             type="username"
                             placeholder="Recipient's username"
-                            value={recipient}
-                            onChange={(e) => setRecipient(e.target.value)}
+                            value={inputRecipient}
+                            onChange={(e) => {setRecipient(e.target.value); setInputRecipient(e.target.value);}}
                         />
                     <button className="share-button" onClick={() => addMessageBoard(recipient)}>Start Message</button>
                     <button className="cancel-button" onClick={() => handleCancel()}>Cancel</button>
@@ -243,7 +254,7 @@ export default function MessageList() {
                             onClick={() => handleSelectMessageBoard(messageBoard)}
                         >
                             <p className="message-sender">{messageBoard.messagesWith}</p>
-                            <p className="message-timestamp">{new Date(messageBoard.timeSent).toLocaleString()}</p>
+                            <p className="message-timestamp">{new Date(messageBoard.time).toLocaleString()}</p>
                         </button>
                     ))}
                 </ul>

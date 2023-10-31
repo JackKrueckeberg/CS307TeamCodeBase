@@ -63,13 +63,54 @@ router.patch("/update-info/:id", async (req, res) => {
         username: req.body.username,
         email: req.body.email,
         bio: req.body.bio,
-        profile_image: req.body.profile_image,
+        password: req.body.password,
+        //profile_image: req.body.profile_image,
       }
     };
   
     let collection = await db.collection("users");
     let result = await collection.updateOne(query, updates);
 
+    res.send(result).status(200);
+});
+
+// Update the user password
+router.patch("/update-password/:id", async (req, res) => {
+  const validObjectId = validateAndConvertId(req.params.id);
+  if (!validObjectId) {
+      return res.status(400).send("Invalid ID format");
+  }
+  const query = {_id: new ObjectId(validObjectId)}; // update the user based on their id
+
+  const updates =  {
+    $set: {
+      password: req.body.password,
+    }
+  };
+
+  let collection = await db.collection("users");
+  let result = await collection.updateOne(query, updates);
+
+  res.send(result).status(200);
+});
+
+// Update the user profile_image
+router.patch("/update-image/:id", async (req, res) => {
+  const validObjectId = validateAndConvertId(req.params.id);
+  if (!validObjectId) {
+      return res.status(400).send("Invalid ID format");
+  }
+  const query = {_id: new ObjectId(validObjectId)}; // update the user based on their id
+
+  const updates =  {
+    $set: {
+      profile_image: req.body.profile_image,
+    }
+  };
+
+  let collection = await db.collection("users");
+  let result = await collection.updateOne(query, updates);
+  
   res.send(result).status(200);
 });
 
