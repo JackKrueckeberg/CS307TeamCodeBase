@@ -1,40 +1,69 @@
-import { mock } from "node:test";
+
 import React, { useState, useEffect } from "react";
 
 
-export default function Flags() {
+export default function Replies() {
     
-    const [replies, setReplies] = useState([]);
-    const [user, setLoggedinUser] = useUser();
+  const [discussion, setDiscussion] = useState({});
 
-    const mockDisscusion = {
-      name: "name",
-      comment: {
-        text: "",
-        replies: []
-      }
-      
-    }
+  async function getDiscussion() {
 
-    setReplies(mockDisscusion.comments.replies)
+    const city_info = await fetch("http://localhost:5050/city_info/New York City", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
 
-    async function reply(reply) {
-      if(!user.strikes.is_banned) {
-        mockDisscusion.comment.replies.push(reply)
-      } else {
-        console.log("You can't reply to this post")
-      }
-        
-    }
+    const resp = await city_info.json();
+  
 
-    async function removeReply(reply_text) {
-        var temp = [];
-        for (var i = 0; i < replies.length; i++) {
-          if (!(replies[i] === reply_text)) {
-            temp.add[replies[i]];
-          }
-        }
-        setReplies(temp);
+    setDiscussion(resp.discusssion);
+
+    console.log(resp.discussion);
+
+    return resp.discussion;
+}
+
+    
+
+    
+async function reply(index, content) {
+  var curr = await getDiscussion()
+  
+    curr.comments[index].replies.push(content)
+    await fetch("http://localhost:5050/city_info/New York City", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({discussion: curr})
+    }).catch((error) => {
+      //window.alert(error);
+      console.log("error")
+      return;
+    });
+  
+}
+
+    async function removeReply(index) {
+      var curr = await getDiscussion()
+  
+      curr.comments[0].replies.splice(index, 1)
+      await fetch("http://localhost:5050/city_info/New York City", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({discussion: curr})
+      }).catch((error) => {
+        //window.alert(error);
+        console.log("error")
+        return;
+      });
 
     }
 
@@ -44,8 +73,8 @@ export default function Flags() {
 
 return (
   <div>
-      <button onClick={() => addBookmark("example_discussion")}>Add Bookmark</button>
-      <button onClick={() => removeBookmark("new_discussion")}>Remove Bookmark</button>
+      <button onClick={() => reply(0, "test reply")}>Reply</button>
+      <button onClick={() => removeReply(0)}>Remove Reply</button>
     </div>
 )
 }

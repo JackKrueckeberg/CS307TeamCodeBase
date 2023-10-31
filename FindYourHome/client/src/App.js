@@ -22,6 +22,7 @@ import Flags from './components/strikes/flagComment';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext } from './contexts/CityContext';
+import Replies from './components/replies/replies';
  
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -56,7 +57,7 @@ const App = () => {
   const [city, setCity] = useState(storedCity ? JSON.parse(storedCity) : null);
 
     return (
-      <Flags/>
+      <Replies/>
         // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
         //     <CityContext.Provider value={{city, setGlobalCity}}>
         //         <Routes>
