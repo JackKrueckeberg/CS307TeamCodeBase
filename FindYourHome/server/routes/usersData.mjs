@@ -40,9 +40,23 @@ router.post("/createUser", async (req, res) => {
     password: req.body.password,
     email: req.body.email,
     firstName: req.body.firstName,
-    lastName: req.body.lastName
+    lastName: req.body.lastName,
+    favorite_cities: [],
+    recent_searches: [],
+    recent_cities: [],
+    bio: "",
+    favorite_searches: [],
+    profile_image: "",
+    strikes: {
+      comments_removed: 0,
+      is_banned: false
+    },
+    achievements: {
+      city_searches: 0
+    },
+    bookmarked_discussions: []
   };
-  console.log("in user post");
+  console.log("newDocument");
   let collection = db.collection("users");
   let result = await collection.insertOne(newDocument);
   res.send(result).status(204);

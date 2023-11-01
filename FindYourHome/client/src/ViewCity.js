@@ -288,6 +288,25 @@ const ViewCity = () => {
                 </div>
             )}
             <h1 className="header">View City Page</h1>
+
+            <div className="navBar">
+                
+                <div class="profiletooltip">
+                    <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+                    <span class="profiletooltiptext">View your profile page and make edits</span>
+                </div>
+                <div class="advancedtooltip">
+                    <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+                    <span class="advancedtooltiptext">Search based on attributes of cities</span>
+                </div>
+                <div class="discussiontooltip">
+                    <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
+                    <span class="discussiontooltiptext">View discussions about different cities</span>
+                </div>
+                <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
+
+            </div>
+
             {showResults && (
                 <div>
                     <div>
@@ -348,10 +367,6 @@ const ViewCity = () => {
 
                     </div>
                 </div>
-
-                <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
-                <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-                <button className="logout" onClick={handleLogout}>Logout</button>
             </div>
 
             <div className="recentlyViewedCities">

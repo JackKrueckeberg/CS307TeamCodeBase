@@ -17,9 +17,12 @@ import Preferences from "./components/preferences";
 import City_Info from './components/city-info';
 import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
+import MessageList from "./components/messageList";
 import CompareCities from './components/compareCities';
 import DeleteAccount from './components/delete-account';
 import Flags from './components/strikes/flagComment';
+import DiscussionHome from './components/discussionHome';
+import DiscussNav from './components/discussNav';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
@@ -71,6 +74,9 @@ const App = () => {
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/citypage" element={<CityPage />} />
                         <Route path="/compare" element={<CompareCities />} />
+                        <Route path="/delete-account" element={<DeleteAccount />} />
+                        <Route path="/discussionHome" element={<DiscussionHome />} />
+                        <Route path="/messageBoards" element={<MessageList/>} />
                     </Routes>
                 </CompareCitiesProvider>
             </CityContext.Provider>
@@ -90,7 +96,6 @@ const App = () => {
         //         </Routes>
         //     </CityContext.Provider>
         // </UserContext.Provider>
-
     );
 };
  

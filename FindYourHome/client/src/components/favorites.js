@@ -1,16 +1,60 @@
 import React, { useState, useEffect } from "react";
 import '../Stylings/favorites.css';
+import Modal from "react-modal";
+import { useUser } from '../contexts/UserContext';
+
 
 export default function Favorites() {
     
+    const {user: userProfile } = useUser(); // the id of the current logged in user
+    const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
+    const [user, setInfo] = useState(storedSesUser || storedLocUser || userProfile);
+    const [username, setUsername] = useState('');
+
     const [tabVal, setTabVal] = useState(1); // tabVal remembers which tabs are active
     const [favorite_searches, setFavoriteSearches] = useState([]);
     const [favorite_cities, setFavoriteCities] = useState([]);
 
+    const [selectedCities, setSelectedCities] = useState([]);
+    const [isSelecting, setIsSelecting] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
+
+    const [showShareModal, setShareModal] = useState(false);
+    const [recipient, setRecipient] = useState('');
+    const [isExisting, setIsExisting] = useState(true);
+
+    const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
+    const [errorMessage, setError] = useState(''); // errorMessage will display when there is an error
+
     useEffect(() => {
         // Call the function to get favorite cities when the component mounts
+        fetchUsername(user._id);
         getUser_favorite_cities();
+        getUser_favorite_searches();
     }, []); 
+
+    const fetchUsername = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5050/profileRoute/profile/${id}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            })
+
+            const resp = await response.json();
+
+            setUsername(resp.username);
+
+            console.log(resp.username);
+    
+            return resp.username;
+        } catch (error) {
+            console.error("Error fetching user info: ", error);
+        }
+    }
+
 
     const handleTabChange = (index) => {
         if(tabVal === 1) {
@@ -24,7 +68,7 @@ export default function Favorites() {
 
     async function getUser_favorite_searches() {
 
-        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+        const city_info = await fetch(`http://localhost:5050/users/${user.email}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -35,8 +79,9 @@ export default function Favorites() {
         });
     
         const resp = await city_info.json();
-
-        setFavoriteSearches(resp.favorite_searches);
+        if (resp.favorite_searches) {
+            setFavoriteSearches(resp.favorite_searches);
+        }
 
         console.log(resp.favorite_searches);
     
@@ -51,7 +96,7 @@ export default function Favorites() {
             }
         }
 
-        await fetch("http://localhost:5050/favorite_searches/user@example.com", {
+        await fetch(`http://localhost:5050/favorite_searches/${user.email}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -70,7 +115,7 @@ export default function Favorites() {
 
     async function getUser_favorite_cities() {
 
-        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+        const city_info = await fetch(`http://localhost:5050/users/${user.email}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -82,7 +127,13 @@ export default function Favorites() {
     
         const resp = await city_info.json();
 
-        setFavoriteCities(resp.favorite_cities);
+        if (resp.favorite_cities) {
+
+            setFavoriteCities(resp.favorite_cities);
+
+            setSelectedCities(Array.from({ length: resp.favorite_cities.length }, () => false));
+
+        }
 
         console.log(resp.favorite_cities);
     
@@ -97,7 +148,7 @@ export default function Favorites() {
             }
         }
 
-        await fetch("http://localhost:5050/favorite_cities/user@example.com", {
+        await fetch(`http://localhost:5050/favorite_cities/${user.email}`, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
@@ -111,7 +162,100 @@ export default function Favorites() {
         setFavoriteCities(newFavs);
     }
 
+    // function to toggle between view and select mode
+    const handleSelect = () => {
+        setIsSelecting(!isSelecting);
+    };
 
+    // function to toggle between select and view mode
+    const handleCancel = () => {
+        setSelectedCities(Array.from({ length: selectedCities.length }, () => false));
+        setIsSelecting(false);
+    };
+
+    // function to toggle the checkbox
+    const handleCheckboxChange = (index) => {
+        const updatedCheckboxes = [...selectedCities]; // Create a copy of the selectedCities array
+        updatedCheckboxes[index] = !updatedCheckboxes[index]; // Toggle the value at the clicked index
+        setSelectedCities(updatedCheckboxes); // Update the state
+    };
+
+    // function to share selected cities
+    const handleShareModal = () => {
+        const isAnyCitySelected = selectedCities.some((isSelected) => isSelected); // Checks if there is at least one value in selected Cities that is true
+        if (!isAnyCitySelected) {
+            alert("You need to select a city to share.");
+            return;
+        }
+
+        setShareModal(true);
+        console.log(selectedCities);
+    }
+
+    const handleShareCancel = () => {
+        setShareModal(false);
+        setError('');
+        setRecipient('');
+    }
+
+    // function to share selected cities with the another user
+    const handleShare = async (recipient) => {
+        const exists = await checkExistingUser(recipient);
+        if (!exists) {
+            setError('The username you provided does not match any in our records. Please try again.');
+            return;
+        }
+
+        // TODO finish the send method
+        const citiesToSend = favorite_cities.filter((city, index) => selectedCities[index]);
+        const message = `Here are my favorite cites: ${citiesToSend.join(', ')}`;
+
+        console.log(message);
+
+        const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                senderUsername: username,
+                recipientUsername: recipient,
+                content: message,
+                timeSent: new Date(),
+            }),
+        });
+
+        if (response.status === 200) {
+            setSuccessMessage('Your favorites have been sent to ', recipient, '!');
+            handleCancel();
+            handleShareCancel();
+            return;
+        } else {
+            setError('There was an error sending your favorites to ', recipient, '. Please try again.');
+        }
+
+    };
+
+    // function to check that the user exists
+    const checkExistingUser = async (recipient) => {
+        try {
+            const response = await fetch(`http://localhost:5050/profileRoute/check-username/${recipient}`, {
+                method: "GET",
+                headers: {
+                    "Accept": "application/json"
+                }
+            });
+
+            if (response.status === 200) {
+                const data = await response.json();
+                return !data.isAvailable;
+            }
+        } catch (error) {
+            console.error("Error checking username availability: ", error);
+            return false;
+        }
+    };
+   
 
 
     return (
@@ -125,51 +269,140 @@ export default function Favorites() {
                 
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Cities </h2>
-                    {getUser_favorite_cities}
-                    <ul>
-                    {favorite_cities.map((search, index) => (
-                        <li key={index}>
-                        <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                        {Object.entries(search).map(([key, value]) => {
+                    {favorite_cities.length > 0 ? (
+                        <div>
+                            {isSelecting ? (
+                                <div>
+                                    <div className="buttons">
+                                        <button className="shareTo-button" onClick={handleShareModal}>Share to</button>
+                                        <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                                    </div>
+                                    <Modal
+                                        className={"share-modal"}
+                                        isOpen={showShareModal}
+                                        onRequestClose={() => {
+                                            setShareModal(false);
+                                            setError('');
+                                        }}
+                                        contentLabel="Share Favorite Modal"
+                                    >
+                                        <div className="modal-content">
+                                            <h2>Who do you wanna share your favorite cities with?</h2>
+                                            {errorMessage && <p className="error-message">{errorMessage}</p>}
+                                            {successMessage && <p className="success-message">{successMessage}</p>}
+                                            <h5>Selected Cities to Share:</h5>
+                                            <ul>
+                                                {selectedCities.map((isSelected, index) => {
+                                                    if (isSelected) {
+                                                        return (
+                                                            <li key={index}>
+                                                                {Object.entries(favorite_cities[index]).map(([key, value]) => (
+                                                                    <span key={key}>
+                                                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                                                    </span>
+                                                                ))}
+                                                            </li>
+                                                        );
+                                                    }
+                                                })}
+                                            </ul>
+                                            <input
+                                                type="username"
+                                                placeholder="Recipient's username"
+                                                value={recipient}
+                                                onChange={(e) => setRecipient(e.target.value)}
+                                            />
+                                            <button className="share-button" onClick={() => handleShare(recipient)}>Share</button>
+                                            <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
+                                        </div>
+                                    </Modal>
+                                <ul>
+                                    {favorite_cities.map((city, index) => (
+                                        <li key={index}>
+                                            <input
+                                                type="checkbox"
+                                                name="selectedCity"
+                                                checked={selectedCities[index]}
+                                                onChange={() => handleCheckboxChange(index)}
+                                            />
+                                            {Object.entries(city).map(([key, value]) => {
                             
                             
-                            return (
-                                <span key={key}>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                </span>
-                            );
+                                                return (
+                                                    <span key={key}>
+                                                        {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                                    </span>
+                                                );
                             
                            
-                        })}
-                        </li>
-                    ))}
-                    </ul>
-
-
+                                             })}
+                                        </li>
+                                    ))}
+                                </ul>
+                                </div>
+                            ) : (
+                                <div className="view">
+                                    <div className="buttons">
+                                        <button className="share-favorite" onClick={handleSelect}>Share Favorite</button>
+                                    </div>
+                                    {/*{getUser_favorite_cities}*/}
+                                    <ul>
+                                        {favorite_cities.map((city, index) => (
+                                            <li key={index}>
+                                                <button onClick={() => removeFavoriteCity(index)}>delete</button>
+                                                {Object.entries(city).map(([key, value]) => {
+                            
+                                                    return (
+                                                        <span key={key}>
+                                                            {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                                        </span>
+                                                    );
+                            
+                           
+                                                })}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div>
+                            <h5> No favorites cities yet </h5>
+                            <p> Mark your favorite cities and you will always have them here!</p>
+                        </div>
+                    )}
                 </div>
 
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Searches </h2>
-                    <ul>
-                    {favorite_searches.map((search, index) => (
-                        <li key={index}>
-                        <button onClick={() => removeFavoriteSearch(index)}>delete</button>
-                        {Object.entries(search).map(([key, value]) => {
-                            if (value !== null && value !== "" && value !== false) {
-                            if (key === 'state' && value === 'default') {
-                                return null; // Don't display State: default
-                            }
-                            return (
-                                <span key={key}>
-                                {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                </span>
-                            );
-                            }
-                            return null; // Don't display if the field is not populated
-                        })}
-                        </li>
-                    ))}
-                    </ul>
+                    {favorite_searches.length > 0 ? (
+                        <ul>
+                        {favorite_searches.map((search, index) => (
+                            <li key={index}>
+                            <button onClick={() => removeFavoriteSearch(index)}>delete</button>
+                            {Object.entries(search).map(([key, value]) => {
+                                if (value !== null && value !== "" && value !== false) {
+                                if (key === 'state' && value === 'default') {
+                                    return null; // Don't display State: default
+                                }
+                                return (
+                                    <span key={key}>
+                                    {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                    </span>
+                                );
+                                }
+                                return null; // Don't display if the field is not populated
+                            })}
+                            </li>
+                        ))}
+                        </ul>
+                    ) : (
+                        <div>
+                            <h5> No favorites searches yet </h5>
+                            <p> Mark your favorite searches and you will always have them here!</p>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
