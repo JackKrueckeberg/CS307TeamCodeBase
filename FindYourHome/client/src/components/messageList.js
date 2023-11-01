@@ -5,10 +5,11 @@ import Modal from "react-modal";
 
 import io from "socket.io-client";
 
-const socket = io.connect("http://localhost:5050");
+
 
 export default function MessageList() {
 
+    const socket = io.connect("http://localhost:5050");
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const [messageBoards, setMessageBoards] = useState([]);
     const [messages, setMessages] = useState([]);
