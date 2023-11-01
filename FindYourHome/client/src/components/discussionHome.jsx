@@ -127,7 +127,9 @@ const DiscussionHome = () => {
         category: dropdownSelection,
         city: selectedCity,
         numFlags: 0,
+        numLikes: 0,
         date: Date.now(),
+        replies: []
       });
 
       // Now update the discussions with the new comment
