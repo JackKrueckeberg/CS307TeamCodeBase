@@ -203,6 +203,8 @@ const ViewCity = () => {
             matchedCity.lon,
             matchedCity.lat
         );
+        console.log(cityModel);
+        localStorage.setItem('selectedCity', JSON.stringify(cityModel));
 
         incrementAchievement("City-Explorer");
         setImageUrl(img);
@@ -210,6 +212,7 @@ const ViewCity = () => {
         setGlobalCity(matchedCity);
         setShowResults(true);
         setIsValidSearch(true);
+        // Store it in localStorage
         return true; // City is valid
     }
 
@@ -347,7 +350,7 @@ const ViewCity = () => {
                     </div>
                 }
 
-                {showResults && city && <CityPage showResults={showResults} city={city} cityModel={cityModel} cityCoordinates={cityCoordinates} testProp="Test"></CityPage>}
+                {showResults && city && <CityPage showResults={showResults} testProp="Test"></CityPage>}
 
                 <div className="mainContent">
                     <div className="searchBar">

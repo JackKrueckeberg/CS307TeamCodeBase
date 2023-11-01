@@ -9,10 +9,13 @@ import { useCity } from "../contexts/CityContext";
 const OPENAI_API_KEY = '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'
 
 export default function CityPage(props) {
-  const currentUser = localStorage.getItem("currentCity");
-  const { city: globalCity } = useCity();
   const navigate = useNavigate();
   const [apiResponse, setApiResponse] = useState('');
+
+  // Parsing the cityModel from localStorage
+  const cityModelStored = localStorage.getItem('selectedCity');
+  const cityModel = cityModelStored ? JSON.parse(cityModelStored) : {};
+  console.log(cityModel);
 
   // useEffect(() => {
   //   async function fetchAttractions(city) {
@@ -48,10 +51,10 @@ export default function CityPage(props) {
   //     }
   //   }
 
-  //   if (globalCity.name) {
-  //     fetchAttractions(globalCity.name);
+  //   if (cityModel.name) {
+  //     fetchAttractions(cityModel.name);
   //   }
-  // }, [globalCity.name]);
+  // }, [cityModel.name]);
 
 
   return (
@@ -61,18 +64,18 @@ export default function CityPage(props) {
         <button className="preferences-button" onClick={() => navigate('/preferences')}>Go to Preferences</button>
       </div>
       <div className="result">
-        <label content={globalCity.lon}></label>
-        {globalCity.name && globalCity && <CityModel model={globalCity} />}
-        {globalCity.name && globalCity && <Map key={`${globalCity.lat}-${globalCity.lon}`} lat={globalCity.lat} lon={globalCity.lon} />}
+        {cityModel.name && <CityModel model={cityModel} />}
+        {cityModel.name && <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} />}
       </div>
       <div>
         <h3>Top 10 City Attractions: (takes a second to load)</h3>
         <p>{apiResponse}</p>  {/* Render the response */}
       </div>
-      <Twitter cityName={globalCity.name}></Twitter>
-      {/* Display fetched attractions if available (you can customize this part) */}
+      {/* You might want to replace globalCity.name with cityModel.name below if you're no longer using globalCity */}
+      <Twitter cityName={cityModel.name}></Twitter>
     </div>
   );
 }
+
 
 
