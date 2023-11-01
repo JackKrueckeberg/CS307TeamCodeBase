@@ -17,6 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+
 //this route helps you get a user by email
 router.get("/:email", async (req, res) => {
   try {
@@ -96,38 +97,6 @@ router.delete("/:email", async (req, res) => {
       res.status(400).send({ message: 'Invalid action' });
     }
   });
-
-  //update users achievement(s) counter
-    router.patch('/achievements/:email', async (req, res) => {
-      const email = req.params.email;
-  
-      // Access the achievementName and the incrementValue from the request body
-      const { achievementName, incrementValue = 1 } = req.body; // default incrementValue to 1 if not provided
-  
-      try {
-          // Construct the field path dynamically
-          const achievementPath = `achievements.${achievementName}`;
-  
-          // Update the specific achievement counter
-          const result = await db.collection('users').updateOne(
-              { email: email },
-              {
-                  $inc: { [achievementPath]: incrementValue }
-              }
-          );
-  
-          if (result.matchedCount === 0) {
-              res.status(404).send({ message: 'User not found or achievement not present' });
-              return;
-          }
-  
-          res.status(200).send({ message: `Achievement ${achievementName} incremented by ${incrementValue}` });
-  
-      } catch (error) {
-          res.status(500).send({ message: 'Internal Server Error' });
-      }
-  });
-  
 
 
 

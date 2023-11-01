@@ -15,6 +15,7 @@ import favorite_cities from "./routes/favorite_cities.mjs";
 import recent_searches from "./routes/recent_searches.mjs";
 import get_tweet from "./routes/get_tweet.mjs"
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
+import achievementsData from "./routes/achievementsData.mjs";
 
 import strikes from "./routes/strikes.mjs"
 
@@ -46,6 +47,7 @@ app.use("/recent_searches", recent_searches);
 app.use("/get_tweet", get_tweet);
 app.use("/bookmarked_discussions", bookmarked_discussions)
 app.use("/strikes", strikes)
+app.use("/achievements", achievementsData);
 
 //app.use("/discussionPost", discussion);
 
