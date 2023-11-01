@@ -5,11 +5,8 @@ import Modal from "react-modal";
 
 import io from "socket.io-client";
 
-
-
 export default function MessageList() {
-
-    const socket = io.connect("http://localhost:5050");
+    //const socket = io.connect("http://localhost:5050");
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const [messageBoards, setMessageBoards] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -34,11 +31,22 @@ export default function MessageList() {
         fetchUsername(user._id);
         fetchUserMessageBoards();
 
-        socket.on("receive_message", (data) => {
+        /*const intervalId = setInterval(() => {
+            // Code to run every 10 seconds
             fetchUserMessageBoards();
-        })
-        
-    }, [socket]);
+
+          }, 5000); // 5000 milliseconds = 5 seconds
+      
+          // The cleanup function to clear the interval when the component unmounts
+          return () => {
+            clearInterval(intervalId);
+          };*/
+
+        /*socket.on("receive_message", (data) => {
+            fetchUserMessageBoards();
+        })*/
+
+    }, []);
 
     // get the current user's username
     const fetchUsername = async (id) => {
@@ -151,7 +159,7 @@ export default function MessageList() {
             setInputRecipient('');
         } else {
 
-            socket.emit("new_message_board", recipient);
+            //socket.emit("new_message_board", recipient);
 
             // Create a new message board and add it to the messageBoards state
             setNewBoardMessages([...newBoardMessages, `Hello! ${username} wants to start a conversation!`]);
@@ -247,7 +255,7 @@ export default function MessageList() {
                 timeSent: new Date(),
             };
 
-            await socket.emit("send_message", messageData);
+            //await socket.emit("send_message", messageData);
 
             const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
                 method: "POST",
@@ -265,7 +273,7 @@ export default function MessageList() {
             if (response.status === 200) {             
                 setNewMessage(""); // Clear the input field
                 messageInputRef.current.value = "";
-                window.location.reload();
+                //window.location.reload();
                 return;
             } else {
                 alert("something went wrong");
