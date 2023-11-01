@@ -26,7 +26,6 @@ import DiscussNav from './components/discussNav';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
-import DiscussionHome from './components/discussionHome';
  
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
