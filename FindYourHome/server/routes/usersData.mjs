@@ -17,6 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+
 //this route helps you get a user by email
 router.get("/:email", async (req, res) => {
   try {
@@ -110,6 +111,7 @@ router.delete("/:email", async (req, res) => {
       res.status(400).send({ message: 'Invalid action' });
     }
   });
+
 
 
 export default router;

@@ -1,0 +1,27 @@
+.compare-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px; /* Adjust space between city boxes. */
+    margin: 20px 0; /* Some margin to give breathing space from the top and bottom. */
+}
+
+.city-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    width: 300px; /* Adjust width if needed. */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center; /* Center the text elements. */
+    overflow: hidden; /* Ensures nothing goes outside the box. */
+    background-color: white;
+}
+
+.city-box img {
+    max-width: 100%; /* Ensure images never go beyond the width of the box. */
+    border-radius: 10px; /* Optional: Round corners of images. */
+    margin-top: 10px; /* Some space above the image. */
+}
+
+h1 {
+    text-align: center;
+}

@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import CityPage from "./components/citypage"
 import { useCity } from "./contexts/CityContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
@@ -112,6 +114,40 @@ const ViewCity = () => {
 
     }
 
+    const incrementAchievement = async (achievementName) => {
+        try {
+            const userEmail = "user2@example.com"; // Replace with the correct email
+    
+            const response = await fetch(`http://localhost:5050/achievements/${userEmail}/${achievementName}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: "incrementAchievement"
+                })
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log(data);
+    
+            // Check if achievement count is above 10
+            if (data.count && data.count > 10) {
+                // Show the toast notification
+                toast.success(`Congrats on reaching ${achievementName}!`);
+            }
+    
+        } catch (error) {
+            console.error("Error incrementing achievement:", error);
+        }
+    };
+    
+    
+    
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
             const inputValue = value.trim().toLowerCase();
@@ -128,24 +164,6 @@ const ViewCity = () => {
     const onSuggestionsClearRequested = () => {
         setSuggestions([]);
     };
-
-    const fetchCityAttractions = async (cityName) => {
-        try {
-            console.log(cityName);
-            const response = await fetch(`http://localhost:5050/attractions/${cityName}`);
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            console.log(data); // Handle this data as needed in your frontend
-    
-        } catch (error) {
-            console.error("There was an error fetching the city attractions", error);
-        }
-    }
-    
     
 
     const handleSubmit = async () => {
@@ -178,12 +196,10 @@ const ViewCity = () => {
                 matchedCity.lat
             );
 
+            incrementAchievement("City-Explorer");
             setImageUrl(img);
             setCityModel(cityModel);
         }
-
-        console.log("setting global city");
-        console.log(matchedCity);
         setGlobalCity(matchedCity);
         setShowResults(true);
 
@@ -356,6 +372,8 @@ const ViewCity = () => {
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
+
+            <ToastContainer />
         </div>
 
     );
