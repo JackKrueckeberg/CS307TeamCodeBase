@@ -31,6 +31,8 @@ const ViewCity = () => {
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [shouldFetchAttractions, setShouldFetchAttractions] = useState(false);
+    const [isValidSearch, setIsValidSearch] = useState(true);
+
 
 
     const [favorite, setFavorite] = useState(false)
@@ -38,14 +40,14 @@ const ViewCity = () => {
     const [isVerified, setIsVerified] = useState(false);
 
     const { user } = useUser();
-    const {globalCity, setGlobalCity} = useCity();
+    const { globalCity, setGlobalCity } = useCity();
     const navigate = useNavigate();
 
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentUser');
-    
+
         navigate("/", { state: { loggedOut: true }, replace: true });
     };
 
@@ -117,7 +119,7 @@ const ViewCity = () => {
     const incrementAchievement = async (achievementName) => {
         try {
             const userEmail = "user2@example.com"; // Replace with the correct email
-    
+
             const response = await fetch(`http://localhost:5050/achievements/${userEmail}/${achievementName}`, {
                 method: 'PATCH',
                 headers: {
@@ -127,27 +129,27 @@ const ViewCity = () => {
                     action: "incrementAchievement"
                 })
             });
-    
+
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-    
+
             const data = await response.json();
             console.log(data);
-    
+
             // Check if achievement count is above 10
             if (data.count && data.count > 10) {
                 // Show the toast notification
                 toast.success(`Congrats on reaching ${achievementName}!`);
             }
-    
+
         } catch (error) {
             console.error("Error incrementing achievement:", error);
         }
     };
-    
-    
-    
+
+
+
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
             const inputValue = value.trim().toLowerCase();
@@ -164,46 +166,60 @@ const ViewCity = () => {
     const onSuggestionsClearRequested = () => {
         setSuggestions([]);
     };
-    
 
-    const handleSubmit = async () => {
+
+    async function handleSubmit() {
         setShowResults(false);
         const matchedCity = allCities.find((c) => c.name.toLowerCase() === searchTerm.toLowerCase());
         setCity(matchedCity);
         setCityCoordinates(matchedCity ? { lat: matchedCity.lat, lon: matchedCity.lon } : null)
-        if (matchedCity) {
-            const img = await searchImage();
-            const med_income = matchedCity.median_income ? matchedCity.median_income : "N/A";
 
-            let nation_avg;
-            let nation_flag = false;
-            if (med_income !== "N/A") {
-                nation_avg = med_income - 74580;
-                if (nation_avg >= 0) {
-                    nation_flag = true;
-                }
-            }
-            const cityModel = new Model(
-                matchedCity.name,
-                matchedCity.population,
-                matchedCity.region,
-                matchedCity.state,
-                med_income,
-                img,
-                nation_avg,
-                nation_flag,
-                matchedCity.lon,
-                matchedCity.lat
-            );
-
-            incrementAchievement("City-Explorer");
-            setImageUrl(img);
-            setCityModel(cityModel);
+        if (!matchedCity) {
+            setIsValidSearch(false);
+            return false; // City not found
         }
+
+        const img = await searchImage();
+        const med_income = matchedCity.median_income ? matchedCity.median_income : "N/A";
+
+        let nation_avg;
+        let nation_flag = false;
+        if (med_income !== "N/A") {
+            nation_avg = med_income - 74580;
+            if (nation_avg >= 0) {
+                nation_flag = true;
+            }
+        }
+
+        const cityModel = new Model(
+            matchedCity.name,
+            matchedCity.population,
+            matchedCity.region,
+            matchedCity.state,
+            med_income,
+            img,
+            nation_avg,
+            nation_flag,
+            matchedCity.lon,
+            matchedCity.lat
+        );
+
+        incrementAchievement("City-Explorer");
+        setImageUrl(img);
+        setCityModel(cityModel);
         setGlobalCity(matchedCity);
         setShowResults(true);
+        setIsValidSearch(true);
+        return true; // City is valid
+    }
 
-    };
+    // Combined action
+    async function handleCombinedActions() {
+        const isValidCity = await handleSubmit();
+        if (isValidCity) {
+            navToCityPage();
+        }
+    }
 
     const confirm_fav = async () => {
         if (favorite) {
@@ -268,9 +284,7 @@ const ViewCity = () => {
         }
     };
 
-    //allows the submit button to handle the submit and add the city to the queue
-    async function handleCombinedActions() {
-        await handleSubmit();
+    function navToCityPage() {
         navigate("/citypage");
     }
 
@@ -290,7 +304,7 @@ const ViewCity = () => {
             <h1 className="header">View City Page</h1>
 
             <div className="navBar">
-                
+
                 <div class="profiletooltip">
                     <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
                     <span class="profiletooltiptext">View your profile page and make edits</span>
@@ -327,14 +341,13 @@ const ViewCity = () => {
 
             <div className="container">
 
-                {showResults && city && <CityPage showResults={showResults} city={city} cityModel={cityModel} cityCoordinates={cityCoordinates} testProp="Test"></CityPage>}
-
-
-                {showResults && !city &&
+                {!isValidSearch &&
                     <div className="errorMessage">
                         {searchTerm === "" ? <h2>No City Searched</h2> : <h2>Invalid Search</h2>}
                     </div>
                 }
+
+                {showResults && city && <CityPage showResults={showResults} city={city} cityModel={cityModel} cityCoordinates={cityCoordinates} testProp="Test"></CityPage>}
 
                 <div className="mainContent">
                     <div className="searchBar">
