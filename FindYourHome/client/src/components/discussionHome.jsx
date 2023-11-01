@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import styles from "../Stylings/discussionStyle.module.css";
 import DiscussNav from "./discussNav.js";
-import { useUser } from "../contexts/UserContext";import { Queue } from "./recentDiscussionsQueue.js";
+import { useUser } from "../contexts/UserContext";
+import { Queue } from "./recentDiscussionsQueue.js";
 import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
-import Autosuggest from 'react-autosuggest';
+import Autosuggest from "react-autosuggest";
+import defaultImage from "../Stylings/Default_Profile_Picture.png";
 import { useNavigate } from "react-router";
 
 const DiscussionHome = () => {
@@ -13,14 +15,18 @@ const DiscussionHome = () => {
   const [content, setContent] = useState("");
   const [selectorChoice, setSelectorChoice] = useState("");
   const [dropdownSelection, setDropdownSelection] = useState("");
-    const [allCities, setAllCities] = useState([]);
-    const [suggestions, setSuggestions] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [showResults, setShowResults] = useState(false);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());  const [cities, setCities] = useState([]);
+  const [allCities, setAllCities] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(
+    new Queue()
+  );
+  const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [error, setError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   // User Stuff
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -30,6 +36,34 @@ const DiscussionHome = () => {
   const [user, setInfo] = useState(
     storedSesUser || storedLocUser || userProfile
   );
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
+
+  const fetchUserInfo = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5050/profileRoute/profile/${user._id}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const userInfo = await response.json();
+        // Update the user state with the fetched data
+        setInfo({
+          ...userInfo,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching user info: ", error);
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -61,9 +95,9 @@ const DiscussionHome = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('currentUser');
-    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("currentUser");
 
     navigate("/", { state: { loggedOut: true }, replace: true });
   };
@@ -94,14 +128,12 @@ const DiscussionHome = () => {
   // useEffect for fetching cities
   useEffect(() => {
     fetchCities();
-    console.log("first useEffect");
   }, []);
 
   // useEffect for fetching discussions
   useEffect(() => {
     if (selectedCity) {
       fetchDiscussions(selectedCity);
-      console.log("Second useEffect");
     }
   }, [selectedCity]);
 
@@ -140,7 +172,10 @@ const DiscussionHome = () => {
         numFlags: 0,
         numLikes: 0,
         date: Date.now(),
-        replies: []
+        replies: [],
+        postedBy: {
+          username: user.username,
+        },
       });
 
       // Now update the discussions with the new comment
@@ -177,27 +212,41 @@ const DiscussionHome = () => {
     <div className={styles.DiscussionHome}>
       <h2>Discussions</h2>
 
-      {!showForm && 
+      {!showForm && (
         <div className="navBar">
-                
           <div class="profiletooltip">
-              <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-              <span class="profiletooltiptext">View your profile page and make edits</span>
+            <button className="profilebtn" onClick={() => navigate("/profile")}>
+              Profile
+            </button>
+            <span class="profiletooltiptext">
+              View your profile page and make edits
+            </span>
           </div>
           <div class="discussiontooltip">
-              <button className="discussionButton" onClick={() => navigate("/view-city")}>City Search</button>
-              <span class="discussiontooltiptext">Search for cities by name</span>
+            <button
+              className="discussionButton"
+              onClick={() => navigate("/view-city")}
+            >
+              City Search
+            </button>
+            <span class="discussiontooltiptext">Search for cities by name</span>
           </div>
           <div class="advancedtooltip">
-              <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
-              <span class="advancedtooltiptext">Search based on attributes of cities</span>
+            <button
+              className="advancedSearch"
+              onClick={() => navigate("/preferences")}
+            >
+              Advanced Search
+            </button>
+            <span class="advancedtooltiptext">
+              Search based on attributes of cities
+            </span>
           </div>
-          <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
-
+          <button className="logoutbtn" onClick={() => handleLogout()}>
+            Logout
+          </button>
         </div>
-      }
-
-      {!showForm && error && <div className="error">{error}</div>}
+      )}
 
       {!showForm && (
         <button
@@ -215,13 +264,64 @@ const DiscussionHome = () => {
           value={selectedCity}
           onChange={(e) => setSelectedCity(e.target.value)}
         >
-          <option value="">Select a City</option>
+          <option value="">Select a City to View or Post Discussions</option>
           {(cities || []).map((city, index) => (
             <option key={index} value={city}>
               {city}
             </option>
           ))}
         </select>
+      )}
+
+      {!showForm && selectedCity && (
+        <div className={styles.categoryFilterButtons}>
+          <button
+            className={selectedCategory === "All" ? styles.selectedButton : ""}
+            onClick={() => setSelectedCategory("All")}
+          >
+            All
+          </button>
+          <button
+            className={
+              selectedCategory === "General" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("General")}
+          >
+            General
+          </button>
+          <button
+            className={
+              selectedCategory === "Crime" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Crime")}
+          >
+            Crime
+          </button>
+          <button
+            className={
+              selectedCategory === "Dining" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Dining")}
+          >
+            Dining
+          </button>
+          <button
+            className={
+              selectedCategory === "Things To Do" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Things To Do")}
+          >
+            Things to Do
+          </button>
+          <button
+            className={
+              selectedCategory === "Other" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Other")}
+          >
+            Other
+          </button>
+        </div>
       )}
 
       <div
@@ -231,27 +331,48 @@ const DiscussionHome = () => {
       >
         {!showForm && selectedCity && (
           <div className={styles.commentsBox}>
-            {(discussions || []).map((discussion, index) => (
-              <div key={index} className={styles.discussionPost}>
-                <div className={styles.authorInfo}>
-                  {/* Assuming discussion has authorType, adjust as needed */}
-                  <div className={styles.fakeAvatar}></div>
-                  <h3>
-                    {discussion.selectorChoice === "Your Username"
-                      ? user.username
-                      : "Anonymous"}
-                  </h3>
-                </div>
-                <div className={styles.postContent}>
-                  <h4 className={styles.postTitle}>{discussion.title}</h4>
-                  <p>{discussion.content}</p>
-                  {/* Assuming discussion has city and category, adjust as needed */}
-                  <p className={styles.metadata}>
-                    City: {discussion.city} | Category: {discussion.category}
-                  </p>
-                </div>
+            {discussions.length === 0 ? (
+              <div className={styles.noDiscussionsMessage}>
+                Start a Discussion for this City above!
               </div>
-            ))}
+            ) : (
+              (() => {
+                const filteredDiscussions = discussions.filter(
+                  (discussion) =>
+                    selectedCategory === "All" ||
+                    discussion.category === selectedCategory
+                );
+
+                return filteredDiscussions.length === 0 ? (
+                  <div className={styles.noDiscussionsMessage}>
+                    No discussions found in this category.  Start a Discussion for this Category above!
+                  </div>
+                ) : (
+                  filteredDiscussions.map((discussion) => (
+                    <div
+                      key={discussion.id || discussion.title}
+                      className={styles.discussionPost}
+                    >
+                      <div className={styles.authorInfo}>
+                        <h3>
+                          {discussion.selectorChoice === "Your Username"
+                            ? discussion.postedBy.username
+                            : "Anonymous"}
+                        </h3>
+                      </div>
+                      <div className={styles.postContent}>
+                        <h4 className={styles.postTitle}>{discussion.title}</h4>
+                        <p>{discussion.content}</p>
+                        <p className={styles.metadata}>
+                          City: {discussion.city} | Category:{" "}
+                          {discussion.category}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                );
+              })()
+            )}
           </div>
         )}
       </div>
