@@ -26,6 +26,7 @@ const DiscussionHome = () => {
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [error, setError] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   // User Stuff
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -247,8 +248,6 @@ const DiscussionHome = () => {
         </div>
       )}
 
-      {!showForm && error && <div className="error">{error}</div>}
-
       {!showForm && (
         <button
           onClick={() => setShowForm(true)}
@@ -265,13 +264,64 @@ const DiscussionHome = () => {
           value={selectedCity}
           onChange={(e) => setSelectedCity(e.target.value)}
         >
-          <option value="">Select a City</option>
+          <option value="">Select a City to View or Post Discussions</option>
           {(cities || []).map((city, index) => (
             <option key={index} value={city}>
               {city}
             </option>
           ))}
         </select>
+      )}
+
+      {!showForm && selectedCity && (
+        <div className={styles.categoryFilterButtons}>
+          <button
+            className={selectedCategory === "All" ? styles.selectedButton : ""}
+            onClick={() => setSelectedCategory("All")}
+          >
+            All
+          </button>
+          <button
+            className={
+              selectedCategory === "General" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("General")}
+          >
+            General
+          </button>
+          <button
+            className={
+              selectedCategory === "Crime" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Crime")}
+          >
+            Crime
+          </button>
+          <button
+            className={
+              selectedCategory === "Dining" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Dining")}
+          >
+            Dining
+          </button>
+          <button
+            className={
+              selectedCategory === "Things To Do" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Things To Do")}
+          >
+            Things to Do
+          </button>
+          <button
+            className={
+              selectedCategory === "Other" ? styles.selectedButton : ""
+            }
+            onClick={() => setSelectedCategory("Other")}
+          >
+            Other
+          </button>
+        </div>
       )}
 
       <div
@@ -281,29 +331,48 @@ const DiscussionHome = () => {
       >
         {!showForm && selectedCity && (
           <div className={styles.commentsBox}>
-            {(discussions || []).map((discussion) => (
-              <div
-                key={discussion.id || discussion.title}
-                className={styles.discussionPost}
-              >
-                {" "}
-                {/* Use a unique identifier */}
-                <div className={styles.authorInfo}>
-                  <h3>
-                    {discussion.selectorChoice === "Your Username"
-                      ? discussion.postedBy.username
-                      : "Anonymous"}
-                  </h3>
-                </div>
-                <div className={styles.postContent}>
-                  <h4 className={styles.postTitle}>{discussion.title}</h4>
-                  <p>{discussion.content}</p>
-                  <p className={styles.metadata}>
-                    City: {discussion.city} | Category: {discussion.category}
-                  </p>
-                </div>
+            {discussions.length === 0 ? (
+              <div className={styles.noDiscussionsMessage}>
+                Start a Discussion for this City above!
               </div>
-            ))}
+            ) : (
+              (() => {
+                const filteredDiscussions = discussions.filter(
+                  (discussion) =>
+                    selectedCategory === "All" ||
+                    discussion.category === selectedCategory
+                );
+
+                return filteredDiscussions.length === 0 ? (
+                  <div className={styles.noDiscussionsMessage}>
+                    No discussions found in this category.  Start a Discussion for this Category above!
+                  </div>
+                ) : (
+                  filteredDiscussions.map((discussion) => (
+                    <div
+                      key={discussion.id || discussion.title}
+                      className={styles.discussionPost}
+                    >
+                      <div className={styles.authorInfo}>
+                        <h3>
+                          {discussion.selectorChoice === "Your Username"
+                            ? discussion.postedBy.username
+                            : "Anonymous"}
+                        </h3>
+                      </div>
+                      <div className={styles.postContent}>
+                        <h4 className={styles.postTitle}>{discussion.title}</h4>
+                        <p>{discussion.content}</p>
+                        <p className={styles.metadata}>
+                          City: {discussion.city} | Category:{" "}
+                          {discussion.category}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                );
+              })()
+            )}
           </div>
         )}
       </div>
