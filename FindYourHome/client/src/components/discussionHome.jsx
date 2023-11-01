@@ -177,8 +177,25 @@ const DiscussionHome = () => {
     <div className={styles.DiscussionHome}>
       <h2>Discussions</h2>
 
-      {!showForm && <DiscussNav />}
-      <button className="logout" onClick={handleLogout}>Logout</button>
+      {!showForm && 
+        <div className="navBar">
+                
+          <div class="profiletooltip">
+              <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+              <span class="profiletooltiptext">View your profile page and make edits</span>
+          </div>
+          <div class="discussiontooltip">
+              <button className="discussionButton" onClick={() => navigate("/view-city")}>City Search</button>
+              <span class="discussiontooltiptext">Search for cities by name</span>
+          </div>
+          <div class="advancedtooltip">
+              <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+              <span class="advancedtooltiptext">Search based on attributes of cities</span>
+          </div>
+          <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
+
+        </div>
+      }
 
       {!showForm && error && <div className="error">{error}</div>}
 

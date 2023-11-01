@@ -287,10 +287,7 @@ const ViewCity = () => {
                     <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
                     <span class="discussiontooltiptext">View discussions about different cities</span>
                 </div>
-                <div classname="logouttooltip">
-                    <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
-                    <span class="logouttooltiptext">Logout of current account</span>
-                </div>
+                <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
             </div>
 

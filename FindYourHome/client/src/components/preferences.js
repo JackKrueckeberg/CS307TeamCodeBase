@@ -407,10 +407,21 @@ export default function Create() {
     // name, population, region, state, zip code, county, median income
     <div>
       <div class="navBar">
-        <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-        <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
-        <button className="profilebtn" onClick={() => navigate("/discussionHome")}>Discussions</button>
-        <button className="logout" onClick={handleLogout}>Logout</button>
+
+        <div class="profiletooltip">
+            <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+            <span class="profiletooltiptext">View your profile page and make edits</span>
+        </div>
+        <div class="advancedtooltip">
+            <button className="advancedSearch" onClick={() => navigate("/view-city")}>City Search</button>
+            <span class="advancedtooltiptext">Search for cities by name</span>
+        </div>
+        <div class="discussiontooltip">
+            <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
+            <span class="discussiontooltiptext">View discussions about different cities</span>
+        </div>
+        <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
+
       </div>
         <div>
         <form onSubmit={onSubmit}>
