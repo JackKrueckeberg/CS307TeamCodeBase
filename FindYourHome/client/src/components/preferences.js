@@ -380,6 +380,13 @@ export default function Create() {
 
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
+
+    navigate("/", { state: { loggedOut: true }, replace: true });
+  };
 
   const handleCity = async (value) => {
       for (var i = 0; i < results.length; i++) {
@@ -394,14 +401,28 @@ export default function Create() {
   }
 
   const navigate = useNavigate();
-  
 
   // This following section will display the form that takes the input from the user.
   return (
     // name, population, region, state, zip code, county, median income
     <div>
-        <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
-        <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+      <div class="navBar">
+
+        <div class="profiletooltip">
+            <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+            <span class="profiletooltiptext">View your profile page and make edits</span>
+        </div>
+        <div class="advancedtooltip">
+            <button className="advancedSearch" onClick={() => navigate("/view-city")}>City Search</button>
+            <span class="advancedtooltiptext">Search for cities by name</span>
+        </div>
+        <div class="discussiontooltip">
+            <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
+            <span class="discussiontooltiptext">View discussions about different cities</span>
+        </div>
+        <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
+
+      </div>
         <div>
         <form onSubmit={onSubmit}>
           <div className="padding" />

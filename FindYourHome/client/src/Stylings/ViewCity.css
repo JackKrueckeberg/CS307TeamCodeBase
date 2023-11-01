@@ -47,6 +47,151 @@ div.container {
     color: #555;
 }
 
+.profiletooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.profiletooltip .profiletooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.profiletooltip:hover .profiletooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.profilebtn {
+    visibility: visible;
+    background-color: rgb(199, 199, 199);
+    margin: 10px;
+}
+
+.profilebtn:hover {
+    background-color: rgb(145, 145, 145);
+}
+
+.discussiontooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.discussiontooltip .discussiontooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.discussiontooltip:hover .discussiontooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.discussionButton {
+    visibility: visible;
+    background-color: rgb(199, 199, 199);
+    margin: 10px;
+}
+
+.advancedtooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.advancedtooltip .advancedtooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.advancedtooltip:hover .advancedtooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.advancedSearch {
+    visibility: visible;
+    background-color: rgb(199, 199, 199);
+    margin: 10px;
+
+}
+
+.advancedSearch:hover {
+    background-color: rgb(145, 145, 145);
+}
+
+.logouttooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.logouttooltip .logouttooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    top: 80%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.logouttooltip:hover .logouttooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
+
+.logoutbtn {
+    visibility: visible;
+    background-color: rgb(255, 91, 91);
+    margin: 10px;
+}
+
+.logoutbtn:hover {
+    background-color: rgb(255, 0, 0);
+}
+
 .button-group {
     display: flex;
     gap: 15px;
@@ -113,10 +258,10 @@ button:hover {
     background-color: #ecf0f1;
 } */
 
-
 .fav_icon {
     scale: 5;
 }
+
 .confirmButton {
     background-color: white;
     color: black;
@@ -133,7 +278,6 @@ button:hover {
     background-color: #2980b9; /* Change the background color on hover */
     /* Additional styles for the button on hover */
   }
-  
 
 .errorMessage {
     font-size: 1.5rem; 
@@ -141,6 +285,7 @@ button:hover {
     margin-top: 20px;
     text-align: center; /* Centering the error message */
 }
+
 .verificationBanner {
     background-color: red;
     color: white;
@@ -148,8 +293,4 @@ button:hover {
     text-align: center;
     font-weight: bold;
     border-radius: 5px;
-}
-
-.logout {
-    background-color: rgb(255, 91, 91);
 }

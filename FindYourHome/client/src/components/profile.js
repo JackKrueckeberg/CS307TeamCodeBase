@@ -30,12 +30,24 @@ export default function Profile() {
 
     return (
         <div className="container">
-            <div className="nav-buttons">
-                <button className="viewCity-button" onClick={() => navigate('/view-city')}>Go to City Search</button>
-                <button className="preferences-button" onClick={() => navigate('/preferences')}>Go to Preferences</button>
-                <button className="logout" onClick={handleLogout}>Logout</button>
-                <button className="logout" onClick={() => navigate('/delete-account')}>Delete Account</button>
+            <div className="navBar">
+                
+                <div class="profiletooltip">
+                    <button className="profilebtn" onClick={() => navigate("/view-city")}>City Search</button>
+                    <span class="profiletooltiptext">Search for cities by name</span>
+                </div>
+                <div class="advancedtooltip">
+                    <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+                    <span class="advancedtooltiptext">Search based on attributes of cities</span>
+                </div>
+                <div class="discussiontooltip">
+                    <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
+                    <span class="discussiontooltiptext">View discussions about different cities</span>
+                </div>
+                <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
+
             </div>
+
             <div className="tabs-block">
                 <div onClick={() => handleTabChange(1)} className={`${tabVal === 1 ? 'tab active-tab' : 'tab'}`}> Account Info </div>
                 <div className={`${tabVal === 2 ? 'tab active-tab' : 'tab'}`} onClick={() => handleTabChange(2)}> Messages </div>
