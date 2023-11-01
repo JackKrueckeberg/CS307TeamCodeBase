@@ -1,123 +1,134 @@
-
 import React, { useState, useEffect } from "react";
 import { useUser } from '../../contexts/UserContext';
 import { useCity } from "../../contexts/CityContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
-export default function Replies() {
-    
+import styles from './replies.module.css';
+
+export default function Replies({ commentIndex, _selectedCity }) {
+  const { user: userProfile } = useUser();
+  const [replies, setReplies] = useState([]);
   const [discussion, setDiscussion] = useState({});
-  const [banned, setBanned] = useState(false)
-  const [username, setUsername] = useState("")
-  const { city: globalCity } = useCity();
-  const {user: userProfile } = useUser();
+  const [banned, setBanned] = useState(false);
+  const [replyContent, setReplyContent] = useState('');
+  const [currentUsername, setCurrentUsername] = useState('');
 
   useEffect(() => {
-    // Call the function to get favorite cities when the component mounts
-    user_data()
-}, []); 
+    getReplies();
+    loadUserData();
+  }, []); 
 
- 
+  async function getReplies() {
+    try {
+      const city_info = await fetch("http://localhost:5050/city_info/" + _selectedCity, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-  async function getDiscussion() {
+      const resp = await city_info.json();
+      const comments = resp.discussion.comments;
 
-    const city_info = await fetch("http://localhost:5050/city_info/" + globalCity.name, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).catch((error) => {
+      if (comments && comments[commentIndex] && comments[commentIndex].replies) {
+        setReplies(comments[commentIndex].replies);
+      }
+      
+      setDiscussion(resp.discussion);
+    } catch (error) {
       window.alert(error);
-      return;
-    });
-
-    const resp = await city_info.json();
-  
-
-      setDiscussion(resp.discusssion);
-
-    
-    
-    console.log(resp.discussion);
-
-    return resp.discussion;
-}
-
-async function user_data() {
-
-  const user_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).catch((error) => {
-    window.alert(error);
-    return;
-  });
-
-  const resp = await user_info.json();
-
-  setBanned(resp.strikes.is_banned);
-  setUsername(resp.username)
-
-
-  return resp;
-} 
-
-    
-async function reply(index, content) {
-  await user_data()
-  if (!banned) {
-  var curr = await getDiscussion()
-    var _reply = {
-        username: username,
-        content: content
     }
-  
-    curr.comments[index].replies.push(_reply)
-    await fetch("http://localhost:5050/city_info/" + globalCity.name, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({discussion: curr})
-    }).catch((error) => {
-      //window.alert(error);
-      console.log("error")
-      return;
-    });
-  } else {
-    window.alert("You are banned from commenting!")
   }
-}
 
-    async function removeReply(index) {
-      var curr = await getDiscussion()
-  
-      curr.comments[0].replies.splice(index, 1)
-      await fetch("http://localhost:5050/city_info/" + globalCity.name, {
+  async function loadUserData() {
+    try {
+      const user_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const resp = await user_info.json();
+      setBanned(resp.strikes.is_banned);
+      setCurrentUsername(resp.username);
+    } catch (error) {
+      window.alert(error);
+    }
+  }
+
+  async function reply(content) {
+    try {
+      if (!banned) {
+        const updatedReplies = [...replies, { username: currentUsername, content }];
+        setReplies(updatedReplies);
+
+        discussion.comments[commentIndex].replies.push({ username: currentUsername, content });
+
+        await fetch("http://localhost:5050/city_info/" + _selectedCity, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ discussion }),
+        });
+      } else {
+        window.alert("You are banned from commenting!");
+      }
+    } catch (error) {
+      console.error("Error replying:", error);
+    }
+  }
+
+  async function removeReply(index) {
+    try {
+      const updatedReplies = [...replies];
+      updatedReplies.splice(index, 1);
+      setReplies(updatedReplies);
+
+      const curr = { ...discussion };
+      curr.comments[commentIndex].replies.splice(index, 1);
+
+      await fetch("http://localhost:5050/city_info/" + _selectedCity, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({discussion: curr})
-      }).catch((error) => {
-        //window.alert(error);
-        console.log("error")
-        return;
+        body: JSON.stringify({ discussion: curr }),
       });
-
+    } catch (error) {
+      console.error("Error removing reply:", error);
     }
+  }
 
-    
-
-   
-
-return (
-  <div>
-      <button onClick={() => reply(0, "test reply")}>Reply</button>
-      <button onClick={() => removeReply(0)}>Remove Reply</button>
+  return (
+    <div className={styles.replyContainer}>
+      <h2>Replies:</h2>
+      {replies.map((reply, index) => (
+        <div key={index} className={styles.replyItem}>
+          <div className={styles.replyDetails}>
+            <span className={styles.replyUsername}>{reply.username}</span>
+          </div>
+          <p className={styles.replyContent}>{reply.content}</p>
+          {reply.username === currentUsername && (
+              <button onClick={() => removeReply(index)} className={styles.replyButton}>
+                Remove Reply
+              </button>
+            )}
+        </div>
+      ))}
+      <div>
+        <input
+          type="text"
+          value={replyContent}
+          onChange={(e) => setReplyContent(e.target.value)}
+          placeholder="Type your reply"
+          className={styles.replyInput}
+        />
+        <button onClick={() => reply(replyContent)} className={styles.replyButton}>
+          Reply
+        </button>
+      </div>
     </div>
-)
+  );
 }
-
