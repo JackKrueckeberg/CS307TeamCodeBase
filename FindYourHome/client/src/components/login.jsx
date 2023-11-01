@@ -215,10 +215,9 @@ export const Login = () => {
                     </label>
                 </div>
             </form>
-
-            <button type="button" onClick={() => setIsForgotPasswordPopupOpen(true)} className={styles.button}>Forgot Password</button>
-        
+            
             <button type="button" onClick={() => navigate("/createAccount")}className={styles.account}>Don't have an Account? Click here to Create one.</button>
+            <button type="button" onClick={() => setIsForgotPasswordPopupOpen(true)} className={styles.button}>Forgot Password</button>
 
             {isForgotPasswordPopupOpen && (
                 <div className="popup">

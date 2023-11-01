@@ -8,6 +8,7 @@ export default function DiscussNav() {
             <nav>
                 <ul>
                     <li><NavLink to="/view-city">Home</NavLink></li>
+                    <li><NavLink to="/preferences">Advanced Search</NavLink></li>
                     <li><NavLink to="/profile">Profile Page</NavLink></li>
                 </ul>
             </nav>

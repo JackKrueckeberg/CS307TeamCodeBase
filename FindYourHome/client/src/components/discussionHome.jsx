@@ -1,315 +1,355 @@
-import React, { useState, useEffect } from 'react';
-import styles from '../Stylings/discussionStyle.module.css';
-import DiscussNav from './discussNav.js';
-import { Queue } from "./recentDiscussionsQueue.js";
+import React, { useState, useEffect } from "react";
+import styles from "../Stylings/discussionStyle.module.css";
+import DiscussNav from "./discussNav.js";
+import { useUser } from "../contexts/UserContext";import { Queue } from "./recentDiscussionsQueue.js";
 import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
 import Autosuggest from 'react-autosuggest';
+import { useNavigate } from "react-router";
 
 const DiscussionHome = () => {
-    const [discussions, setDiscussions] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [city, setCity] = useState('');
-    const [error, setError] = useState('');
-    const [selectorChoice, setSelectorChoice] = useState("");
-    const [dropdownSelection, setDropdownSelection] = useState("");
+  const [discussions, setDiscussions] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [selectorChoice, setSelectorChoice] = useState("");
+  const [dropdownSelection, setDropdownSelection] = useState("");
     const [allCities, setAllCities] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());
-    
-    const getUniqueCitiesWithCasePreserved = (discussions) => {
-        const uniqueCitySet = new Set();
-        const uniqueCityList = [];
-    
-        discussions.forEach(discussion => {
-            const cityLowerCase = discussion.city.toLowerCase();
-            if (!uniqueCitySet.has(cityLowerCase)) {
-                uniqueCitySet.add(cityLowerCase);
-                uniqueCityList.push(discussion.city);
-            }
-        });
-    
-        return uniqueCityList;
-    };
-    
-    const uniqueCities = getUniqueCitiesWithCasePreserved(discussions);
+    const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());  const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState("");
+  const [error, setError] = useState("");
 
-    const capitalizeFirstLetter = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  // User Stuff
+  const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  const { user: userProfile } = useUser(); // the id of the current logged in user
+  const [user, setInfo] = useState(
+    storedSesUser || storedLocUser || userProfile
+  );
+
+  const navigate = useNavigate();
+
+  // Helper function to fetch cities
+  const fetchCities = async () => {
+    try {
+      const response = await fetch(`http://localhost:5050/city_info`, {
+        headers: { "Content-Type": "application/json" },
+      });
+      const citiesArray = await response.json();
+      if (response.ok) {
+        const cityNames = citiesArray.map((city) => city.name);
+        setCities(cityNames);
+      } else {
+        console.error("Failed to fetch cities:", citiesArray.error);
+      }
+    } catch (error) {
+      console.error("Error fetching cities:", error);
     }
-    
-    const handleCancel = () => {
-        setShowForm(false);  // Hide the form
-        setError('');        // Clear any previous errors
-        setTitle('');        // Clear the title
-        setContent('');      // Clear the content
-        setCity('');         // Clear the city
-        setDropdownSelection('');
-        setSelectorChoice('');
-    };
+  };
 
-    const userPost = {
-        title: title,
-        city: city,
-        content: content,
-        selectorChoice: selectorChoice,
-        dropdownSelection: dropdownSelection
-    };
+  const handleCancel = () => {
+    setShowForm(false);
+    setError("");
+    setTitle("");
+    setContent("");
+    setDropdownSelection("");
+    setSelectorChoice("");
+  };
 
-    const handleSubmit = async () => {
-        try {
-            // Send a POST request to the server
-            const response = await fetch("http://localhost:5050/discussionPost/newDiscussion", { 
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(userPost)
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
 
-            });
-    
-            const data = await response.json();
-    
-            if (response.status === 200) {
-                console.log(data.message);
-                setDiscussions([...discussions, data.discussion]);
-                handleQueueDiscussion(data.discussion);
-                setShowForm(false);
-            } else {
-                setError("Failed to add discussion. " + data.error);
-            }
-    
-        } catch (error) {
-            console.error("There was an error posting the discussion:", error);
+    navigate("/", { state: { loggedOut: true }, replace: true });
+  };
+
+  // Helper function to fetch discussions
+  const fetchDiscussions = async (city) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5050/city_info/${encodeURIComponent(city)}`
+      );
+      const data = await response.json();
+      if (response.ok) {
+        const sortedComments = (data.discussion.comments || []).sort(
+          (a, b) => b.date - a.date
+        );
+        setDiscussions(sortedComments);
+      } else {
+        console.error(
+          "Failed to fetch discussions for the selected city:",
+          data.error
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching discussions:", error);
+    }
+  };
+
+  // useEffect for fetching cities
+  useEffect(() => {
+    fetchCities();
+    console.log("first useEffect");
+  }, []);
+
+  // useEffect for fetching discussions
+  useEffect(() => {
+    if (selectedCity) {
+      fetchDiscussions(selectedCity);
+      console.log("Second useEffect");
+    }
+  }, [selectedCity]);
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    let missingFields = [];
+
+    if (!title) missingFields.push("Title of Post");
+    if (!selectorChoice) missingFields.push("Post as");
+    if (!dropdownSelection) missingFields.push("Discussion Category");
+    if (!content) missingFields.push("Thoughts");
+
+    if (missingFields.length) {
+      setError(
+        `Please fill out the following fields: ${missingFields.join(", ")}`
+      );
+      return;
+    }
+    const encodedCity = encodeURIComponent(selectedCity);
+    try {
+      // Get the current discussions
+      const responseGet = await fetch(
+        `http://localhost:5050/city_info/${encodedCity}`
+      );
+      const data = await responseGet.json();
+      if (!responseGet.ok) throw new Error("Failed to get discussions");
+
+      let currentDiscussion = data.discussion || {};
+      currentDiscussion.comments = currentDiscussion.comments || [];
+      currentDiscussion.comments.push({
+        title,
+        content,
+        selectorChoice,
+        category: dropdownSelection,
+        city: selectedCity,
+        numFlags: 0,
+        numLikes: 0,
+        date: Date.now(),
+        replies: []
+      });
+
+      // Now update the discussions with the new comment
+      const responsePatch = await fetch(
+        `http://localhost:5050/city_info/${encodedCity}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ discussion: currentDiscussion }),
         }
-    };
+      );
 
-    const handleQueueDiscussion = (discussion) => {
-        console.log("discussion queueing");
-        // Check if there's a valid ??? DISCUSSION ??? to enqueue
-        if (discussion) {
-            // Enqueue the city name to the recent cities queue
-            const updatedQueue = recentDiscussionsQueue.enqueue(discussion);
-            setRecentDiscussionsQueue(updatedQueue);
-        } else {
-            console.warn("No valid discussion selected to queue.");
-        }
-    };
+      if (responsePatch.ok) {
+        // Place the new comment at the beginning of the discussions array
+        setDiscussions((prev) => [
+          currentDiscussion.comments[currentDiscussion.comments.length - 1],
+          ...prev,
+        ]);
+      } else {
+        console.error("Failed to update discussion");
+      }
+    } catch (error) {
+      console.error("Error in submitting discussion:", error);
+    } finally {
+      setShowForm(false);
+      setTitle("");
+      setContent("");
+      setDropdownSelection("");
+      setSelectorChoice("");
+    }
+  };
 
-    const handleNewDiscussion = () => {
-        handleQueueDiscussion(city);
-        setShowForm(true);
-    };
-    
-    useEffect(() => {
-        async function fetchDiscussions() {
-            try {
-                const response = await fetch("http://localhost:5050/discussionPost/getDiscussions");
-                const data = await response.json();
-    
-                if (response.status === 200) {
-                    setDiscussions(data);
-                } else {
-                    console.error("Failed to fetch discussions:", data.error);
-                }
-    
-            } catch (error) {
-                console.error("Error fetching discussions:", error);
-            }
-        }
-        fetchDiscussions();
+  return (
+    <div className={styles.DiscussionHome}>
+      <h2>Discussions</h2>
 
-        async function fetchData() {
-            try {
-                const response = await fetch(`http://localhost:5050/record/cities_full_2`);
-                if (!response.ok) {
-                    const message = `An error occurred: ${response.statusText}`;
-                    window.alert(message);
-                    return;
-                }
+      {!showForm && 
+        <div className="navBar">
+                
+          <div class="profiletooltip">
+              <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+              <span class="profiletooltiptext">View your profile page and make edits</span>
+          </div>
+          <div class="discussiontooltip">
+              <button className="discussionButton" onClick={() => navigate("/view-city")}>City Search</button>
+              <span class="discussiontooltiptext">Search for cities by name</span>
+          </div>
+          <div class="advancedtooltip">
+              <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+              <span class="advancedtooltiptext">Search based on attributes of cities</span>
+          </div>
+          <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
-                const cities = await response.json();
-                setAllCities(cities);
-            } catch (error) {
-                console.error("There was an error fetching the cities", error);
-            }
-        }
-
-        fetchData();
-    }, []);
-
-    const handleClear = () => {
-        setCity(null);
-        setShowResults(false);
-        setSearchTerm("");
-    };
-
-    const handleInputChange = (e) => {
-        setSearchTerm(e.target.value);
-        setCity(e.target.value);
-        setIsDropdownOpen(true);
-        console.log(city);
-    };
-
-    const onSuggestionsFetchRequested = ({ value }) => {
-        if (value) {
-            const inputValue = value.trim().toLowerCase();
-            const matchingCities = allCities.filter((city) =>
-                city.name.toLowerCase().startsWith(inputValue)
-            );
-
-            setSuggestions(matchingCities.map((city) => city.name).slice(0, 10));
-        } else {
-            setSuggestions([]);
-        }
-    };
-
-    const onSuggestionsClearRequested = () => {
-        setSuggestions([]);
-    };
-
-    return (
-        <div className={styles.DiscussionHome}>
-            <h2>Discussions</h2>
-
-            {!showForm && <DiscussNav />}
-            
-            {error && <div className="error">{error}</div>}
-            {!showForm &&
-            <div>
-                <span>Find a City</span>
-                <Autosuggest
-                    suggestions={suggestions}
-                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                    onSuggestionsClearRequested={onSuggestionsClearRequested}
-                    getSuggestionValue={(suggestion) => suggestion}
-                    renderSuggestion={(suggestion) => (
-                        <div
-                            key={suggestion}
-                            className="suggestion"
-                        >
-                            {suggestion}
-                        </div>
-                    )}
-                    inputProps={{
-                        type: "text",
-                        placeholder: "Enter a city",
-                        value: searchTerm,
-                        onChange: handleInputChange,
-                    }}
-                />
-            </div>}
-            {!showForm && <div className="recentlyViewedDiscussions">
-                <RecentDiscussionsQueue queue={recentDiscussionsQueue}/>
-            </div>}
-            {!showForm && <button onClick={() => handleNewDiscussion()} className={styles.createNew}>Create New Discussion</button>}
-            {!showForm && 
-                <select
-                    className={styles.filter} 
-                    value={city} 
-                    onChange={(e) => setCity(e.target.value)}>
-                    <option value="">All Cities</option>
-                    {uniqueCities.map((uniqueCity, index) => (
-                         <option key={index} value={uniqueCity}>{capitalizeFirstLetter(uniqueCity)}</option>
-                    ))}
-                </select>
-            }
-            <div className={`${styles.threadContainer} ${showForm ? styles.formActive : ''}`}>
-            {!showForm && <div className={styles.commentsBox}>
-                {discussions.slice().reverse().filter(discussion => !city || discussion.city.toLowerCase() === city.toLowerCase()).map((discussion, index) => (
-                    <div key={index} className={styles.discussionPost}>
-                        <div className={styles.authorInfo}>
-                            <div className={styles.fakeAvatar}></div>
-                            <h3>{discussion.authorType === "Your Username" ? "Username" : "Anonymous"}</h3>
-                        </div>
-                        <div className={styles.postContent}>
-                            <h4 className={styles.postTitle}>{discussion.title}</h4>
-                            <p>{discussion.content}</p>
-                            <p className={styles.metadata}>City: {discussion.city} | Category: {discussion.category}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>}
         </div>
+      }
 
+      {!showForm && error && <div className="error">{error}</div>}
 
+      {!showForm && (
+        <button
+          onClick={() => setShowForm(true)}
+          className={styles.createNew}
+          disabled={!selectedCity}
+        >
+          Create New Discussion
+        </button>
+      )}
 
+      {!showForm && (
+        <select
+          className={styles.filter}
+          value={selectedCity}
+          onChange={(e) => setSelectedCity(e.target.value)}
+        >
+          <option value="">Select a City</option>
+          {(cities || []).map((city, index) => (
+            <option key={index} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
+      )}
 
-            {showForm && (
-                <div className={styles.discussionForm}>
-                    <h3>Discuss {city}</h3>
-                    <label>
-                        <span>Title of Discussion</span>
-                        <input 
-                            type="text" 
-                            value={title} 
-                            onChange={(e) => setTitle(e.target.value)} 
-                            placeholder="Enter the title"
-                            className={styles.inputField}
-                            required
-                        />
-                    </label>
-                    <label>
-                        <span>Post as:</span>
-                        <div className={styles.choiceGroup}>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="Anonymous"
-                                    required
-                                    checked={selectorChoice === "Anonymous"}
-                                    onChange={(e) => setSelectorChoice(e.target.value)}
-                                />
-                                <span>Anonymous</span>
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="Your Username"
-                                    required
-                                    checked={selectorChoice === "Your Username"}
-                                    onChange={(e) => setSelectorChoice(e.target.value)}
-                                />
-                                <span>Username</span>
-                            </label>
-                        </div>
-                    </label>
-                    <label>
-                        <span>Select a topic:</span>
-                        <select
-                            value={dropdownSelection}
-                            onChange={(e) => setDropdownSelection(e.target.value)} required>
-                            <option value="" disabled selected>Select an option</option>
-                            <option value="General">General</option>
-                            <option value="Crime">Crime</option>
-                            <option value="Dining">Dining</option>
-                            <option value="Things To Do">Things to Do</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </label>
-                    <label>
-                        <span>Tell us your thoughts...</span>
-                        <textarea 
-                            value={content} 
-                            onChange={(e) => setContent(e.target.value)} 
-                            placeholder="Share your thoughts"
-                            className={styles.inputField}
-                            required
-                        ></textarea>
-                    </label>
-    
-                    <div className={styles.button}>
-                        <button onClick={handleSubmit} className={styles.submit}>Submit</button>
-                        <button onClick={() => {setShowForm(false); handleCancel();}} className={styles.cancel}>Cancel</button>
-                    </div>
+      <div
+        className={`${styles.threadContainer} ${
+          showForm ? styles.formActive : ""
+        }`}
+      >
+        {!showForm && selectedCity && (
+          <div className={styles.commentsBox}>
+            {(discussions || []).map((discussion, index) => (
+              <div key={index} className={styles.discussionPost}>
+                <div className={styles.authorInfo}>
+                  {/* Assuming discussion has authorType, adjust as needed */}
+                  <div className={styles.fakeAvatar}></div>
+                  <h3>
+                    {discussion.selectorChoice === "Your Username"
+                      ? user.username
+                      : "Anonymous"}
+                  </h3>
                 </div>
-            )}
+                <div className={styles.postContent}>
+                  <h4 className={styles.postTitle}>{discussion.title}</h4>
+                  <p>{discussion.content}</p>
+                  {/* Assuming discussion has city and category, adjust as needed */}
+                  <p className={styles.metadata}>
+                    City: {discussion.city} | Category: {discussion.category}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className={styles.parentErr}>
+        {showForm && error && <div className={styles.errorMsg}>{error}</div>}
+      </div>
+
+      {showForm && (
+        <div className={styles.discussionForm}>
+          <h3>Create New Discussion</h3>
+
+          <label>
+            <span>Title of Post:</span>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter the title"
+              className={styles.inputField}
+              required
+            />
+          </label>
+
+          <label>
+            <span>Post as:</span>
+            <div className={styles.choiceGroup}>
+              <label>
+                <input
+                  type="radio"
+                  value="Anonymous"
+                  required
+                  checked={selectorChoice === "Anonymous"}
+                  onChange={(e) => setSelectorChoice(e.target.value)}
+                />
+                <span>Anonymous</span>
+              </label>
+
+              <label>
+                <input
+                  type="radio"
+                  value="Your Username"
+                  required
+                  checked={selectorChoice === "Your Username"}
+                  onChange={(e) => setSelectorChoice(e.target.value)}
+                />
+                <span>Username</span>
+              </label>
+            </div>
+          </label>
+
+          <label>
+            <span>Please Select a Discussion Category:</span>
+            <select
+              value={dropdownSelection}
+              onChange={(e) => setDropdownSelection(e.target.value)}
+              required
+            >
+              <option value="" disabled selected>
+                Select an option
+              </option>
+              <option value="General">General</option>
+              <option value="Crime">Crime</option>
+              <option value="Dining">Dining</option>
+              <option value="Things To Do">Things to Do</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Tell us about your Thoughts:</span>
+            <textarea
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Share your thoughts"
+              className={styles.inputField}
+              required
+            ></textarea>
+          </label>
+
+          <div className={styles.button}>
+            <button onClick={handleSubmit} className={styles.submit}>
+              Submit
+            </button>
+            <button
+              onClick={() => {
+                setShowForm(false);
+                handleCancel();
+              }}
+              className={styles.cancel}
+            >
+              Cancel
+            </button>
+          </div>
         </div>
-    );        
+      )}
+    </div>
+  );
 };
 
 export default DiscussionHome;
