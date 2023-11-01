@@ -136,3 +136,19 @@ body {
     border: none;
     margin-top: 5px;
 }
+.errorMsg {
+    color: red;
+    padding: 10px;
+    max-width: fit-content;
+    margin-bottom: -10px;
+    text-align: center;
+    border-radius: 20px;
+    background-color: rgb(255, 91, 91);
+    color: white;
+  }
+  .parentErr{
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+  }
+  

@@ -20,7 +20,7 @@ const DiscussionHome = () => {
 
   const { user: userProfile } = useUser(); // the id of the current logged in user
   const [user, setInfo] = useState(
-    storedSesUser || storedLocUser || userProfile || initialInfo
+    storedSesUser || storedLocUser || userProfile
   );
 
   // Helper function to fetch cities
@@ -89,6 +89,19 @@ const DiscussionHome = () => {
 
   // Handle form submission
   const handleSubmit = async () => {
+    let missingFields = [];
+
+    if (!title) missingFields.push("Title of Post");
+    if (!selectorChoice) missingFields.push("Post as");
+    if (!dropdownSelection) missingFields.push("Discussion Category");
+    if (!content) missingFields.push("Thoughts");
+
+    if (missingFields.length) {
+      setError(
+        `Please fill out the following fields: ${missingFields.join(", ")}`
+      );
+      return;
+    }
     const encodedCity = encodeURIComponent(selectedCity);
     try {
       // Get the current discussions
@@ -146,10 +159,14 @@ const DiscussionHome = () => {
 
       {!showForm && <DiscussNav />}
 
-      {error && <div className="error">{error}</div>}
+      {!showForm && error && <div className="error">{error}</div>}
 
       {!showForm && (
-        <button onClick={() => setShowForm(true)} className={styles.createNew}>
+        <button
+          onClick={() => setShowForm(true)}
+          className={styles.createNew}
+          disabled={!selectedCity}
+        >
           Create New Discussion
         </button>
       )}
@@ -199,6 +216,10 @@ const DiscussionHome = () => {
             ))}
           </div>
         )}
+      </div>
+
+      <div className={styles.parentErr}>
+        {showForm && error && <div className={styles.errorMsg}>{error}</div>}
       </div>
 
       {showForm && (
