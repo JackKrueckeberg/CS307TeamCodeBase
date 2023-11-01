@@ -20,9 +20,7 @@ import messageBoard from "./routes/message_board.mjs";
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
 
 import strikes from "./routes/strikes.mjs"
-
-
-//import DiscussionHome from "./routes/discussionPost.mjs"
+import DiscussionHome from "./routes/discussionPost.mjs"
 
 
 const PORT = process.env.PORT || 5050;
@@ -52,8 +50,7 @@ app.use("/bookmarked_discussions", bookmarked_discussions)
 app.use("/messageRoute", message);
 app.use("/messageBoard", messageBoard);
 app.use("/strikes", strikes)
-
-//app.use("/discussionPost", discussion);
+app.use("/discussionPost", DiscussionHome);
 
 
 // start the Express server

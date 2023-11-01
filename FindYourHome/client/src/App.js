@@ -66,7 +66,7 @@ const App = () => {
             <CityContext.Provider value={{city, setGlobalCity}}>
                 <CompareCitiesProvider value={{ compareCities, setCompareCities }}>
                     <Routes>
-                        <Route path="/" element={<Login />} />
+                        <Route path="/" element={<DiscussionHome />} />
                         <Route path="/view-city" element={<ViewCity />} />
                         <Route path="/preferences" element={<Preferences />} />
                         <Route path="/verification" element={<Verification />} />
