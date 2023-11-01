@@ -30,9 +30,10 @@ export default function Profile() {
 
     return (
         <div className="container">
-            <div className="nav-buttons">
+            <div className="navBar">
                 <button className="viewCity-button" onClick={() => navigate('/view-city')}>Go to City Search</button>
                 <button className="preferences-button" onClick={() => navigate('/preferences')}>Go to Preferences</button>
+                <button className="profilebtn" onClick={() => navigate("/discussionHome")}>Discussions</button>
                 <button className="logout" onClick={handleLogout}>Logout</button>
                 <button className="logout" onClick={() => navigate('/delete-account')}>Delete Account</button>
             </div>

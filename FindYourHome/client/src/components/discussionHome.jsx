@@ -4,6 +4,7 @@ import DiscussNav from "./discussNav.js";
 import { useUser } from "../contexts/UserContext";import { Queue } from "./recentDiscussionsQueue.js";
 import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
 import Autosuggest from 'react-autosuggest';
+import { useNavigate } from "react-router";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -30,6 +31,8 @@ const DiscussionHome = () => {
     storedSesUser || storedLocUser || userProfile
   );
 
+  const navigate = useNavigate();
+
   // Helper function to fetch cities
   const fetchCities = async () => {
     try {
@@ -55,6 +58,14 @@ const DiscussionHome = () => {
     setContent("");
     setDropdownSelection("");
     setSelectorChoice("");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
+
+    navigate("/", { state: { loggedOut: true }, replace: true });
   };
 
   // Helper function to fetch discussions
@@ -167,6 +178,7 @@ const DiscussionHome = () => {
       <h2>Discussions</h2>
 
       {!showForm && <DiscussNav />}
+      <button className="logout" onClick={handleLogout}>Logout</button>
 
       {!showForm && error && <div className="error">{error}</div>}
 
