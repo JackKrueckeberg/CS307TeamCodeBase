@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "../Stylings/discussionStyle.module.css";
 import DiscussNav from "./discussNav.js";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../contexts/UserContext";import { Queue } from "./recentDiscussionsQueue.js";
+import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
+import Autosuggest from 'react-autosuggest';
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -10,7 +12,12 @@ const DiscussionHome = () => {
   const [content, setContent] = useState("");
   const [selectorChoice, setSelectorChoice] = useState("");
   const [dropdownSelection, setDropdownSelection] = useState("");
-  const [cities, setCities] = useState([]);
+    const [allCities, setAllCities] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [showResults, setShowResults] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());  const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [error, setError] = useState("");
 
