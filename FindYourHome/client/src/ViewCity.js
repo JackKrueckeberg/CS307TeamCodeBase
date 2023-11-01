@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import CityPage from "./components/citypage"
 import { useCity } from "./contexts/CityContext";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
@@ -116,12 +118,12 @@ const ViewCity = () => {
         try {
             const userEmail = "user2@example.com"; // Replace with the correct email
     
-            const response = await fetch(`http://localhost:5050/achievements/user2@example.com/city_searches`, {
+            const response = await fetch(`http://localhost:5050/achievements/${userEmail}/${achievementName}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     action: "incrementAchievement"
                 })
             });
@@ -133,10 +135,18 @@ const ViewCity = () => {
             const data = await response.json();
             console.log(data);
     
+            // Check if achievement count is above 10
+            if (data.count && data.count > 10) {
+                // Show the toast notification
+                toast.success(`Congrats on reaching ${achievementName}!`);
+            }
+    
         } catch (error) {
             console.error("Error incrementing achievement:", error);
         }
     };
+    
+    
     
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
@@ -186,7 +196,7 @@ const ViewCity = () => {
                 matchedCity.lat
             );
 
-            incrementAchievement("city_searches");
+            incrementAchievement("City-Explorer");
             setImageUrl(img);
             setCityModel(cityModel);
         }
@@ -347,6 +357,8 @@ const ViewCity = () => {
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
+
+            <ToastContainer />
         </div>
 
     );
