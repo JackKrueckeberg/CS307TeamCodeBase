@@ -163,3 +163,18 @@ body {
     align-items: center; 
   }
   
+  .profileCircle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .profileCircle img {
+    max-width: 100%;
+    height: auto;
+  }
+  
