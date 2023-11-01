@@ -1,0 +1,42 @@
+/* replies.module.css */
+
+/* Container for the replies */
+.replyContainer {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+/* Individual reply item */
+.replyItem {
+  margin-bottom: 15px;
+}
+
+/* Username */
+.replyUsername {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* Content of the reply */
+.replyContent {
+  margin: 5px 0;
+}
+
+/* Remove Reply button */
+.replyButton {
+  font-size: 0.9em;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.replyButton:hover {
+  background-color: #ddd;
+}

@@ -7,6 +7,8 @@ import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
 import Autosuggest from "react-autosuggest";
 import defaultImage from "../Stylings/Default_Profile_Picture.png";
 import { useNavigate } from "react-router";
+import Replies from "./replies/replies";
+import AddReply from "./replies/addReply";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -367,6 +369,7 @@ const DiscussionHome = () => {
                           City: {discussion.city} | Category:{" "}
                           {discussion.category}
                         </p>
+                        <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                       </div>
                     </div>
                   ))
