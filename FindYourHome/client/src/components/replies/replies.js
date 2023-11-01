@@ -8,12 +8,13 @@ export default function Replies() {
     
   const [discussion, setDiscussion] = useState({});
   const [banned, setBanned] = useState(false)
+  const [username, setUsername] = useState("")
   const { city: globalCity } = useCity();
   const {user: userProfile } = useUser();
 
   useEffect(() => {
     // Call the function to get favorite cities when the component mounts
-    check_banned()
+    user_data()
 }, []); 
 
  
@@ -42,7 +43,7 @@ export default function Replies() {
     return resp.discussion;
 }
 
-async function check_banned() {
+async function user_data() {
 
   const user_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
     method: "GET",
@@ -57,19 +58,23 @@ async function check_banned() {
   const resp = await user_info.json();
 
   setBanned(resp.strikes.is_banned);
+  setUsername(resp.username)
 
 
-
-  return resp.strikes.is_banned;
+  return resp;
 } 
 
     
 async function reply(index, content) {
-  await check_banned()
+  await user_data()
   if (!banned) {
   var curr = await getDiscussion()
+    var _reply = {
+        username: username,
+        content: content
+    }
   
-    curr.comments[index].replies.push(content)
+    curr.comments[index].replies.push(_reply)
     await fetch("http://localhost:5050/city_info/" + globalCity.name, {
       method: "PATCH",
       headers: {
