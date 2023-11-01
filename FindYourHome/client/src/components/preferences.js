@@ -406,7 +406,7 @@ export default function Create() {
   return (
     // name, population, region, state, zip code, county, median income
     <div>
-      <div className="navBar">
+      <div class="navBar">
         <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
         <button className="viewCity" onClick={() => navigate("/view-city")}>City Search</button>
         <button className="profilebtn" onClick={() => navigate("/discussionHome")}>Discussions</button>
