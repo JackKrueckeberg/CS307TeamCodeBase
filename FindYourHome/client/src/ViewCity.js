@@ -94,9 +94,9 @@ const ViewCity = () => {
 
     async function addFavorite(favs) {
 
-        console.log('adding favorite');
+        // console.log('adding favorite');
 
-        console.log(favs);
+        // console.log(favs);
 
         const newFavorite = {
             city: city.name
@@ -135,10 +135,9 @@ const ViewCity = () => {
             }
 
             const data = await response.json();
-            console.log(data);
 
             // Check if achievement count is above 10
-            if (data.count && data.count > 10) {
+            if (data.count && data.count === 10) {
                 // Show the toast notification
                 toast.success(`Congrats on reaching ${achievementName}!`);
             }
@@ -203,7 +202,7 @@ const ViewCity = () => {
             matchedCity.lon,
             matchedCity.lat
         );
-        console.log(cityModel);
+
         localStorage.setItem('selectedCity', JSON.stringify(cityModel));
 
         incrementAchievement("City-Explorer");

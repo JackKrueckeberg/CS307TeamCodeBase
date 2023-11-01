@@ -19,7 +19,7 @@ const RecentCitiesQueue = ({ queue }) => {
         const filteredCities = cities.filter(city => city); // Ensure no null or undefined values
         localStorage.setItem('compareCities', JSON.stringify(filteredCities));
     };
-    
+
 
     const compareCities = getCompareCitiesFromLocalStorage();
 
