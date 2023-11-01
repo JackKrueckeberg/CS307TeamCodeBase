@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./bookmarks.css"
 import { useUser } from '../../contexts/UserContext';
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 
-export default function Bookmarks() {
+export default function removeBookmark() {
     
     const [bookmarks, setBookmarks] = useState([]);
     const {user: userProfile } = useUser();
@@ -41,26 +40,42 @@ export default function Bookmarks() {
 
 
 
+
   
+  
+
+
+
+
+
+    async function removeBookmark(bookmark) {
+        var newBookmarks = [];
+        for (var i = 0; i < bookmarks.length; i++) {
+            if (bookmarks[i] != bookmark) {
+                newBookmarks.push(bookmarks[i]);
+            }
+        }
+
+        await fetch("http://localhost:5050/bookmarked_discussions/user@example.com", {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({bookmarked_discussions: newBookmarks})
+          }).catch((error) => {
+            window.alert(error);
+            return;
+          });
+
+        setBookmarks(newBookmarks);
+    }
     
+    console.log(bookmarks);
 
-
-  
-
-    return (
-      
-      <div className="sidebar">
-          <h2>Bookmarked Discussions</h2>
-          <ul>
-              {bookmarks.length === 0 ? (
-                  <li>No Bookmarks</li>
-              ) : (
-                  bookmarks.map((bookmark, index) => (
-                      <li key={index}>{bookmark}</li>
-                  ))
-              )}
-          </ul>
-      </div>
-  );
+return (
+  <div>
+      <button onClick={() => removeBookmark("new_discussion")}>Remove Bookmark</button>
+    </div>
+)
 }
 

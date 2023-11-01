@@ -3,6 +3,7 @@ import '../Stylings/profile.css';
 import { useNavigate } from 'react-router-dom';
 import AccountInfo from "./accountInfo.js";
 import MessageList from "./messageList";
+import Bookmarks from "./saved_discussions/bookmarks";
 
 export default function Profile() {
 
@@ -47,6 +48,7 @@ export default function Profile() {
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
             </div>
+            
 
             <div className="tabs-block">
                 <div onClick={() => handleTabChange(1)} className={`${tabVal === 1 ? 'tab active-tab' : 'tab'}`}> Account Info </div>
@@ -54,6 +56,9 @@ export default function Profile() {
             </div>
 
             <div className="contents">
+            <div className="bookmarks">
+                    <p2><Bookmarks/></p2>
+                </div>
                 
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <AccountInfo />
@@ -62,6 +67,7 @@ export default function Profile() {
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
                     <p2><MessageList/></p2>
                 </div>
+                
             </div>
         </div>
     )

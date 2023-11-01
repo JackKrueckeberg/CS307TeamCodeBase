@@ -18,6 +18,7 @@ import get_tweet from "./routes/get_tweet.mjs";
 import message from "./routes/messageRoute.mjs";
 import messageBoard from "./routes/message_board.mjs";
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
+import achievementsData from "./routes/achievementsData.mjs";
 
 import strikes from "./routes/strikes.mjs"
 import DiscussionHome from "./routes/discussionPost.mjs"
@@ -50,7 +51,13 @@ app.use("/bookmarked_discussions", bookmarked_discussions)
 app.use("/messageRoute", message);
 app.use("/messageBoard", messageBoard);
 app.use("/strikes", strikes)
+
+app.use("/achievements", achievementsData);
+
+//app.use("/discussionPost", discussion);
+
 app.use("/discussionPost", DiscussionHome);
+
 
 
 // start the Express server
