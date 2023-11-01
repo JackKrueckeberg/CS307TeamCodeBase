@@ -112,31 +112,31 @@ const ViewCity = () => {
 
     }
 
-    async function incrementSearchAchievement() {
-        let email = "user2@example.com"; //mock email
-    
+    const incrementAchievement = async (achievementName) => {
         try {
-            const updateAchievementData = {
-                achievementName: "city_searches",
-                incrementValue: 1
-            };
+            const userEmail = "user2@example.com"; // Replace with the correct email
     
-            const response = await fetch(`http://localhost:5050/achievements/${email}`, {
-                method: "PATCH",
+            const response = await fetch(`http://localhost:5050/achievements/user2@example.com/city_searches`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(updateAchievementData)
+                body: JSON.stringify({ 
+                    action: "incrementAchievement"
+                })
             });
     
             if (!response.ok) {
-                console.error(`Error while updating the achievement: ${response.statusText}`);
+                throw new Error(`HTTP error! Status: ${response.status}`);
             }
     
+            const data = await response.json();
+            console.log(data);
+    
         } catch (error) {
-            console.error("There was an error updating the achievement", error);
+            console.error("Error incrementing achievement:", error);
         }
-    }
+    };
     
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
@@ -186,7 +186,7 @@ const ViewCity = () => {
                 matchedCity.lat
             );
 
-            incrementSearchAchievement();
+            incrementAchievement("city_searches");
             setImageUrl(img);
             setCityModel(cityModel);
         }
