@@ -3,10 +3,7 @@ import { useUser } from '../contexts/UserContext';
 import '../Stylings/messageBoard.css';
 import Modal from "react-modal";
 
-import io from "socket.io-client";
-
 export default function MessageList() {
-    //const socket = io.connect("http://localhost:5050");
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const [messageBoards, setMessageBoards] = useState([]);
     const [messages, setMessages] = useState([]);
@@ -24,27 +21,31 @@ export default function MessageList() {
     const [recipient, setRecipient] = useState('');
     const [inputRecipient, setInputRecipient] = useState('');
     const messageInputRef = useRef(); // Reference to the message input field
+    const messagesRef = useRef(null); // reference to the messages in a message board
     const [newMessage, setNewMessage] = useState(""); // State to store the new message
     const [newBoardMessages, setNewBoardMessages] = useState([]);
+
+    const [sentMessage, setSentMessage] = useState(false); // Boolean to keep track of new messages
 
     useEffect(() => {
         fetchUsername(user._id);
         fetchUserMessageBoards();
 
-        /*const intervalId = setInterval(() => {
-            // Code to run every 10 seconds
+        const intervalId = setInterval(() => {
             fetchUserMessageBoards();
+            console.log(sentMessage);
+            if (sentMessage) {
+                fetchUserMessages(selectedMessageBoard);
+                setSentMessage(false);
+            }
 
           }, 5000); // 5000 milliseconds = 5 seconds
       
           // The cleanup function to clear the interval when the component unmounts
           return () => {
             clearInterval(intervalId);
-          };*/
-
-        /*socket.on("receive_message", (data) => {
-            fetchUserMessageBoards();
-        })*/
+            setSelectedMessageBoard(null);
+          };
 
     }, []);
 
@@ -159,8 +160,6 @@ export default function MessageList() {
             setInputRecipient('');
         } else {
 
-            //socket.emit("new_message_board", recipient);
-
             // Create a new message board and add it to the messageBoards state
             setNewBoardMessages([...newBoardMessages, `Hello! ${username} wants to start a conversation!`]);
 
@@ -219,7 +218,12 @@ export default function MessageList() {
         setSelectedMessageBoard(messageBoard);
         setRecipient(messageBoard.messagesWith);
         fetchUserMessages(messageBoard);
+        
         console.log(messages);
+
+        if (messagesRef.current) {
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+        }
     }
 
     const updateMessageBoard = async (messageBoard) => {
@@ -255,8 +259,6 @@ export default function MessageList() {
                 timeSent: new Date(),
             };
 
-            //await socket.emit("send_message", messageData);
-
             const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
                 method: "POST",
                 headers: {
@@ -273,7 +275,8 @@ export default function MessageList() {
             if (response.status === 200) {             
                 setNewMessage(""); // Clear the input field
                 messageInputRef.current.value = "";
-                //window.location.reload();
+                setSentMessage(true);
+                window.location.reload();
                 return;
             } else {
                 alert("something went wrong");
@@ -335,7 +338,7 @@ export default function MessageList() {
                 <div>
                     <div className="message-board-container">
                         <h2>Messages with<span>{selectedMessageBoard.messagesWith}</span></h2>
-                        <ul className="message-board scrollable">
+                        <ul className="message-board scrollable" ref={messagesRef}>
                             {messages.map((message, index) => (
                                 <li
                                     key={index}
@@ -359,7 +362,7 @@ export default function MessageList() {
                                 ref={messageInputRef}
                                 onChange={(e) => setNewMessage(e.target.value)}
                             />
-                            <button onClick={sendMessage}>Send</button>
+                            <button onClick={() => sendMessage()}>Send</button>
                         </div>
                     </div>
                     {/* Add a button or link to go back to the list of message boards */}
