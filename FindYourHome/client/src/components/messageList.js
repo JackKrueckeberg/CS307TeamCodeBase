@@ -24,9 +24,6 @@ export default function MessageList() {
     const messagesRef = useRef(null); // reference to the messages in a message board
     const [newMessage, setNewMessage] = useState(""); // State to store the new message
     const [newBoardMessages, setNewBoardMessages] = useState([]);
-    const [notification, setNotification] = useState('');
-
-    const [sentMessage, setSentMessage] = useState(false); // Boolean to keep track of new messages
 
     useEffect(() => {
         fetchUsername(user._id);
@@ -81,11 +78,6 @@ export default function MessageList() {
 
             if (resp.messageList) {
                 setMessageBoards(resp.messageList);
-                for (var i = 0; i < resp.messageList.length; i++) {
-                    if (resp.messageList[i].hasNewMessage === true) {
-                        setNotification(`You have a new message from ${resp.messageList[i].messagesWith}.`);
-                    }
-                }
             }
 
             console.log(resp.messageList);
@@ -274,7 +266,6 @@ export default function MessageList() {
             if (response.status === 200) {             
                 setNewMessage(""); // Clear the input field
                 messageInputRef.current.value = "";
-                setSentMessage(true);
                 window.location.reload();
                 return;
             } else {
