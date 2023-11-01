@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../Stylings/discussionStyle.module.css';
 import DiscussNav from './discussNav.js';
-
+import { Queue } from "./recentDiscussionsQueue.js";
+import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
+import Autosuggest from 'react-autosuggest';
 
 const DiscussionHome = () => {
     const [discussions, setDiscussions] = useState([]);
@@ -12,7 +14,12 @@ const DiscussionHome = () => {
     const [error, setError] = useState('');
     const [selectorChoice, setSelectorChoice] = useState("");
     const [dropdownSelection, setDropdownSelection] = useState("");
-
+    const [allCities, setAllCities] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [showResults, setShowResults] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());
     
     const getUniqueCitiesWithCasePreserved = (discussions) => {
         const uniqueCitySet = new Set();
@@ -70,6 +77,7 @@ const DiscussionHome = () => {
             if (response.status === 200) {
                 console.log(data.message);
                 setDiscussions([...discussions, data.discussion]);
+                handleQueueDiscussion(data.discussion);
                 setShowForm(false);
             } else {
                 setError("Failed to add discussion. " + data.error);
@@ -78,6 +86,23 @@ const DiscussionHome = () => {
         } catch (error) {
             console.error("There was an error posting the discussion:", error);
         }
+    };
+
+    const handleQueueDiscussion = (discussion) => {
+        console.log("discussion queueing");
+        // Check if there's a valid ??? DISCUSSION ??? to enqueue
+        if (discussion) {
+            // Enqueue the city name to the recent cities queue
+            const updatedQueue = recentDiscussionsQueue.enqueue(discussion);
+            setRecentDiscussionsQueue(updatedQueue);
+        } else {
+            console.warn("No valid discussion selected to queue.");
+        }
+    };
+
+    const handleNewDiscussion = () => {
+        handleQueueDiscussion(city);
+        setShowForm(true);
     };
     
     useEffect(() => {
@@ -97,7 +122,55 @@ const DiscussionHome = () => {
             }
         }
         fetchDiscussions();
+
+        async function fetchData() {
+            try {
+                const response = await fetch(`http://localhost:5050/record/cities_full_2`);
+                if (!response.ok) {
+                    const message = `An error occurred: ${response.statusText}`;
+                    window.alert(message);
+                    return;
+                }
+
+                const cities = await response.json();
+                setAllCities(cities);
+            } catch (error) {
+                console.error("There was an error fetching the cities", error);
+            }
+        }
+
+        fetchData();
     }, []);
+
+    const handleClear = () => {
+        setCity(null);
+        setShowResults(false);
+        setSearchTerm("");
+    };
+
+    const handleInputChange = (e) => {
+        setSearchTerm(e.target.value);
+        setCity(e.target.value);
+        setIsDropdownOpen(true);
+        console.log(city);
+    };
+
+    const onSuggestionsFetchRequested = ({ value }) => {
+        if (value) {
+            const inputValue = value.trim().toLowerCase();
+            const matchingCities = allCities.filter((city) =>
+                city.name.toLowerCase().startsWith(inputValue)
+            );
+
+            setSuggestions(matchingCities.map((city) => city.name).slice(0, 10));
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    const onSuggestionsClearRequested = () => {
+        setSuggestions([]);
+    };
 
     return (
         <div className={styles.DiscussionHome}>
@@ -106,8 +179,34 @@ const DiscussionHome = () => {
             {!showForm && <DiscussNav />}
             
             {error && <div className="error">{error}</div>}
-            
-            {!showForm && <button onClick={() => setShowForm(true)} className={styles.createNew}>Create New Discussion</button>}
+            {!showForm &&
+            <div>
+                <span>Find a City</span>
+                <Autosuggest
+                    suggestions={suggestions}
+                    onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                    onSuggestionsClearRequested={onSuggestionsClearRequested}
+                    getSuggestionValue={(suggestion) => suggestion}
+                    renderSuggestion={(suggestion) => (
+                        <div
+                            key={suggestion}
+                            className="suggestion"
+                        >
+                            {suggestion}
+                        </div>
+                    )}
+                    inputProps={{
+                        type: "text",
+                        placeholder: "Enter a city",
+                        value: searchTerm,
+                        onChange: handleInputChange,
+                    }}
+                />
+            </div>}
+            {!showForm && <div className="recentlyViewedDiscussions">
+                <RecentDiscussionsQueue queue={recentDiscussionsQueue}/>
+            </div>}
+            {!showForm && <button onClick={() => handleNewDiscussion()} className={styles.createNew}>Create New Discussion</button>}
             {!showForm && 
                 <select
                     className={styles.filter} 
@@ -142,10 +241,9 @@ const DiscussionHome = () => {
 
             {showForm && (
                 <div className={styles.discussionForm}>
-                    <h3>Create New Discussion</h3>
-                
+                    <h3>Discuss {city}</h3>
                     <label>
-                        <span>Title of Post:</span>
+                        <span>Title of Discussion</span>
                         <input 
                             type="text" 
                             value={title} 
@@ -155,19 +253,6 @@ const DiscussionHome = () => {
                             required
                         />
                     </label>
-
-                    <label>
-                        <span>City Name:</span>
-                        <input 
-                            type="text" 
-                            value={city} 
-                            onChange={(e) => setCity(e.target.value)} 
-                            placeholder="Which city are you discussing"
-                            className={styles.inputField}
-                            required
-                        />
-                    </label>
-
                     <label>
                         <span>Post as:</span>
                         <div className={styles.choiceGroup}>
@@ -181,7 +266,6 @@ const DiscussionHome = () => {
                                 />
                                 <span>Anonymous</span>
                             </label>
-
                             <label>
                                 <input
                                     type="radio"
@@ -194,10 +278,8 @@ const DiscussionHome = () => {
                             </label>
                         </div>
                     </label>
-
-
                     <label>
-                        <span>Select an item:</span>
+                        <span>Select a topic:</span>
                         <select
                             value={dropdownSelection}
                             onChange={(e) => setDropdownSelection(e.target.value)} required>
@@ -209,9 +291,8 @@ const DiscussionHome = () => {
                             <option value="Other">Other</option>
                         </select>
                     </label>
-
                     <label>
-                        <span>Tell us about your Thoughts:</span>
+                        <span>Tell us your thoughts...</span>
                         <textarea 
                             value={content} 
                             onChange={(e) => setContent(e.target.value)} 
