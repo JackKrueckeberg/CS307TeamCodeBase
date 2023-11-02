@@ -72,7 +72,7 @@ router.get("/messages/:id/:recipientUsername", async (req, res) => {
 
 // send favorites to another user
 router.post("/share-favorite-cities", async (req, res) => {
-  const { senderUsername, recipientUsername, content, timeSent } = req.body;
+  const { senderUsername, recipientUsername, content, timeSent, isList} = req.body;
 
   try {
     const collection = await db. collection("users");
@@ -84,8 +84,16 @@ router.post("/share-favorite-cities", async (req, res) => {
         recipient: recipientUsername,
         content: content,
         timeSent: timeSent,
+        isList: isList,
     };
     if (recipient && sender) {
+      if (!sender.messageList) {
+        sender.messageList = [];
+      } 
+      if (!recipient.messageList) {
+        recipient.messageList = [];
+      } 
+
       const senderMessageBoard = sender.messageList.find(
         (entry) => entry.messagesWith === recipientUsername
       );

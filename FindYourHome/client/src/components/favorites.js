@@ -168,7 +168,7 @@ export default function Favorites() {
     }
 
     /* Got this from preferences.js */
-    const handleCity = async (value) => {
+    /*const handleCity = async (value) => {
         for (var i = 0; i < favorite_cities.length; i++) {
           if (favorite_cities[i].name === value) {
             var tempCity = favorite_cities[i];
@@ -177,7 +177,7 @@ export default function Favorites() {
             return;
           }
         }
-    }
+    }*/
 
     // function to toggle between view and select mode
     const handleSelect = () => {
@@ -225,17 +225,7 @@ export default function Favorites() {
 
         // TODO finish the send method
         const citiesToSend = favorite_cities.filter((city, index) => selectedCities[index]);
-        const message = "Here are my favorite cites: \n\n";
-        const cityDetails = citiesToSend.map((city) => {
-            return Object.entries(city) 
-            .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`)
-            .join(', ');
-        })
-
-        const buttonCode = `<button onclick="alert('City details: ${cityDetails.join(', ')}')">View City</button>`;
-
-        const finalMessage = `${message}${cityDetails.join('\n')}\n\n${buttonCode}`;
-
+        const message = `Here are my favorite cities: ${citiesToSend.join(', ')}`;
         console.log(message);
 
         const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
@@ -246,8 +236,9 @@ export default function Favorites() {
             body: JSON.stringify({
                 senderUsername: username,
                 recipientUsername: recipient,
-                content: finalMessage,
+                content: message,
                 timeSent: new Date(),
+                isList: true,
             }),
         });
 
@@ -317,16 +308,17 @@ export default function Favorites() {
                                             {errorMessage && <p className="error-message">{errorMessage}</p>}
                                             {successMessage && <p className="success-message">{successMessage}</p>}
                                             <h5>Selected Cities to Share:</h5>
-                                            <ul>
+                                            <ul className="city">
                                                 {selectedCities.map((isSelected, index) => {
                                                     if (isSelected) {
                                                         return (
                                                             <li key={index}>
-                                                                {Object.entries(favorite_cities[index]).map(([key, value]) => (
+                                                                <span>{favorite_cities[index]}</span>
+                                                                {/*{Object.entries(favorite_cities[index]).map(([key, value]) => (
                                                                     <span key={key}>
                                                                         {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
                                                                     </span>
-                                                                ))}
+                                                                ))}*/}
                                                             </li>
                                                         );
                                                     }
@@ -342,7 +334,7 @@ export default function Favorites() {
                                             <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
                                         </div>
                                     </Modal>
-                                <ul>
+                                <ul className="city">
                                     {favorite_cities.map((city, index) => (
                                         <li key={index}>
                                             <input
@@ -351,7 +343,8 @@ export default function Favorites() {
                                                 checked={selectedCities[index]}
                                                 onChange={() => handleCheckboxChange(index)}
                                             />
-                                            {Object.entries(city).map(([key, value]) => {
+                                            <span>{city}</span>
+                                            {/*{Object.entries(city).map(([key, value]) => {
                             
                             
                                                 return (
@@ -361,7 +354,7 @@ export default function Favorites() {
                                                 );
                             
                            
-                                             })}
+                                             })}*/}
                                         </li>
                                     ))}
                                 </ul>
@@ -372,21 +365,22 @@ export default function Favorites() {
                                         <button className="share-favorite" onClick={handleSelect}>Share Favorite</button>
                                     </div>
                                     {/*{getUser_favorite_cities}*/}
-                                    <ul>
+                                    <ul className="city">
                                         {favorite_cities.map((city, index) => (
                                             <li key={index}>
                                                 <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                                                {Object.entries(city).map(([key, value]) => {
-                            
+                                                <span>{city}</span>
+                                                {/*{Object.entries(city).map(([key, value]) => {
+                                                    console.log(city);
                                                     return (
                                                         <span key={key}>
+                                                            {value}
                                                             {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
-                                                            <button onClick={() => handleCity(value)}>View</button>
                                                         </span>
                                                     );
                             
                            
-                                                })}
+                                                })}*/}
                                             </li>
                                         ))}
                                     </ul>
@@ -404,7 +398,7 @@ export default function Favorites() {
                 <div className={`${tabVal === 2 ? "content active-content" : "content"}`}>
                     <h2> Here are your Favorite Searches </h2>
                     {favorite_searches.length > 0 ? (
-                        <ul>
+                        <ul className="search">
                         {favorite_searches.map((search, index) => (
                             <li key={index}>
                             <button onClick={() => removeFavoriteSearch(index)}>delete</button>

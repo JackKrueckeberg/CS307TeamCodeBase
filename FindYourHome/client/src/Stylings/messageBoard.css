@@ -55,7 +55,7 @@
 .message-content.sent {
     flex: 1;
     background-color: #007bff;
-    padding-bottom: 0%;
+    padding-bottom: 5px;
     border-radius: 10px;
     margin: 0;
 }
@@ -63,7 +63,7 @@
 .message-content.received {
     flex: 1;
     background-color: #f1f0f0;
-    padding-bottom: 0%;
+    padding-bottom: 5px;
     border-radius: 10px;
     margin: 0;
 }
@@ -112,6 +112,13 @@
 .scrollable {
     max-height: 500px; /* Set your desired maximum height */
     overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.city-button {
+    font-size: small;
+    background-color: rgba(255, 255, 255, 0.5);
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .share-modal {

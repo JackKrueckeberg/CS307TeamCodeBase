@@ -46,8 +46,6 @@ export default function MessageNotification() {
             const resp = await response.json();
 
             setUsername(resp.username);
-
-            console.log(resp.username);
     
             return resp.username;
         } catch (error) {
@@ -75,9 +73,9 @@ export default function MessageNotification() {
                 );
 
                 if (found) {
+                    updateMessageBoard(found);    
                     setNotificationModal(true);
                     setNotification(`You have a new message from ${found.messagesWith}.`);
-                    updateMessageBoard(found);    
                         
                     // Set a timeout to hide the notification after 8 seconds
                     setTimeout(() => {
@@ -87,8 +85,6 @@ export default function MessageNotification() {
                 }
             }
 
-            console.log(resp.messageList);
-    
             return resp.messageList;
         } catch (error) {
             console.error("Error fetching user info: ", error);

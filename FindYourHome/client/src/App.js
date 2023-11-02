@@ -27,6 +27,7 @@ import DiscussNav from './components/discussNav';
 import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
 import MessageNotification from './components/messageNotification';
+import AccountInfo from './components/accountInfo';
 
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -73,6 +74,7 @@ const App = () => {
                         <Route path="/verification" element={<Verification />} />
                         <Route path="/createAccount" element={<CreateAccount />} />
                         <Route path="/profile" element={<Profile />} />
+                        <Route path="/accountInfo" element={<AccountInfo/> } />
                         <Route path="/citypage" element={<CityPage />} />
                         <Route path="/compare" element={<CompareCities />} />
                         <Route path="/delete-account" element={<DeleteAccount />} />
