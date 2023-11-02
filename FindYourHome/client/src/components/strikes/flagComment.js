@@ -1,90 +1,114 @@
-
 import React, { useState, useEffect } from "react";
+import { useUser } from "../../contexts/UserContext";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
+export default function Flags({ type, commentIndex, replyIndex, _selectedCity }) {
+  const [discussion, setDiscussion] = useState({});
+  const { user: userProfile } = useUser();
+  const [isFlagged, setIsFlagged] = useState(false);
 
-export default function Flags() {
+  useEffect(() => {
+    getDiscussion();
+  }, [_selectedCity]);
 
-
-    
-    const [discussion, setDiscussion] = useState({});
-
-    const mockDisscusion = {
-      name: "name",
-      numFlags: 0
-    }
-
-    async function getDiscussion() {
-
-      const city_info = await fetch("http://localhost:5050/city_info/New York City", {
+  async function getDiscussion() {
+    try {
+      const cityInfo = await fetch("http://localhost:5050/city_info/" + _selectedCity, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-      }).catch((error) => {
-        window.alert(error);
-        return;
       });
-  
-      const resp = await city_info.json();
-    
 
-      setDiscussion(resp.discusssion);
-
-      console.log(resp.discussion);
-  
-      return resp.discussion;
+      const resp = await cityInfo.json();
+      setDiscussion(resp.discussion);
+    } catch (error) {
+      console.error(error);
+      // Handle the error or display an error message
+    }
   }
 
-
-    async function flagComment() {
-        var curr = await getDiscussion()
-        curr.comments[0].numFlags++;
-        console.log(curr.comments[0].numFlags)
-        if (curr.comments[0].numFlags >= 3) {
-          removeComment(0);
-        } else {
-          console.log("right here")
-          await fetch("http://localhost:5050/city_info/New York City", {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({discussion: curr})
-          }).catch((error) => {
-            //window.alert(error);
-            console.log("error")
-            return;
-          });
-        }
+  async function flagItem(type, commentIndex, replyIndex) {
+    let curr = { ...discussion };
+    const flagReason = prompt('Please provide a reason for flagging:');
+    if (flagReason === null || flagReason === '') {
+      alert('Flag reason is required.');
+      return;
     }
 
-    async function removeComment(commentIndex) {
-      console.log("here")
-      var curr = await getDiscussion();
-      console.log(curr.comments)
+    if (type === "comment") {
+      curr.comments[commentIndex].numFlags++;
+      if (curr.comments[commentIndex].numFlags >= 3) {
+        removeComment(commentIndex);
+      } else {
+        await updateDiscussion(curr, flagReason);
+      }
+    } else if (type === "reply") {
+      if (
+        curr.comments[commentIndex] &&
+        curr.comments[commentIndex].replies &&
+        curr.comments[commentIndex].replies[replyIndex]
+      ) {
+        curr.comments[commentIndex].replies[replyIndex].numFlags++;
+        if (curr.comments[commentIndex].replies[replyIndex].numFlags >= 3) {
+          removeReply(commentIndex, replyIndex);
+        } else {
+          await updateDiscussion(curr, flagReason);
+        }
+      }
+    }
+
+    setIsFlagged(true);
+  }
+
+  async function removeComment(commentIndex) {
+    let curr = { ...discussion };
+    if (curr.comments && curr.comments[commentIndex]) {
       curr.comments.splice(commentIndex, 1);
-      await fetch("http://localhost:5050/city_info/New York City", {
+      await updateDiscussion(curr);
+      alert("The comment has been removed due to multiple flags.");
+    }
+  }
+
+  async function removeReply(commentIndex, replyIndex) {
+    let curr = { ...discussion };
+    if (
+      curr.comments &&
+      curr.comments[commentIndex] &&
+      curr.comments[commentIndex].replies &&
+      curr.comments[commentIndex].replies[replyIndex]
+    ) {
+      curr.comments[commentIndex].replies.splice(replyIndex, 1);
+      await updateDiscussion(curr);
+      alert("The reply has been removed due to multiple flags.");
+    }
+  }
+
+  async function updateDiscussion(data, flagReason) {
+    try {
+      await fetch("http://localhost:5050/city_info/" + _selectedCity, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({discussion: curr})
-      }).catch((error) => {
-        //window.alert(error);
-        console.log("error")
-        return;
+        body: JSON.stringify({ discussion: data }),
       });
+      alert(`The ${type === "comment" ? "comment" : "reply"} has been successfully flagged! Reason: ${flagReason}`);
+    } catch (error) {
+      console.error(error);
+      // Handle the error or display an error message
     }
+  }
 
-    
-
-   
-
-return (
-  <div>
-      <button onClick={() => flagComment()}>Flag Comment</button>
-      
+  // Render the flags or buttons for flagging comments or replies
+  return (
+    <div>
+      {/* Show the flag button only if it hasn't been flagged */}
+      {!isFlagged && (
+        <button onClick={() => flagItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "Flag Comment" : "Flag Reply"}
+        </button>
+      )}
     </div>
-)
+  );
 }
-
