@@ -14,6 +14,14 @@ export default function CityPage(props) {
   const navigate = useNavigate();
   const [apiResponse, setApiResponse] = useState('');
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentUser');
+
+    navigate("/", { state: { loggedOut: true }, replace: true });
+  };
+
   // useEffect(() => {
   //   async function fetchAttractions(city) {
   //     try {
@@ -56,9 +64,22 @@ export default function CityPage(props) {
 
   return (
     <div>
-      <div className="nav-buttons">
-        <button className="viewCity-button" onClick={() => navigate('/view-city')}>Go to City Search</button>
-        <button className="preferences-button" onClick={() => navigate('/preferences')}>Go to Preferences</button>
+      <div className="navBar">
+          
+        <div class="profiletooltip">
+          <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+          <span class="profiletooltiptext">View your profile page and make edits</span>
+        </div>
+        <div class="advancedtooltip">
+          <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+          <span class="advancedtooltiptext">Search based on attributes of cities</span>
+        </div>
+        <div class="discussiontooltip">
+          <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
+          <span class="discussiontooltiptext">View discussions about different cities</span>
+        </div>
+        <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
+
       </div>
       <div className="result">
         <label content={globalCity.lon}></label>
