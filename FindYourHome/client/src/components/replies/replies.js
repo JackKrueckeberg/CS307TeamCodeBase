@@ -4,6 +4,7 @@ import { useCity } from "../../contexts/CityContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 import styles from './replies.module.css';
+import Flags from '../strikes/flagComment'
 
 export default function Replies({ commentIndex, _selectedCity }) {
   const { user: userProfile } = useUser();
@@ -63,7 +64,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
         const updatedReplies = [...replies, { username: currentUsername, content }];
         setReplies(updatedReplies);
 
-        discussion.comments[commentIndex].replies.push({ username: currentUsername, content });
+        discussion.comments[commentIndex].replies.push({ username: currentUsername, content, numFlags: 0, time: Date.now()});
 
         await fetch("http://localhost:5050/city_info/" + _selectedCity, {
           method: "PATCH",
@@ -101,6 +102,8 @@ export default function Replies({ commentIndex, _selectedCity }) {
     }
   }
 
+  
+
   return (
     <div className={styles.replyContainer}>
       <h2>Replies:</h2>
@@ -108,13 +111,14 @@ export default function Replies({ commentIndex, _selectedCity }) {
         <div key={index} className={styles.replyItem}>
           <div className={styles.replyDetails}>
             <span className={styles.replyUsername}>{reply.username}</span>
+            <Flags type="reply" commentIndex={commentIndex} replyIndex={index} _selectedCity={_selectedCity} /> {/* Insert Flags component for replies */}
           </div>
           <p className={styles.replyContent}>{reply.content}</p>
           {reply.username === currentUsername && (
-              <button onClick={() => removeReply(index)} className={styles.replyButton}>
-                Remove Reply
-              </button>
-            )}
+            <button onClick={() => removeReply(index)} className={styles.replyButton}>
+              Remove Reply
+            </button>
+          )}
         </div>
       ))}
       <div>

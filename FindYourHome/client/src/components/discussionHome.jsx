@@ -8,7 +8,8 @@ import Autosuggest from "react-autosuggest";
 import defaultImage from "../Stylings/Default_Profile_Picture.png";
 import { useNavigate } from "react-router";
 import Replies from "./replies/replies";
-import AddReply from "./replies/addReply";
+import AddReply from "./replies/addReply"
+import Flags from "./strikes/flagComment";;
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -365,6 +366,7 @@ const DiscussionHome = () => {
                       <div className={styles.postContent}>
                         <h4 className={styles.postTitle}>{discussion.title}</h4>
                         <p>{discussion.content}</p>
+                        <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                         <p className={styles.metadata}>
                           City: {discussion.city} | Category:{" "}
                           {discussion.category}
