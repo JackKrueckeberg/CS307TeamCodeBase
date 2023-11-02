@@ -13,6 +13,7 @@ import Flags from "./strikes/flagComment";;
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
+  const [showSearchBar, setShowSearchBar] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [showHist, setShowHist] = useState(false);
   const [title, setTitle] = useState("");
@@ -29,6 +30,7 @@ const DiscussionHome = () => {
   const [selectedCity, setSelectedCity] = useState("");
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchBarCity, setSearchBarCity] = useState('');
 
   // User Stuff
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -87,6 +89,21 @@ const DiscussionHome = () => {
     }
   };
 
+  const fetchData = async () => {
+    try {
+        const response = await fetch(`http://localhost:5050/record/cities_full_2`);
+        if (!response.ok) {
+            const message = `An error occurred: ${response.statusText}`;
+            window.alert(message);
+            return;
+        }
+        const cities = await response.json();
+        setAllCities(cities);
+    } catch (error) {
+        console.error("There was an error fetching the cities", error);
+    }
+}
+
   const handleCancel = () => {
     setShowForm(false);
     setError("");
@@ -130,6 +147,7 @@ const DiscussionHome = () => {
   // useEffect for fetching cities
   useEffect(() => {
     fetchCities();
+    fetchData();
   }, []);
 
   // useEffect for fetching discussions
@@ -150,12 +168,35 @@ const DiscussionHome = () => {
     } else {
         console.warn("No valid discussion selected to queue.");
     }
-};
+  };
 
-const clearHistory = () => {
-  setRecentDiscussionsQueue(new Queue());
-  setShowHist(false);
-}
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+    setSearchBarCity(e.target.value);
+    setIsDropdownOpen(true);
+  };
+
+  const clearHistory = () => {
+    setRecentDiscussionsQueue(new Queue());
+    setShowHist(false);
+  }
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    if (value) {
+        const inputValue = value.trim().toLowerCase();
+        const matchingCities = allCities.filter((searchBarCity) =>
+            searchBarCity.name.toLowerCase().startsWith(inputValue)
+        );
+
+        setSuggestions(matchingCities.map((searchBarCity) => searchBarCity.name).slice(0, 10));
+    } else {
+        setSuggestions([]);
+    }
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
 
   // Handle form submission
   const handleSubmit = async () => {
@@ -282,6 +323,29 @@ const clearHistory = () => {
             </option>
           ))}
         </select>
+      )}
+
+      {!showForm && !showSearchBar && (
+        <Autosuggest
+        suggestions={suggestions}
+        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+        onSuggestionsClearRequested={onSuggestionsClearRequested}
+        getSuggestionValue={(suggestion) => suggestion}
+        renderSuggestion={(suggestion) => (
+          <div
+            key={suggestion}
+            className="suggestion"
+          >
+            {suggestion}
+          </div>
+        )}
+        inputProps={{
+          type: "text",
+          placeholder: "Enter a city",
+          value: searchTerm,
+          onChange: handleInputChange,
+        }}
+    />
       )}
 
       {!showForm && (
@@ -411,7 +475,7 @@ const clearHistory = () => {
 
       {showForm && (
         <div className={styles.discussionForm}>
-          <h3>Create New Discussion</h3>
+          <h3>New Discussion about {selectedCity}</h3>
 
           <label>
             <span>Title of Post:</span>
