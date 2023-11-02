@@ -428,6 +428,7 @@ const DiscussionHome = () => {
           >
             Other
           </button>
+          <AddBookmark _bookmark={selectedCity}/>
         </div>
       )}
 
@@ -436,6 +437,7 @@ const DiscussionHome = () => {
           showForm ? styles.formActive : ""
         }`}
       >
+        
         {!showForm && selectedCity && (
           <div className={styles.commentsBox}>
             {discussions.length === 0 ? (
@@ -455,6 +457,7 @@ const DiscussionHome = () => {
                     No discussions found in this category.  Start a Discussion for this Category above!
                   </div>
                 ) : (
+                  
                   filteredDiscussions.map((discussion) => (
                     <div
                       key={discussion.id || discussion.title}
@@ -474,7 +477,6 @@ const DiscussionHome = () => {
                         <p className={styles.metadata}>
                           City: {discussion.city} | Category: {discussion.category} | Likes: {discussion.numLikes} | Dislikes: {discussion.numDislikes}
                         </p>
-                        <AddBookmark/>
                         <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                       </div>
                     </div>
