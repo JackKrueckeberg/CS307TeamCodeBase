@@ -14,6 +14,7 @@ export default function MessageList() {
 
     const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
     const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
+    const [cityFound, setCityFound] = useState(null);
 
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setError] = useState('');
@@ -83,8 +84,6 @@ export default function MessageList() {
             if (resp.messageList) {
                 setMessageBoards(resp.messageList);
             }
-
-            console.log(resp.messageList);
     
             return resp.messageList;
         } catch (error) {
@@ -106,8 +105,6 @@ export default function MessageList() {
             const resp = await response.json();
 
             setMessages(resp);
-
-            console.log(resp);
     
             return resp;
         } catch (error) {
@@ -142,10 +139,6 @@ export default function MessageList() {
             setError('The username you provided does not match any in our records. Please try again.');
             return;
         }
-
-        console.log(username);
-
-        console.log(recipient);
 
         // Check if a message board with the recipient already exists
         const existingMessageBoard = messageBoards.find((board) => board.messagesWith === recipient);
@@ -221,9 +214,25 @@ export default function MessageList() {
         }
     }
 
-    const handleCityButtonClick = async (city) => {
-        setGlobalCity(city);
-        navigate("/cityPage", city);
+    const handleCityButtonClick = async (cityName) => {
+
+        const response = await fetch(`http://localhost:5050/city_info/${cityName}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const resp = await response.json();
+
+        if (response.status === 200) {
+            setGlobalCity(resp);
+            localStorage.setItem('selectedCity', JSON.stringify(resp));
+            navigate("/cityPage", resp);
+            return resp;
+        } else {
+            alert("Something went wrong");
+        }
     }
 
     const updateMessageBoard = async (messageBoard) => {
@@ -292,7 +301,6 @@ export default function MessageList() {
             const citiesString = message.replace("Here are my favorite cities: ", "");
             const cities = citiesString.split(',').map(city => city.trim());
 
-            console.log(cities);
             return cities;
           }
         

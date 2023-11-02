@@ -46,8 +46,6 @@ export default function MessageNotification() {
             const resp = await response.json();
 
             setUsername(resp.username);
-
-            console.log(resp.username);
     
             return resp.username;
         } catch (error) {
@@ -87,8 +85,6 @@ export default function MessageNotification() {
                 }
             }
 
-            console.log(resp.messageList);
-    
             return resp.messageList;
         } catch (error) {
             console.error("Error fetching user info: ", error);
