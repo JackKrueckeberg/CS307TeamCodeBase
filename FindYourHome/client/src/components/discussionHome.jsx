@@ -9,7 +9,8 @@ import defaultImage from "../Stylings/Default_Profile_Picture.png";
 import { useNavigate } from "react-router";
 import Replies from "./replies/replies";
 import AddReply from "./replies/addReply"
-import Flags from "./strikes/flagComment";;
+import Flags from "./strikes/flagComment";
+import AddBookmark from "./saved_discussions/addBookmark";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -216,6 +217,7 @@ const DiscussionHome = () => {
     const encodedCity = encodeURIComponent(selectedCity);
     try {
       // Get the current discussions
+      if (!user.strikes.is_banned) {
       const responseGet = await fetch(
         `http://localhost:5050/city_info/${encodedCity}`
       );
@@ -259,6 +261,9 @@ const DiscussionHome = () => {
       } else {
         console.error("Failed to update discussion");
       }
+    } else {
+      window.alert("you can not comment. You are banned!")
+    }
     } catch (error) {
       console.error("Error in submitting discussion:", error);
     } finally {
@@ -423,6 +428,7 @@ const DiscussionHome = () => {
           >
             Other
           </button>
+          <AddBookmark _bookmark={selectedCity}/>
         </div>
       )}
 
@@ -431,6 +437,7 @@ const DiscussionHome = () => {
           showForm ? styles.formActive : ""
         }`}
       >
+        
         {!showForm && selectedCity && (
           <div className={styles.commentsBox}>
             {discussions.length === 0 ? (
@@ -450,6 +457,7 @@ const DiscussionHome = () => {
                     No discussions found in this category.  Start a Discussion for this Category above!
                   </div>
                 ) : (
+                  
                   filteredDiscussions.map((discussion) => (
                     <div
                       key={discussion.id || discussion.title}

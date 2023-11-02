@@ -1,101 +1,73 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from '../../contexts/UserContext';
 import { useLocalStorage } from "@uidotdev/usehooks";
+import './addBookmark.css'
 
+export default function AddBookmark({_bookmark}) {
+  const [bookmarks, setBookmarks] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const { user: userProfile } = useUser();
 
-export default function addBookmark() {
-    
-    const [bookmarks, setBookmarks] = useState([]);
-    const {user: userProfile } = useUser();
+  useEffect(() => {
+    getBookmarks();
+  }, [_bookmark]);
+  useEffect(() => {
+    setIsBookmarked(false); // Reset isBookmarked whenever _bookmark changes
+  }, [_bookmark]);
 
-
-
-    useEffect(() => {
-        // Call the function to get favorite cities when the component mounts
-        get_bookmarks();
-    }, []); 
-
-    
-
-    async function get_bookmarks() {
-
-        const city_info = await fetch("http://localhost:5050/users/" + userProfile.email, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }).catch((error) => {
-          window.alert(error);
-          return;
-        });
-    
-        const resp = await city_info.json();
-
-        setBookmarks(resp.bookmarked_discussions);
-
-        console.log(resp.bookmarked_discussions);
-    
-        return resp.bookmarked_discussions;
+  async function getBookmarks() {
+    try {
+      const cityInfo = await fetch("http://localhost:5050/users/" + userProfile.email, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const resp = await cityInfo.json();
+      setBookmarks(resp.bookmarked_discussions);
+    } catch (error) {
+      window.alert(error);
     }
+  }
 
+  async function addBookmark(newBookmark) {
+    console.log("here")
+    console.log(newBookmark)
+    try {
+      if (bookmarks.includes(newBookmark)) {
+        alert("This discussion is already bookmarked.");
+        console.log("Already bookmarked");
+        return;
+      }
 
-
-
-
-
-
-    async function addBookmark(new_bookmarks) {
-  
-  
-      await get_bookmarks();
-  
-      for (var i = 0; i < bookmarks.length; i++) {
-
-        if (new_bookmarks === bookmarks[i]) {
-          
-            alert("This discussion is already bookmarked.");
-            console.log("already bookmarked")
-            return;
-          }
-
-        }
-
-  
-      console.log('adding bookamrk');
-  
+      console.log('Adding bookmark');
       console.log(bookmarks);
-  
-      bookmarks.push(new_bookmarks);
-  
-      await fetch("http://localhost:5050/bookmarked_discussions/user@example.com", {
+
+      const updatedBookmarks = [...bookmarks, newBookmark];
+      console.log("updated bookmarks" + updatedBookmarks)
+      setBookmarks(updatedBookmarks);
+
+      await fetch("http://localhost:5050/bookmarked_discussions/" + userProfile.email, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({bookmarked_discussions: bookmarks})
-      }).catch((error) => {
-        window.alert(error);
-        return;
+        body: JSON.stringify({ bookmarked_discussions: updatedBookmarks })
       });
-      
+      setIsBookmarked(true); // Update state to hide the button after adding the bookmark
+      window.alert("Discussion successfully bookmarked!");
+    } catch (error) {
+      window.alert(error);
     }
-  
-  
-    
+  }
 
+  console.log(bookmarks);
 
-
-
-
-
-
-
-  
-
-return (
-  <div>
-      <button onClick={() => addBookmark("example_discussion")}>Add Bookmark</button>
+  return (
+    <div className="button-container">
+      {!isBookmarked && (
+        <button className="add-bookmark-button" onClick={() => addBookmark(_bookmark)}>Bookmark this Discussion</button>
+      )}
     </div>
-)
+  );
 }
-

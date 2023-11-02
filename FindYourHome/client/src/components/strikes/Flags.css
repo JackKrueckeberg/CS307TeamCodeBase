@@ -1,0 +1,49 @@
+/* Flags.css */
+
+/* Style for the button container */
+.flags-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Spacing between buttons */
+  max-width: 100px; /* Limit the maximum width of the container */
+}
+
+/* Style for the buttons */
+.flags-button {
+  padding: 8px; /* Adjust button padding */
+  background-color: gray; /* Blue background */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  cursor: pointer;
+  transition-duration: 0.4s;
+  margin-right: 10px; /* Spacing from the right */
+}
+
+/* Box styles for emojis */
+.flags-button::before {
+  content: ' ';
+  display: inline-block;
+  margin-right: 5px; /* Spacing between emoji box and button text */
+  padding: 8px; /* Box padding */
+  border: 1px solid #ccc; /* Border color */
+  border-radius: 4px; /* Rounded box corners */
+}
+
+/* Additional styles for specific buttons */
+.like-button::before {
+  background-color: #27ae60; /* Green for like emoji box */
+}
+
+.dislike-button::before {
+  background-color: #e74c3c; /* Red for dislike emoji box */
+}
+
+.flag-button::before {
+  background-color: #f39c12; /* Yellow for flag emoji box */
+  color: black; /* Adjust text color for flag button */
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from "../../contexts/UserContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import './Flags.css';
 
 export default function Flags({ type, commentIndex, replyIndex, _selectedCity }) {
   const [discussion, setDiscussion] = useState({});
@@ -309,31 +310,30 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
 
   // Render the flags or buttons for flagging comments or replies
   return (
-    <div>
-      {/* Show the flag button only if it hasn't been flagged */}
+    <div className="flags-container">
       {!isLiked && (
-        <button onClick={() => likeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Like Comment" : "Like Reply"}
+        <button className="flags-button like-button" onClick={() => likeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "👍" : "👍"}
         </button>
       )}
       {isLiked && (
-        <button onClick={() => removeLikeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Remove Comment Like" : "Remove Reply Like"}
+        <button className="flags-button like-button" onClick={() => removeLikeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "Unlike Comment" : "Unlike Reply"}
         </button>
       )}
       {!isDisliked && (
-        <button onClick={() => dislikeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Dislike Comment" : "Dislike Reply"}
+        <button className="flags-button dislike-button" onClick={() => dislikeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "👎" : "👎"}
         </button>
       )}
       {isDisliked && (
-        <button onClick={() => removeDislikeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Remove Comment Dislike" : "Remove Reply Dislike"}
+        <button className="flags-button dislike-button" onClick={() => removeDislikeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "Remove Dislike from Comment" : "Remove Dislike from Reply"}
         </button>
       )}
       {!isFlagged && (
-        <button onClick={() => flagItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Flag Comment" : "Flag Reply"}
+        <button className="flags-button flag-button" onClick={() => flagItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "🚩" : "🚩"}
         </button>
       )}
     </div>

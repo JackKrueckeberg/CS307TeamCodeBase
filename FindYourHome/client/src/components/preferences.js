@@ -394,6 +394,7 @@ export default function Create() {
           var tempCity = results[i];
           results[i].form = form;
           setGlobalCity(results[i]);
+          localStorage.setItem('selectedCity', JSON.stringify(results[i]));
           navigate("/cityPage", results[i]);
           return;
         }
