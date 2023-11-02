@@ -19,6 +19,16 @@ import 'react-toastify/dist/ReactToastify.css';
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 const ViewCity = () => {
+    const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    const { user: userProfile } = useUser(); // the id of the current logged in user
+    const [user, setInfo] = useState(
+        storedSesUser || storedLocUser || userProfile
+    );
+
+    const g_email = user.email;
+    
     const [allCities, setAllCities] = useState([]);
     const [city, setCity] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -28,18 +38,13 @@ const ViewCity = () => {
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
     const [recentCitiesQueue, setRecentCitiesQueue] = useState(new Queue());
+    recentCitiesQueue.g_email = g_email;
     const [cityModel, setCityModel] = useState(null);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [shouldFetchAttractions, setShouldFetchAttractions] = useState(false);
     const [isValidSearch, setIsValidSearch] = useState(true);
-
-
-
     const [favorite, setFavorite] = useState(false)
-
     const [isVerified, setIsVerified] = useState(false);
-
-    const { user } = useUser();
     const { globalCity, setGlobalCity } = useCity();
     const navigate = useNavigate();
 
@@ -73,10 +78,9 @@ const ViewCity = () => {
         fetchData();
     }, []);
 
-
     async function getUser_favorites() {
 
-        const city_info = await fetch("http://localhost:5050/users/user@example.com", {
+        const city_info = await fetch(`http://localhost:5050/users/${g_email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -118,9 +122,7 @@ const ViewCity = () => {
 
     const incrementAchievement = async (achievementName) => {
         try {
-            const userEmail = "user2@example.com"; // Replace with the correct email
-
-            const response = await fetch(`http://localhost:5050/achievements/${userEmail}/${achievementName}`, {
+            const response = await fetch(`http://localhost:5050/achievements/${g_email}/${achievementName}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'

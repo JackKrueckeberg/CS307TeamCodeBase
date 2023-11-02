@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { CityModel } from "./CityModel/CityModel";
 import { useNavigate } from "react-router-dom";
 import "../Stylings/compareCities.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useUser } from "../contexts/UserContext";
 
 export default function CompareCities() {
     // Retrieve cities from localStorage
     const citiesToCompare = JSON.parse(localStorage.getItem('compareCities') || '[]');
     const navigate = useNavigate();
+
+    const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    const { user: userProfile } = useUser(); // the id of the current logged in user
+    const [user, setInfo] = useState(
+        storedSesUser || storedLocUser || userProfile
+    );
+  
+    const g_email = user.email;
 
     function handleBackButton() {
         localStorage.removeItem('compareCities');
@@ -18,9 +29,8 @@ export default function CompareCities() {
 
     const incrementAchievement = async (achievementName) => {
         try {
-            const userEmail = "user2@example.com"; // Replace with the correct email
 
-            const response = await fetch(`http://localhost:5050/achievements/${userEmail}/${achievementName}`, {
+            const response = await fetch(`http://localhost:5050/achievements/${g_email}/${achievementName}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
