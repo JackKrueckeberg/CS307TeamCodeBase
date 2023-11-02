@@ -7,6 +7,7 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
   const { user: userProfile } = useUser();
   const [isFlagged, setIsFlagged] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [isDisliked, setIsDisliked] = useState(false);
 
   useEffect(() => {
     getDiscussion();
@@ -78,16 +79,44 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
         discussion.comments[commentIndex].replies &&
         discussion.comments[commentIndex].replies[replyIndex]
       ) {
-        if (discussion.comments[commentIndex].replies[replyIndex].numlikes) {
-          discussion.comments[commentIndex].replies[replyIndex].numlikes++;
+        if (discussion.comments[commentIndex].replies[replyIndex].numLikes) {
+          discussion.comments[commentIndex].replies[replyIndex].numLikes++;
         } else {
-          discussion.comments[commentIndex].replies[replyIndex].numlikes = 1;
+          discussion.comments[commentIndex].replies[replyIndex].numLikes = 1;
         }
       }
     }
     await updateDiscussionLike(discussion);
     setIsLiked(true);
-    console.log(discussion.comments[commentIndex].numlikes);
+    // console.log(discussion.comments[commentIndex].numlikes);
+  }
+
+  async function dislikeItem(type, commentIndex, replyIndex) {
+    if (type === "comment") {
+      if (discussion && 
+          discussion.comments && 
+          discussion.comments[commentIndex] &&
+          discussion.comments[commentIndex].numDislikes) {
+        discussion.comments[commentIndex].numDislikes++;
+      } else {
+        discussion.comments[commentIndex].numDislikes = 1;
+      }
+    } else if (type === "reply") {
+      if (
+        discussion.comments[commentIndex] &&
+        discussion.comments[commentIndex].replies &&
+        discussion.comments[commentIndex].replies[replyIndex]
+      ) {
+        if (discussion.comments[commentIndex].replies[replyIndex].numDislikes) {
+          discussion.comments[commentIndex].replies[replyIndex].numDislikes++;
+        } else {
+          discussion.comments[commentIndex].replies[replyIndex].numDislikes = 1;
+        }
+      }
+    }
+    await updateDiscussionLike(discussion);
+    setIsDisliked(true);
+    // console.log(discussion.comments[commentIndex].numlikes);
   }
 
   async function removeLikeItem(type, commentIndex, replyIndex) {
@@ -106,16 +135,44 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
         discussion.comments[commentIndex].replies &&
         discussion.comments[commentIndex].replies[replyIndex]
       ) {
-        if (discussion.comments[commentIndex].replies[replyIndex].numlikes) {
-          discussion.comments[commentIndex].replies[replyIndex].numlikes--;
+        if (discussion.comments[commentIndex].replies[replyIndex].numLikes) {
+          discussion.comments[commentIndex].replies[replyIndex].numLikes--;
         } else {
-          discussion.comments[commentIndex].replies[replyIndex].numlikes = 0;
+          discussion.comments[commentIndex].replies[replyIndex].numLikes = 0;
         }
       }
     }
     await updateDiscussionLike(discussion);
     setIsLiked(false);
-    console.log(discussion.comments[commentIndex].numlikes);
+    // console.log(discussion.comments[commentIndex].numlikes);
+  }
+
+  async function removeDislikeItem(type, commentIndex, replyIndex) {
+    if (type === "comment") {
+      if (discussion && 
+          discussion.comments && 
+          discussion.comments[commentIndex] &&
+          discussion.comments[commentIndex].numDislikes) {
+        discussion.comments[commentIndex].numDislikes--;
+      } else {
+        discussion.comments[commentIndex].numDislikes = 0;
+      }
+    } else if (type === "reply") {
+      if (
+        discussion.comments[commentIndex] &&
+        discussion.comments[commentIndex].replies &&
+        discussion.comments[commentIndex].replies[replyIndex]
+      ) {
+        if (discussion.comments[commentIndex].replies[replyIndex].numDislikes) {
+          discussion.comments[commentIndex].replies[replyIndex].numDislikes--;
+        } else {
+          discussion.comments[commentIndex].replies[replyIndex].numDislikes = 0;
+        }
+      }
+    }
+    await updateDiscussionLike(discussion);
+    setIsDisliked(false);
+    // console.log(discussion.comments[commentIndex].numlikes);
   }
 
   async function removeComment(commentIndex) {
@@ -185,6 +242,16 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       {isLiked && (
         <button onClick={() => removeLikeItem(type, commentIndex, replyIndex)}>
           {type === "comment" ? "Remove Comment Like" : "Remove Reply Like"}
+        </button>
+      )}
+      {!isDisliked && (
+        <button onClick={() => dislikeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "Dislike Comment" : "Dislike Reply"}
+        </button>
+      )}
+      {isDisliked && (
+        <button onClick={() => removeDislikeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "Remove Comment Dislike" : "Remove Reply Dislike"}
         </button>
       )}
       {!isFlagged && (

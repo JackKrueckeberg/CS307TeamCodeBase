@@ -467,7 +467,7 @@ const DiscussionHome = () => {
                         <p>{discussion.content}</p>
                         <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                         <p className={styles.metadata}>
-                          City: {discussion.city} | Category: {discussion.category} | Likes: {discussion.numLikes}
+                          City: {discussion.city} | Category: {discussion.category} | Likes: {discussion.numLikes} | Dislikes: {discussion.numDislikes}
                         </p>
                         <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                       </div>
