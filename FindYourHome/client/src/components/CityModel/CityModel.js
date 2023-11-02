@@ -27,7 +27,7 @@ export const CityModel = ({ model }) => {
                 <p>Population: {model.population}</p>
                 <p>Region: {model.region}</p>
                 <p>State: {model.state}</p>
-                <p>Median Income: {model.median_income}</p>
+                <p>Median Income: ${model.median_income}</p>
                 <p>This is ${model.nation_avg} {national_income} than the National Medium Income Average</p>
                 <img src={model.img_url} alt={model.name} />
             </div>

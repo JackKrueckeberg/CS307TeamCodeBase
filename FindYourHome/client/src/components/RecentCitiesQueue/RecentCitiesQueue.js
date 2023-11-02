@@ -3,13 +3,23 @@ import "./RecentCitiesQueue.css"
 import { useNavigate } from "react-router-dom";
 import { useCompareCities } from "../../contexts/CityContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import { useUser } from "../../contexts/UserContext";
 
 const RecentCitiesQueue = ({ queue }) => {
     const navigate = useNavigate();
     const [queueItems, setQueueItems] = useState({});
-    let email = "user2@example.com"
     const [selectedCities, setSelectedCities] = useState(new Set());
     const [errorMessage, setErrorMessage] = useState("");
+
+    const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+
+    const { user: userProfile } = useUser(); // the id of the current logged in user
+    const [user, setInfo] = useState(
+        storedSesUser || storedLocUser || userProfile
+    );
+
+    const g_email = user.email;
 
     const getCompareCitiesFromLocalStorage = () => {
         return JSON.parse(localStorage.getItem('compareCities') || '[]').filter(city => city); // Filters out null, undefined, and other falsy values
@@ -19,7 +29,7 @@ const RecentCitiesQueue = ({ queue }) => {
         const filteredCities = cities.filter(city => city); // Ensure no null or undefined values
         localStorage.setItem('compareCities', JSON.stringify(filteredCities));
     };
-    
+
 
     const compareCities = getCompareCitiesFromLocalStorage();
 
@@ -27,7 +37,7 @@ const RecentCitiesQueue = ({ queue }) => {
         // Define the function inside useEffect
         async function fillQueueFromDB() {
             try {
-                const response = await fetch(`http://localhost:5050/users/${email}`);
+                const response = await fetch(`http://localhost:5050/users/${g_email}`);
 
                 if (!response.ok) {
                     const message = `An error occurred: ${response.statusText}`;
@@ -114,22 +124,22 @@ const RecentCitiesQueue = ({ queue }) => {
 }
 
 export class Queue {
-    constructor(items = {}, rear = 0, front = 0) {
+    constructor(items = {}, rear = 0, front = 0, g_email) {
         this.items = items;
         this.rear = rear;
         this.front = front;
+        this.g_email = g_email;
     }
 
     //add the contents of the queue to the recent_cities field of a user based of their email
     async addToQueue(cityModel) {
-        let email = "user2@example.com"; //mock email
         try {
             const updateData = {
                 action: "addRecentCity",
                 cityModel: cityModel
             };
     
-            const response = await fetch(`http://localhost:5050/users/${email}`, {
+            const response = await fetch(`http://localhost:5050/users/${this.g_email}`, {
                 method: "PATCH",
                 headers: {
                     'Content-Type': 'application/json'
