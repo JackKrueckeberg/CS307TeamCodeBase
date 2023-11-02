@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AccountInfo from "./accountInfo.js";
 import MessageList from "./messageList";
 import Bookmarks from "./saved_discussions/bookmarks";
+import MessageNotification from "./messageNotification";
 
 export default function Profile() {
 
@@ -31,6 +32,7 @@ export default function Profile() {
 
     return (
         <div className="container">
+            <div><MessageNotification /></div>
             <div className="navBar">
                 
                 <div class="profiletooltip">
