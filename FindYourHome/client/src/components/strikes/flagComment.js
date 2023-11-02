@@ -61,6 +61,23 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
     setIsFlagged(true);
   }
 
+  async function likeItem(type, commentIndex, replyIndex) {
+    let curr = {...discussion};
+    if (type === "comment") {
+      curr.comments[commentIndex].numLikes++;
+    } else if (type === "reply") {
+      if (
+        curr.comments[commentIndex] &&
+        curr.comments[commentIndex].replies &&
+        curr.comments[commentIndex].replies[replyIndex]
+      ) {
+        curr.comments[commentIndex].replies[replyIndex].numLikes++;
+      }
+    }
+    await updateDiscussionLike(curr);
+    console.log(curr.comments[commentIndex].numLikes);
+  }
+
   async function removeComment(commentIndex) {
     let curr = { ...discussion };
     if (curr.comments && curr.comments[commentIndex]) {
@@ -100,10 +117,31 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
     }
   }
 
+  async function updateDiscussionLike(data) {
+    try {
+      await fetch("http://localhost:5050/city_info/" + _selectedCity, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ discussion: data }),
+      });
+      //alert(`The ${type === "comment" ? "comment" : "reply"} has been successfully flagged! Reason: ${flagReason}`);
+    } catch (error) {
+      console.error(error);
+      // Handle the error or display an error message
+    }
+  }
+
   // Render the flags or buttons for flagging comments or replies
   return (
     <div>
       {/* Show the flag button only if it hasn't been flagged */}
+      {
+        <button onClick={() => likeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "Comment Likes: {(discussion.comments[commentIndex].numLikes)}" : "Like Reply"}
+        </button>
+      }
       {!isFlagged && (
         <button onClick={() => flagItem(type, commentIndex, replyIndex)}>
           {type === "comment" ? "Flag Comment" : "Flag Reply"}

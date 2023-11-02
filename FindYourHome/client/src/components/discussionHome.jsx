@@ -231,8 +231,8 @@ const DiscussionHome = () => {
         selectorChoice,
         category: dropdownSelection,
         city: selectedCity,
-        numFlags: 0,
         numLikes: 0,
+        numFlags: 0,
         date: Date.now(),
         replies: [],
         postedBy: {
@@ -328,6 +328,18 @@ const DiscussionHome = () => {
       {!showForm && (
         <div>
           <button
+            onClick={() => setShowForm(true)}
+            className={styles.createNew}
+            disabled={!selectedCity}
+          >
+            Create New Discussion
+          </button>
+        </div>
+      )}
+
+      {!showForm && (
+        <div>
+          <button
             onClick={() => setShowSearchBar(!showSearchBar)}
             className={styles.createNew}
           >
@@ -353,18 +365,6 @@ const DiscussionHome = () => {
               onChange: handleInputChange,
             }}
           />
-        </div>
-      )}
-
-      {!showForm && (
-        <div>
-          <button
-            onClick={() => setShowForm(true)}
-            className={styles.createNew}
-            disabled={!selectedCity}
-          >
-            Create New Discussion
-          </button>
         </div>
       )}
 
