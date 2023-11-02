@@ -4,8 +4,8 @@ import { useLocalStorage } from "@uidotdev/usehooks";
 
 export default function Flags({ type, commentIndex, replyIndex, _selectedCity }) {
   const [discussion, setDiscussion] = useState({});
-  const { user: userProfile } = useUser();
   const [isFlagged, setIsFlagged] = useState(false);
+
 
   useEffect(() => {
     getDiscussion();
@@ -27,6 +27,8 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       // Handle the error or display an error message
     }
   }
+
+
 
   async function flagItem(type, commentIndex, replyIndex) {
     let curr = { ...discussion };
@@ -61,12 +63,76 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
     setIsFlagged(true);
   }
 
+  async function get_strikes(username) {
+
+    const city_info = await fetch("http://localhost:5050/strikes/" + username, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
+
+    const resp = await city_info.json();
+
+  
+    return resp.strikes;
+
+
+
+    return resp.strikes;
+}
+
+  async function addStrike(username) {
+  
+  
+    var strikes = await get_strikes(username);
+    //console.log(strikes)
+
+    strikes.comments_removed++;
+    if (strikes.comments_removed === 2) {
+      strikes.is_banned = true;
+    }
+
+
+
+  
+
+    console.log(strikes);
+
+
+    await fetch("http://localhost:5050/strikes/" + username, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({strikes: strikes})
+    }).catch((error) => {
+      window.alert(error);
+      return;
+    });
+    return strikes;
+  }
+
   async function removeComment(commentIndex) {
     let curr = { ...discussion };
     if (curr.comments && curr.comments[commentIndex]) {
+      var strikes = addStrike(curr.comments[commentIndex].username)
       curr.comments.splice(commentIndex, 1);
       await updateDiscussion(curr);
       alert("The comment has been removed due to multiple flags.");
+
+
+  
+      strikes.comments_removed++;
+      if (strikes.comments_removed === 2) {
+        strikes.is_banned = true;
+      }
+
+  
+  
     }
   }
 
@@ -78,9 +144,19 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       curr.comments[commentIndex].replies &&
       curr.comments[commentIndex].replies[replyIndex]
     ) {
+      console.log(curr.comments[commentIndex].replies[replyIndex].username)
+      var strikes = addStrike(curr.comments[commentIndex].replies[replyIndex].username)
       curr.comments[commentIndex].replies.splice(replyIndex, 1);
       await updateDiscussion(curr);
       alert("The reply has been removed due to multiple flags.");
+
+      
+      if (strikes.comments_removed === 2) {
+        strikes.is_banned = true;
+      }
+
+  
+  
     }
   }
 

@@ -4,10 +4,26 @@ import { ObjectId } from "mongodb";
 
 const router = express.Router();
 
-// update the favorite searches list
-router.patch("/:email", async (req, res) => {
+
+router.get("/:username", async (req, res) => {
+  try {
+    let collection = await db.collection("users");
+    let query = { username: req.params.username };  // Search by email
+    let result = await collection.findOne(query);
+
+    if (!result) return res.status(404).send("Not found");
+    else return res.status(200).send(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
+router.patch("/:username", async (req, res) => {
   let collection = await db.collection("users");
-  let q = {email: req.params.email};  // Search by email
+  let q = {username: req.params.username};  // Search by email
   let query = await collection.findOne(q);
     const updates =  {
       $set: {
