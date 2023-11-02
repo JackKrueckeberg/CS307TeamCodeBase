@@ -7,14 +7,12 @@ import { useUser } from '../contexts/UserContext';
 import Modal from "react-modal";
 
 export default function AccountInfo() {
-    // initialize the profile info
     const initialInfo = {
+        username: '',
         firstName: '',
         lastName: '',
-        username: '',
-        email: '',
         bio: '',
-        profile_image: '',
+        email: '',
         password: '',
     };
 
@@ -23,7 +21,8 @@ export default function AccountInfo() {
     const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
 
     const {user: userProfile } = useUser(); // the id of the current logged in user
-    const [user, setInfo] = useState(storedSesUser || storedLocUser || userProfile || initialInfo);
+    const [user, setInfo] = useState( storedSesUser || storedLocUser || userProfile || initialInfo);
+
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
     const [prevUser, setPrevUser] = useState(initialInfo); // Store a copy of user data to revert if editing is canceled
     const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
@@ -64,11 +63,28 @@ export default function AccountInfo() {
             if (response.status === 200) {
                 const userInfo = await response.json();
                 console.log(userInfo);
-                setInfo(userInfo); // Update the user state with the fetched data
+                setInfo({
+                    ...user,
+                    bio: userInfo.bio,
+                    email: userInfo.email,
+                    firstName: userInfo.firstName,
+                    lastName: userInfo.lastName,
+                    password: userInfo.password,
+                    profile_image: userInfo.profile_image,
+                    username: userInfo.username,
+                });
+                // Update the user state with the fetched data
                 if (userInfo.profile_image === "") {
+                    setImage(defaultImage);
                     setInfo({
                         ...user,
+                        bio: userInfo.bio,
+                        email: userInfo.email,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        password: userInfo.password,
                         profile_image: defaultImage,
+                        username: userInfo.username,
                     });
                 }
             }
@@ -79,6 +95,7 @@ export default function AccountInfo() {
 
     // function to toggle between view and edit mode
     const handleEdit = () => {
+        console.log(user);
         // Store a copy of user data before editing
         setPrevUser(user);
         setIsEditing(!isEditing);
@@ -218,11 +235,11 @@ export default function AccountInfo() {
 
     // function to save changes and exit edit mode
     const handleSave = () => {
-        if (prevUser.username !== user.username && !isUsernameAvailable) {
+        if (prevUser.username !== user.username && isUsernameAvailable === false) {
             alert('Username is already taken. Please choose a different one.');
             setInfo(prevUser);
             return;
-          }
+        }
 
         setIsEditing(false)
         saveChanges();
@@ -247,7 +264,7 @@ export default function AccountInfo() {
 
             if (response.status === 200) {
                 const data = await response.json();
-                return !data.isUsernameTaken;
+                return data.isAvailable;
             }
 
             return false;
@@ -261,8 +278,9 @@ export default function AccountInfo() {
     const saveChanges = async (e) => {
         // Check if the new username is available
         const isUsernameAvailable = await checkUsernameAvailability(user.username);
+        console.log(isUsernameAvailable);
 
-        if (prevUser.username !== user.username && !isUsernameAvailable) {
+        if (prevUser.username !== user.username && isUsernameAvailable === false) {
             alert('Username is already taken. Please choose a different one.');
             setInfo(prevUser);
             return;
