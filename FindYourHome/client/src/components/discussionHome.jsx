@@ -325,37 +325,47 @@ const DiscussionHome = () => {
         </select>
       )}
 
-      {!showForm && !showSearchBar && (
-        <Autosuggest
-        suggestions={suggestions}
-        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-        onSuggestionsClearRequested={onSuggestionsClearRequested}
-        getSuggestionValue={(suggestion) => suggestion}
-        renderSuggestion={(suggestion) => (
-          <div
-            key={suggestion}
-            className="suggestion"
+      {!showForm && (
+        <div>
+          <button
+            onClick={() => setShowSearchBar(!showSearchBar)}
+            className={styles.createNew}
           >
-            {suggestion}
-          </div>
-        )}
-        inputProps={{
-          type: "text",
-          placeholder: "Enter a city",
-          value: searchTerm,
-          onChange: handleInputChange,
-        }}
-    />
+            Toggle Search Bar
+          </button>
+        </div>
+      )}
+      
+      {!showForm && showSearchBar && (
+        <div>
+          <Autosuggest
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            getSuggestionValue={(suggestion) => suggestion}
+            renderSuggestion={(suggestion) => (
+              <div key={suggestion} className="suggestion">{suggestion}</div>
+            )}
+            inputProps={{
+              type: "text",
+              placeholder: "Enter a city",
+              value: searchTerm,
+              onChange: handleInputChange,
+            }}
+          />
+        </div>
       )}
 
       {!showForm && (
-        <button
-          onClick={() => setShowForm(true)}
-          className={styles.createNew}
-          disabled={!selectedCity}
-        >
-          Create New Discussion
-        </button>
+        <div>
+          <button
+            onClick={() => setShowForm(true)}
+            className={styles.createNew}
+            disabled={!selectedCity}
+          >
+            Create New Discussion
+          </button>
+        </div>
       )}
 
       {!showForm && showHist && <div className="recentlyDiscussedCities">
