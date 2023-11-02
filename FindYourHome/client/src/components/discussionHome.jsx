@@ -258,6 +258,11 @@ const DiscussionHome = () => {
           currentDiscussion.comments[currentDiscussion.comments.length - 1],
           ...prev,
         ]);
+        if(selectorChoice == "Anonymous") {
+          alert("Successfully Posted Anonymously");
+        } else {
+          alert(`Successfully Posted as ${user.username}`);
+        }
       } else {
         console.error("Failed to update discussion");
       }
