@@ -13,7 +13,9 @@ import Flags from "./strikes/flagComment";;
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
+  const [showSearchBar, setShowSearchBar] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const [showHist, setShowHist] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectorChoice, setSelectorChoice] = useState("");
@@ -23,13 +25,12 @@ const DiscussionHome = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(
-    new Queue()
-  );
+  const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [searchBarCity, setSearchBarCity] = useState('');
 
   // User Stuff
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -88,6 +89,21 @@ const DiscussionHome = () => {
     }
   };
 
+  const fetchData = async () => {
+    try {
+        const response = await fetch(`http://localhost:5050/record/cities_full_2`);
+        if (!response.ok) {
+            const message = `An error occurred: ${response.statusText}`;
+            window.alert(message);
+            return;
+        }
+        const cities = await response.json();
+        setAllCities(cities);
+    } catch (error) {
+        console.error("There was an error fetching the cities", error);
+    }
+}
+
   const handleCancel = () => {
     setShowForm(false);
     setError("");
@@ -131,6 +147,7 @@ const DiscussionHome = () => {
   // useEffect for fetching cities
   useEffect(() => {
     fetchCities();
+    fetchData();
   }, []);
 
   // useEffect for fetching discussions
@@ -139,6 +156,47 @@ const DiscussionHome = () => {
       fetchDiscussions(selectedCity);
     }
   }, [selectedCity]);
+
+  const handleQueueDiscussion = (discussion) => {
+    console.log("discussion queueing");
+    setShowHist(true);
+    // Check if there's a valid ??? DISCUSSION ??? to enqueue
+    if (discussion) {
+        // Enqueue the city name to the recent cities queue
+        const updatedQueue = recentDiscussionsQueue.enqueue(discussion);
+        setRecentDiscussionsQueue(updatedQueue);
+    } else {
+        console.warn("No valid discussion selected to queue.");
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setSearchTerm(e.target.value);
+    setSearchBarCity(e.target.value);
+    setIsDropdownOpen(true);
+  };
+
+  const clearHistory = () => {
+    setRecentDiscussionsQueue(new Queue());
+    setShowHist(false);
+  }
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    if (value) {
+        const inputValue = value.trim().toLowerCase();
+        const matchingCities = allCities.filter((searchBarCity) =>
+            searchBarCity.name.toLowerCase().startsWith(inputValue)
+        );
+
+        setSuggestions(matchingCities.map((searchBarCity) => searchBarCity.name).slice(0, 10));
+    } else {
+        setSuggestions([]);
+    }
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
 
   // Handle form submission
   const handleSubmit = async () => {
@@ -165,6 +223,7 @@ const DiscussionHome = () => {
       if (!responseGet.ok) throw new Error("Failed to get discussions");
 
       let currentDiscussion = data.discussion || {};
+      handleQueueDiscussion(selectedCity);
       currentDiscussion.comments = currentDiscussion.comments || [];
       currentDiscussion.comments.push({
         title,
@@ -172,8 +231,8 @@ const DiscussionHome = () => {
         selectorChoice,
         category: dropdownSelection,
         city: selectedCity,
-        numFlags: 0,
         numLikes: 0,
+        numFlags: 0,
         date: Date.now(),
         replies: [],
         postedBy: {
@@ -252,20 +311,12 @@ const DiscussionHome = () => {
       )}
 
       {!showForm && (
-        <button
-          onClick={() => setShowForm(true)}
-          className={styles.createNew}
-          disabled={!selectedCity}
-        >
-          Create New Discussion
-        </button>
-      )}
-
-      {!showForm && (
         <select
           className={styles.filter}
           value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
+          onChange={(e) => {setSelectedCity(e.target.value);
+                            handleQueueDiscussion(e.target.value);
+          }}
         >
           <option value="">Select a City to View or Post Discussions</option>
           {(cities || []).map((city, index) => (
@@ -275,6 +326,54 @@ const DiscussionHome = () => {
           ))}
         </select>
       )}
+
+      {!showForm && (
+        <div>
+          <button
+            onClick={() => setShowForm(true)}
+            className={styles.createNew}
+            disabled={!selectedCity}
+          >
+            Create New Discussion
+          </button>
+        </div>
+      )}
+
+      {!showForm && (
+        <div>
+          <button
+            onClick={() => setShowSearchBar(!showSearchBar)}
+            className={styles.createNew}
+          >
+            Toggle Search Bar
+          </button>
+        </div>
+      )}
+      
+      {!showForm && showSearchBar && (
+        <div>
+          <Autosuggest
+            suggestions={suggestions}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            getSuggestionValue={(suggestion) => suggestion}
+            renderSuggestion={(suggestion) => (
+              <div key={suggestion} className="suggestion">{suggestion}</div>
+            )}
+            inputProps={{
+              type: "text",
+              placeholder: "Enter a city",
+              value: searchTerm,
+              onChange: handleInputChange,
+            }}
+          />
+        </div>
+      )}
+
+      {!showForm && showHist && <div className="recentlyDiscussedCities">
+        <RecentDiscussionsQueue queue={recentDiscussionsQueue}/>
+        <button className="clearHistory" onClick={() => clearHistory()}>Clear History</button>
+      </div>}
 
       {!showForm && selectedCity && (
         <div className={styles.categoryFilterButtons}>
@@ -368,8 +467,7 @@ const DiscussionHome = () => {
                         <p>{discussion.content}</p>
                         <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                         <p className={styles.metadata}>
-                          City: {discussion.city} | Category:{" "}
-                          {discussion.category}
+                          City: {discussion.city} | Category: {discussion.category} | Likes: {discussion.numLikes} | Dislikes: {discussion.numDislikes}
                         </p>
                         <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                       </div>
@@ -388,7 +486,7 @@ const DiscussionHome = () => {
 
       {showForm && (
         <div className={styles.discussionForm}>
-          <h3>Create New Discussion</h3>
+          <h3>New Discussion about {selectedCity}</h3>
 
           <label>
             <span>Title of Post:</span>
