@@ -8,6 +8,8 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
   const [isFlagged, setIsFlagged] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isDisliked, setIsDisliked] = useState(false);
+  const [likesNum, setLikesNum] = useState(0);
+  const [dislikesNum, setDislikesNum] = useState(0);
 
 
   useEffect(() => {
@@ -25,6 +27,14 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
 
       const resp = await cityInfo.json();
       setDiscussion(resp.discussion);
+
+      if (type === "comment") {
+        setLikesNum(resp.discussion.comments[commentIndex].numLikes);
+        setDislikesNum(resp.discussion.comments[commentIndex].numDislikes);
+      } else {
+        setLikesNum(resp.discussion.comments[commentIndex].replies[replyIndex].numLikes);
+        setDislikesNum(resp.discussion.comments[commentIndex].replies[replyIndex].numDislikes);
+      }
     } catch (error) {
       console.error(error);
       // Handle the error or display an error message
@@ -67,116 +77,120 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
   }
 
   async function likeItem(type, commentIndex, replyIndex) {
+    let curr = { ...discussion };
     if (type === "comment") {
-      if (discussion && 
-          discussion.comments && 
-          discussion.comments[commentIndex] &&
-          discussion.comments[commentIndex].numLikes) {
-        discussion.comments[commentIndex].numLikes++;
+      if (curr && 
+          curr.comments && 
+          curr.comments[commentIndex] &&
+          curr.comments[commentIndex].numLikes) {
+        curr.comments[commentIndex].numLikes++;
       } else {
-        discussion.comments[commentIndex].numLikes = 1;
+        curr.comments[commentIndex].numLikes = 1;
       }
     } else if (type === "reply") {
       if (
-        discussion.comments[commentIndex] &&
-        discussion.comments[commentIndex].replies &&
-        discussion.comments[commentIndex].replies[replyIndex]
+        curr.comments[commentIndex] &&
+        curr.comments[commentIndex].replies &&
+        curr.comments[commentIndex].replies[replyIndex]
       ) {
-        if (discussion.comments[commentIndex].replies[replyIndex].numLikes) {
-          discussion.comments[commentIndex].replies[replyIndex].numLikes++;
+        if (curr.comments[commentIndex].replies[replyIndex].numLikes) {
+          curr.comments[commentIndex].replies[replyIndex].numLikes++;
         } else {
-          discussion.comments[commentIndex].replies[replyIndex].numLikes = 1;
+          curr.comments[commentIndex].replies[replyIndex].numLikes = 1;
         }
       }
     }
-    await updateDiscussionLike(discussion);
+    await updateDiscussionLike(curr);
     setIsLiked(true);
-    // console.log(discussion.comments[commentIndex].numlikes);
+    console.log(discussion.comments[commentIndex].numlikes);
   }
 
   async function dislikeItem(type, commentIndex, replyIndex) {
+    let curr = { ...discussion};
     if (type === "comment") {
-      if (discussion && 
-          discussion.comments && 
-          discussion.comments[commentIndex] &&
-          discussion.comments[commentIndex].numDislikes) {
-        discussion.comments[commentIndex].numDislikes++;
+      if (curr && 
+          curr.comments && 
+          curr.comments[commentIndex] &&
+          curr.comments[commentIndex].numDislikes) {
+        curr.comments[commentIndex].numDislikes++;
       } else {
-        discussion.comments[commentIndex].numDislikes = 1;
+        curr.comments[commentIndex].numDislikes = 1;
       }
     } else if (type === "reply") {
       if (
-        discussion.comments[commentIndex] &&
-        discussion.comments[commentIndex].replies &&
-        discussion.comments[commentIndex].replies[replyIndex]
+        curr.comments[commentIndex] &&
+        curr.comments[commentIndex].replies &&
+        curr.comments[commentIndex].replies[replyIndex]
       ) {
-        if (discussion.comments[commentIndex].replies[replyIndex].numDislikes) {
-          discussion.comments[commentIndex].replies[replyIndex].numDislikes++;
+        if (curr.comments[commentIndex].replies[replyIndex].numDislikes) {
+          curr.comments[commentIndex].replies[replyIndex].numDislikes++;
         } else {
-          discussion.comments[commentIndex].replies[replyIndex].numDislikes = 1;
+          curr.comments[commentIndex].replies[replyIndex].numDislikes = 1;
         }
       }
     }
-    await updateDiscussionLike(discussion);
+    await updateDiscussionLike(curr);
     setIsDisliked(true);
     // console.log(discussion.comments[commentIndex].numlikes);
   }
 
   async function removeLikeItem(type, commentIndex, replyIndex) {
+    let curr = { ...discussion};
     if (type === "comment") {
-      if (discussion && 
-          discussion.comments && 
-          discussion.comments[commentIndex] &&
-          discussion.comments[commentIndex].numLikes) {
-        discussion.comments[commentIndex].numLikes--;
+      if (curr && 
+          curr.comments && 
+          curr.comments[commentIndex] &&
+          curr.comments[commentIndex].numLikes) {
+        curr.comments[commentIndex].numLikes--;
       } else {
-        discussion.comments[commentIndex].numLikes = 0;
+        curr.comments[commentIndex].numLikes = 0;
       }
     } else if (type === "reply") {
       if (
-        discussion.comments[commentIndex] &&
-        discussion.comments[commentIndex].replies &&
-        discussion.comments[commentIndex].replies[replyIndex]
+        curr.comments[commentIndex] &&
+        curr.comments[commentIndex].replies &&
+        curr.comments[commentIndex].replies[replyIndex]
       ) {
-        if (discussion.comments[commentIndex].replies[replyIndex].numLikes) {
-          discussion.comments[commentIndex].replies[replyIndex].numLikes--;
+        if (curr.comments[commentIndex].replies[replyIndex].numLikes) {
+          curr.comments[commentIndex].replies[replyIndex].numLikes--;
         } else {
-          discussion.comments[commentIndex].replies[replyIndex].numLikes = 0;
+          curr.comments[commentIndex].replies[replyIndex].numLikes = 0;
         }
       }
     }
-    await updateDiscussionLike(discussion);
+    await updateDiscussionLike(curr);
     setIsLiked(false);
     // console.log(discussion.comments[commentIndex].numlikes);
   }
 
   async function removeDislikeItem(type, commentIndex, replyIndex) {
+    let curr = { ...discussion};
     if (type === "comment") {
-      if (discussion && 
-          discussion.comments && 
-          discussion.comments[commentIndex] &&
-          discussion.comments[commentIndex].numDislikes) {
-        discussion.comments[commentIndex].numDislikes--;
+      if (curr && 
+          curr.comments && 
+          curr.comments[commentIndex] &&
+          curr.comments[commentIndex].numDislikes) {
+        curr.comments[commentIndex].numDislikes--;
       } else {
-        discussion.comments[commentIndex].numDislikes = 0;
+        curr.comments[commentIndex].numDislikes = 0;
       }
     } else if (type === "reply") {
       if (
-        discussion.comments[commentIndex] &&
-        discussion.comments[commentIndex].replies &&
-        discussion.comments[commentIndex].replies[replyIndex]
+        curr.comments[commentIndex] &&
+        curr.comments[commentIndex].replies &&
+        curr.comments[commentIndex].replies[replyIndex]
       ) {
-        if (discussion.comments[commentIndex].replies[replyIndex].numDislikes) {
-          discussion.comments[commentIndex].replies[replyIndex].numDislikes--;
+        if (curr.comments[commentIndex].replies[replyIndex].numDislikes) {
+          curr.comments[commentIndex].replies[replyIndex].numDislikes--;
         } else {
-          discussion.comments[commentIndex].replies[replyIndex].numDislikes = 0;
+          curr.comments[commentIndex].replies[replyIndex].numDislikes = 0;
         }
       }
     }
-    await updateDiscussionLike(discussion);
+    await updateDiscussionLike(curr);
     setIsDisliked(false);
     // console.log(discussion.comments[commentIndex].numlikes);
-    console.log(discussion.comments[commentIndex].numlikes);
+    console.log(curr.comments[commentIndex].numlikes);
   }
 
   async function get_strikes(username) {
@@ -192,32 +206,19 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
     });
 
     const resp = await city_info.json();
-
-  
     return resp.strikes;
-
-
-
-    return resp.strikes;
-}
+  }
 
   async function addStrike(username) {
   
-  
     var strikes = await get_strikes(username);
-    //console.log(strikes)
 
     strikes.comments_removed++;
     if (strikes.comments_removed === 2) {
       strikes.is_banned = true;
     }
 
-
-
-  
-
     console.log(strikes);
-
 
     await fetch("http://localhost:5050/strikes/" + username, {
       method: "PATCH",
@@ -313,22 +314,22 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
     <div className="flags-container">
       {!isLiked && (
         <button className="flags-button like-button" onClick={() => likeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "👍" : "👍"}
+          {"👍" + likesNum}
         </button>
       )}
       {isLiked && (
         <button className="flags-button like-button" onClick={() => removeLikeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Unlike Comment" : "Unlike Reply"}
+          {"Unlike\n" + likesNum}
         </button>
       )}
       {!isDisliked && (
         <button className="flags-button dislike-button" onClick={() => dislikeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "👎" : "👎"}
+          {"👎" + dislikesNum}
         </button>
       )}
       {isDisliked && (
         <button className="flags-button dislike-button" onClick={() => removeDislikeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Remove Dislike from Comment" : "Remove Dislike from Reply"}
+          {"Undislike\n" + dislikesNum}
         </button>
       )}
       {!isFlagged && (
