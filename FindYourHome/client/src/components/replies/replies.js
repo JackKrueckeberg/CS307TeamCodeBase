@@ -111,7 +111,6 @@ export default function Replies({ commentIndex, _selectedCity }) {
         <div key={index} className={styles.replyItem}>
           <div className={styles.replyDetails}>
             <span className={styles.replyUsername}>{reply.username}</span>
-            <Flags type="reply" commentIndex={commentIndex} replyIndex={index} _selectedCity={_selectedCity} /> {/* Insert Flags component for replies */}
           </div>
           <p className={styles.replyContent}>{reply.content}</p>
           {reply.username === currentUsername && (
@@ -119,6 +118,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
               Remove Reply
             </button>
           )}
+          <Flags type="reply" commentIndex={commentIndex} replyIndex={index} _selectedCity={_selectedCity} /> {/* Insert Flags component for replies */}
         </div>
       ))}
       <div>

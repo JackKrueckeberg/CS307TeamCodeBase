@@ -3,7 +3,7 @@ import { useUser } from '../../contexts/UserContext';
 import { useLocalStorage } from "@uidotdev/usehooks";
 
 
-export default function removeBookmark() {
+export default function RemoveBookmark() {
     
     const [bookmarks, setBookmarks] = useState([]);
     const {user: userProfile } = useUser();
@@ -56,7 +56,7 @@ export default function removeBookmark() {
             }
         }
 
-        await fetch("http://localhost:5050/bookmarked_discussions/user@example.com", {
+        await fetch("http://localhost:5050/bookmarked_discussions/" + userProfile.email, {
             method: "PATCH",
             headers: {
               "Content-Type": "application/json",
