@@ -14,6 +14,7 @@ import Flags from "./strikes/flagComment";;
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [showHist, setShowHist] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [selectorChoice, setSelectorChoice] = useState("");
@@ -23,9 +24,7 @@ const DiscussionHome = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(
-    new Queue()
-  );
+  const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [error, setError] = useState("");
@@ -140,6 +139,24 @@ const DiscussionHome = () => {
     }
   }, [selectedCity]);
 
+  const handleQueueDiscussion = (discussion) => {
+    console.log("discussion queueing");
+    setShowHist(true);
+    // Check if there's a valid ??? DISCUSSION ??? to enqueue
+    if (discussion) {
+        // Enqueue the city name to the recent cities queue
+        const updatedQueue = recentDiscussionsQueue.enqueue(discussion);
+        setRecentDiscussionsQueue(updatedQueue);
+    } else {
+        console.warn("No valid discussion selected to queue.");
+    }
+};
+
+const clearHistory = () => {
+  setRecentDiscussionsQueue(new Queue());
+  setShowHist(false);
+}
+
   // Handle form submission
   const handleSubmit = async () => {
     let missingFields = [];
@@ -165,6 +182,7 @@ const DiscussionHome = () => {
       if (!responseGet.ok) throw new Error("Failed to get discussions");
 
       let currentDiscussion = data.discussion || {};
+      handleQueueDiscussion(selectedCity);
       currentDiscussion.comments = currentDiscussion.comments || [];
       currentDiscussion.comments.push({
         title,
@@ -252,16 +270,6 @@ const DiscussionHome = () => {
       )}
 
       {!showForm && (
-        <button
-          onClick={() => setShowForm(true)}
-          className={styles.createNew}
-          disabled={!selectedCity}
-        >
-          Create New Discussion
-        </button>
-      )}
-
-      {!showForm && (
         <select
           className={styles.filter}
           value={selectedCity}
@@ -275,6 +283,21 @@ const DiscussionHome = () => {
           ))}
         </select>
       )}
+
+      {!showForm && (
+        <button
+          onClick={() => setShowForm(true)}
+          className={styles.createNew}
+          disabled={!selectedCity}
+        >
+          Create New Discussion
+        </button>
+      )}
+
+      {!showForm && showHist && <div className="recentlyDiscussedCities">
+        <RecentDiscussionsQueue queue={recentDiscussionsQueue}/>
+        <button className="clearHistory" onClick={() => clearHistory()}>Clear History</button>
+      </div>}
 
       {!showForm && selectedCity && (
         <div className={styles.categoryFilterButtons}>
