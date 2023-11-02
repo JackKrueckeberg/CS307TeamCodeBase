@@ -33,6 +33,10 @@ router.get("/:email", async (req, res) => {
   }
 });
 
+
+
+
+
 //route the create a new user
 router.post("/createUser", async (req, res) => {
   let newDocument = {
