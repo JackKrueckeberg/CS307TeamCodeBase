@@ -136,6 +136,12 @@ export default function AccountInfo() {
             setError("That password does not match our records. Please try again.");
             return;
         }
+        if (oldPassword === newPassword) {
+            setError("New password cannot be the same as the old password. Please try again.");
+            return;
+        }
+
+
         if (newPassword !== confirmPassword) {
             setError("Passwords do not match. Please try again.");
             return;

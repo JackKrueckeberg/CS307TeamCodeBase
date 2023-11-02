@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import '../Stylings/favorites.css';
 import Modal from "react-modal";
 import { useUser } from '../contexts/UserContext';
+import { useNavigate } from "react-router";
+import { useCity } from "../contexts/CityContext";
 
 
 export default function Favorites() {
@@ -23,6 +25,9 @@ export default function Favorites() {
     const [showShareModal, setShareModal] = useState(false);
     const [recipient, setRecipient] = useState('');
     const [isExisting, setIsExisting] = useState(true);
+
+    const {globalCity, setGlobalCity} = useCity();
+    const navigate = useNavigate();
 
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
     const [errorMessage, setError] = useState(''); // errorMessage will display when there is an error
@@ -162,6 +167,18 @@ export default function Favorites() {
         setFavoriteCities(newFavs);
     }
 
+    /* Got this from preferences.js */
+    const handleCity = async (value) => {
+        for (var i = 0; i < favorite_cities.length; i++) {
+          if (favorite_cities[i].name === value) {
+            var tempCity = favorite_cities[i];
+            setGlobalCity(favorite_cities[i]);
+            navigate("/cityPage", favorite_cities[i]);
+            return;
+          }
+        }
+    }
+
     // function to toggle between view and select mode
     const handleSelect = () => {
         setIsSelecting(!isSelecting);
@@ -208,7 +225,16 @@ export default function Favorites() {
 
         // TODO finish the send method
         const citiesToSend = favorite_cities.filter((city, index) => selectedCities[index]);
-        const message = `Here are my favorite cites: ${citiesToSend.join(', ')}`;
+        const message = "Here are my favorite cites: \n\n";
+        const cityDetails = citiesToSend.map((city) => {
+            return Object.entries(city) 
+            .map(([key, value]) => `${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}`)
+            .join(', ');
+        })
+
+        const buttonCode = `<button onclick="alert('City details: ${cityDetails.join(', ')}')">View City</button>`;
+
+        const finalMessage = `${message}${cityDetails.join('\n')}\n\n${buttonCode}`;
 
         console.log(message);
 
@@ -220,7 +246,7 @@ export default function Favorites() {
             body: JSON.stringify({
                 senderUsername: username,
                 recipientUsername: recipient,
-                content: message,
+                content: finalMessage,
                 timeSent: new Date(),
             }),
         });
@@ -355,6 +381,7 @@ export default function Favorites() {
                                                     return (
                                                         <span key={key}>
                                                             {key.charAt(0).toUpperCase() + key.slice(1)}: {value},{' '}
+                                                            <button onClick={() => handleCity(value)}>View</button>
                                                         </span>
                                                     );
                             

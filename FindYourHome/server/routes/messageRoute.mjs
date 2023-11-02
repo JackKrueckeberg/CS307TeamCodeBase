@@ -101,6 +101,8 @@ router.post("/share-favorite-cities", async (req, res) => {
         senderMessageBoard.time = timeSent;
         recipientMessageBoard.hasNewMessage = true;
         senderMessageBoard.hasNewMessage = false;
+        recipientMessageBoard.sentNotification = false;
+        senderMessageBoard.sentNotification = true;
         
         await collection.updateOne(
           { username: recipientUsername },
@@ -121,6 +123,7 @@ router.post("/share-favorite-cities", async (req, res) => {
           time: timeSent,
           messages: [],
           hasNewMessage: false,
+          sentNotification: true,
         };
 
         const messageBoard_2 = {
@@ -128,6 +131,7 @@ router.post("/share-favorite-cities", async (req, res) => {
           time: timeSent,
           messages: [],
           hasNewMessage: true,
+          sentNotification: false,
         };
 
         sender.messageList = sender.messageList || [];

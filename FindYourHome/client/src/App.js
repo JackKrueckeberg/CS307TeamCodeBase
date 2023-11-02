@@ -26,7 +26,8 @@ import DiscussNav from './components/discussNav';
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
- 
+import MessageNotification from './components/messageNotification';
+
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
@@ -77,6 +78,7 @@ const App = () => {
                         <Route path="/delete-account" element={<DeleteAccount />} />
                         <Route path="/discussionHome" element={<DiscussionHome />} />
                         <Route path="/messageBoards" element={<MessageList/>} />
+                        <Route path="/notification" element={<MessageNotification/>} />
                     </Routes>
                 </CompareCitiesProvider>
             </CityContext.Provider>

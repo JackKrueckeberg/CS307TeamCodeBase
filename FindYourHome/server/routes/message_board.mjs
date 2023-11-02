@@ -18,6 +18,7 @@ router.post("/create-board", async (req, res) => {
             time: time,
             messages: messages,
             hasNewMessage: false,
+            sentNotification: true,
         };
 
         const messageBoard_2 = {
@@ -25,6 +26,7 @@ router.post("/create-board", async (req, res) => {
             time: time,
             messages: messages,
             hasNewMessage: hasNewMessage,
+            sentNotification: false,
         };
 
         user_1.messageList = user_1.messageList || [];
@@ -77,6 +79,34 @@ router.patch("/update-board", async (req, res) => {
       console.error(error);
       return res.status(500);
     }
+});
+
+// update the hasNewMessage flag in a message board
+router.patch("/update-board-notify", async (req, res) => {
+  const { username, messagesWith } = req.body;
+  try {
+    const collection = await db.collection("users");
+    const owner = await collection.findOne({ username: username });
+    const messagesWithUsername = await collection.findOne({ username: messagesWith });
+
+    if (owner && messagesWithUsername) {
+        const ownerBoard = owner.messageList.find(
+          (entry) => entry.messagesWith === messagesWith
+        );
+      
+        if (ownerBoard) {
+          ownerBoard.sentNotification = true;
+
+          await collection.updateOne({ username: username }, { $set: { messageList: owner.messageList } });
+      
+          return res.status(200).send('Message Board has been updated!');
+        }
+        return res.status(400).send("Recipient or sender not found.");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500);
+  }
 });
   
 
