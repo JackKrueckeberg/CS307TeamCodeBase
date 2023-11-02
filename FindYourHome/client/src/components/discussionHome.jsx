@@ -234,6 +234,7 @@ const DiscussionHome = () => {
         category: dropdownSelection,
         city: selectedCity,
         numLikes: 0,
+        numDislikes: 0,
         numFlags: 0,
         date: Date.now(),
         replies: [],
@@ -281,31 +282,31 @@ const DiscussionHome = () => {
 
       {!showForm && (
         <div className="navBar">
-          <div class="profiletooltip">
+          <div className="profiletooltip">
             <button className="profilebtn" onClick={() => navigate("/profile")}>
               Profile
             </button>
-            <span class="profiletooltiptext">
+            <span className="profiletooltiptext">
               View your profile page and make edits
             </span>
           </div>
-          <div class="discussiontooltip">
+          <div className="discussiontooltip">
             <button
               className="discussionButton"
               onClick={() => navigate("/view-city")}
             >
               City Search
             </button>
-            <span class="discussiontooltiptext">Search for cities by name</span>
+            <span className="discussiontooltiptext">Search for cities by name</span>
           </div>
-          <div class="advancedtooltip">
+          <div className="advancedtooltip">
             <button
               className="advancedSearch"
               onClick={() => navigate("/preferences")}
             >
               Advanced Search
             </button>
-            <span class="advancedtooltiptext">
+            <span className="advancedtooltiptext">
               Search based on attributes of cities
             </span>
           </div>
@@ -475,7 +476,7 @@ const DiscussionHome = () => {
                         <p>{discussion.content}</p>
                         <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                         <p className={styles.metadata}>
-                          City: {discussion.city} | Category: {discussion.category} | Likes: {discussion.numLikes} | Dislikes: {discussion.numDislikes}
+                          City: {discussion.city} | Category: {discussion.category}
                         </p>
                         <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                       </div>
