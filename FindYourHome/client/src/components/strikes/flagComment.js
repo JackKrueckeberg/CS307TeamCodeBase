@@ -6,6 +6,7 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
   const [discussion, setDiscussion] = useState({});
   const { user: userProfile } = useUser();
   const [isFlagged, setIsFlagged] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     getDiscussion();
@@ -62,20 +63,59 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
   }
 
   async function likeItem(type, commentIndex, replyIndex) {
-    let curr = {...discussion};
     if (type === "comment") {
-      curr.comments[commentIndex].numLikes++;
+      if (discussion && 
+          discussion.comments && 
+          discussion.comments[commentIndex] &&
+          discussion.comments[commentIndex].numLikes) {
+        discussion.comments[commentIndex].numLikes++;
+      } else {
+        discussion.comments[commentIndex].numLikes = 1;
+      }
     } else if (type === "reply") {
       if (
-        curr.comments[commentIndex] &&
-        curr.comments[commentIndex].replies &&
-        curr.comments[commentIndex].replies[replyIndex]
+        discussion.comments[commentIndex] &&
+        discussion.comments[commentIndex].replies &&
+        discussion.comments[commentIndex].replies[replyIndex]
       ) {
-        curr.comments[commentIndex].replies[replyIndex].numLikes++;
+        if (discussion.comments[commentIndex].replies[replyIndex].numlikes) {
+          discussion.comments[commentIndex].replies[replyIndex].numlikes++;
+        } else {
+          discussion.comments[commentIndex].replies[replyIndex].numlikes = 1;
+        }
       }
     }
-    await updateDiscussionLike(curr);
-    console.log(curr.comments[commentIndex].numLikes);
+    await updateDiscussionLike(discussion);
+    setIsLiked(true);
+    console.log(discussion.comments[commentIndex].numlikes);
+  }
+
+  async function removeLikeItem(type, commentIndex, replyIndex) {
+    if (type === "comment") {
+      if (discussion && 
+          discussion.comments && 
+          discussion.comments[commentIndex] &&
+          discussion.comments[commentIndex].numLikes) {
+        discussion.comments[commentIndex].numLikes--;
+      } else {
+        discussion.comments[commentIndex].numLikes = 0;
+      }
+    } else if (type === "reply") {
+      if (
+        discussion.comments[commentIndex] &&
+        discussion.comments[commentIndex].replies &&
+        discussion.comments[commentIndex].replies[replyIndex]
+      ) {
+        if (discussion.comments[commentIndex].replies[replyIndex].numlikes) {
+          discussion.comments[commentIndex].replies[replyIndex].numlikes--;
+        } else {
+          discussion.comments[commentIndex].replies[replyIndex].numlikes = 0;
+        }
+      }
+    }
+    await updateDiscussionLike(discussion);
+    setIsLiked(false);
+    console.log(discussion.comments[commentIndex].numlikes);
   }
 
   async function removeComment(commentIndex) {
@@ -137,11 +177,16 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
   return (
     <div>
       {/* Show the flag button only if it hasn't been flagged */}
-      {
+      {!isLiked && (
         <button onClick={() => likeItem(type, commentIndex, replyIndex)}>
-          {type === "comment" ? "Comment Likes: {(discussion.comments[commentIndex].numLikes)}" : "Like Reply"}
+          {type === "comment" ? "Like Comment" : "Like Reply"}
         </button>
-      }
+      )}
+      {isLiked && (
+        <button onClick={() => removeLikeItem(type, commentIndex, replyIndex)}>
+          {type === "comment" ? "Remove Comment Like" : "Remove Reply Like"}
+        </button>
+      )}
       {!isFlagged && (
         <button onClick={() => flagItem(type, commentIndex, replyIndex)}>
           {type === "comment" ? "Flag Comment" : "Flag Reply"}

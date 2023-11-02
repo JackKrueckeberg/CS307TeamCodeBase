@@ -314,7 +314,9 @@ const DiscussionHome = () => {
         <select
           className={styles.filter}
           value={selectedCity}
-          onChange={(e) => setSelectedCity(e.target.value)}
+          onChange={(e) => {setSelectedCity(e.target.value);
+                            handleQueueDiscussion(e.target.value);
+          }}
         >
           <option value="">Select a City to View or Post Discussions</option>
           {(cities || []).map((city, index) => (
@@ -465,8 +467,7 @@ const DiscussionHome = () => {
                         <p>{discussion.content}</p>
                         <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                         <p className={styles.metadata}>
-                          City: {discussion.city} | Category:{" "}
-                          {discussion.category}
+                          City: {discussion.city} | Category: {discussion.category} | Likes: {discussion.numLikes}
                         </p>
                         <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                       </div>

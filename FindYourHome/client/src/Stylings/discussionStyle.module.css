@@ -4,6 +4,7 @@
     align-items: center;
     gap: 20px;
     max-width: 600px;
+    min-height: 600px;
     margin: 0 auto;
     margin-top: 55px;
     position: absolute;
@@ -87,8 +88,8 @@ body {
 }
 .threadContainer {
     margin-top: 5sxpx;
-    flex-grow: 1;  
-    overflow-y: auto;  
+    flex-grow: 1;
+    /* overflow-y: auto; */
     text-align: center;
     border-radius: 20px;
     padding: 1rem;
@@ -100,10 +101,11 @@ body {
 }
 
 .discussionPost {
-    display: flex;
+    /* display: flex; */
     background-color: #fff;
     padding: 15px;
-    margin-bottom: 20px;
+    min-height: 1600;
+    /* margin-bottom: 20px; */
     border-radius: 5px;
     align-items: flex-start;
 }
