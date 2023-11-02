@@ -49,7 +49,14 @@ export default function Profile() {
                 </div>
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
+                <div>
+
+                <button className="logoutbtn" onClick={() => navigate('/delete-account')}>Delete Account</button>
+                </div>
+
+
             </div>
+            
             
 
             <div className="tabs-block">
