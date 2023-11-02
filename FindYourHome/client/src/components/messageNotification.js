@@ -75,9 +75,9 @@ export default function MessageNotification() {
                 );
 
                 if (found) {
+                    updateMessageBoard(found);    
                     setNotificationModal(true);
                     setNotification(`You have a new message from ${found.messagesWith}.`);
-                    updateMessageBoard(found);    
                         
                     // Set a timeout to hide the notification after 8 seconds
                     setTimeout(() => {

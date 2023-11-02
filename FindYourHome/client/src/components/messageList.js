@@ -2,18 +2,22 @@ import React, { useState, useEffect, useRef } from "react";
 import { useUser } from '../contexts/UserContext';
 import '../Stylings/messageBoard.css';
 import Modal from "react-modal";
+import { useNavigate } from "react-router";
+import { useCity } from "../contexts/CityContext";
 
 export default function MessageList() {
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const [messageBoards, setMessageBoards] = useState([]);
     const [messages, setMessages] = useState([]);
     const [selectedMessageBoard, setSelectedMessageBoard] = useState(null);
+    const {globalCity, setGlobalCity} = useCity();
 
     const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
     const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
 
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setError] = useState('');
+    const navigate = useNavigate();
 
     const [user, setInfo] = useState(storedSesUser || storedLocUser || userProfile);
 
@@ -217,6 +221,11 @@ export default function MessageList() {
         }
     }
 
+    const handleCityButtonClick = async (city) => {
+        setGlobalCity(city);
+        navigate("/cityPage", city);
+    }
+
     const updateMessageBoard = async (messageBoard) => {
         console.log(messageBoard.messagesWith);
         const response = await fetch('http://localhost:5050/messageBoard/update-board', {
@@ -260,6 +269,7 @@ export default function MessageList() {
                     recipientUsername: recipient,
                     content: newMessage,
                     timeSent: new Date(),
+                    isList: false,
                 }),
             });
 
@@ -275,6 +285,18 @@ export default function MessageList() {
         } else {
             alert("no recipient");
         }
+    }
+
+    const processMessage = (message) => {
+        if (message.startsWith("Here are my favorite cities: ")) {
+            const citiesString = message.replace("Here are my favorite cities: ", "");
+            const cities = citiesString.split(',').map(city => city.trim());
+
+            console.log(cities);
+            return cities;
+          }
+        
+          return [];
     }
 
     return (
@@ -329,7 +351,28 @@ export default function MessageList() {
                     <div className="message-board-container">
                         <h2>Messages with<span>{selectedMessageBoard.messagesWith}</span></h2>
                         <ul className="message-board scrollable" ref={messagesRef}>
-                            {messages.map((message, index) => (
+                            {messages.map((message, index) => {
+                                if (message.isList == true) {
+                                    const cities = processMessage(message.content);
+                                    return (
+                                    <li
+                                    key={index}
+                                    className={`message ${username === message.sender ? 'sent' : 'received'}`}
+                                >
+                                    <div className="message-content-container">
+                                        <p className="message-sender">{message.sender}</p>
+                                        <div className={`message-content ${username === message.sender ? 'sent' : 'received'}`}>
+                                            <p>Here are my favorite cities:</p>
+                                            {cities.map(city => (
+                                                <button className="city-button" key={city} onClick={() => handleCityButtonClick(city)}>{city}</button>
+                                            ))}
+                                        </div>
+                                        <p className="message-timestamp">{new Date(message.timeSent).toLocaleString()}</p>
+                                    </div>
+                                </li>
+                                    );
+                                } else {
+                                    return (
                                 <li
                                     key={index}
                                     className={`message ${username === message.sender ? 'sent' : 'received'}`}
@@ -342,7 +385,9 @@ export default function MessageList() {
                                         <p className="message-timestamp">{new Date(message.timeSent).toLocaleString()}</p>
                                     </div>
                                 </li>
-                            ))}
+                                    );
+                                }
+                            })}
                         </ul>
     
                         <div className="message-input">
