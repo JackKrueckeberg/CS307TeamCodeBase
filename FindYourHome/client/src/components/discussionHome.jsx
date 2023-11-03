@@ -11,6 +11,7 @@ import Replies from "./replies/replies";
 import AddReply from "./replies/addReply"
 import Flags from "./strikes/flagComment";
 import AddBookmark from "./saved_discussions/addBookmark";
+import AddFavDisc from "./saved_discussions/addFavDisc.js";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -435,6 +436,7 @@ const DiscussionHome = () => {
             Other
           </button>
           <AddBookmark _bookmark={selectedCity}/>
+          <AddFavDisc _favDisc={selectedCity}/>
         </div>
       )}
 

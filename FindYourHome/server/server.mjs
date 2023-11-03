@@ -18,6 +18,7 @@ import get_tweet from "./routes/get_tweet.mjs";
 import message from "./routes/messageRoute.mjs";
 import messageBoard from "./routes/message_board.mjs";
 import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
+import favorite_discussions from "./routes/favorite_discussions.mjs";
 import achievementsData from "./routes/achievementsData.mjs";
 
 import strikes from "./routes/strikes.mjs"
@@ -48,6 +49,7 @@ app.use("/recent_searches", recent_searches);
 app.use("/recent_discussion_searches", recent_discussion_searches);
 app.use("/get_tweet", get_tweet);
 app.use("/bookmarked_discussions", bookmarked_discussions)
+app.use("/favorite_discussions", favorite_discussions)
 app.use("/messageRoute", message);
 app.use("/messageBoard", messageBoard);
 app.use("/strikes", strikes)
