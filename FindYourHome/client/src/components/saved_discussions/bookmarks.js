@@ -77,7 +77,7 @@ export default function Bookmarks() {
           ) : (
             bookmarks.map((bookmark, index) => (
               <li key={index} className="bookmark-item">
-                  <a href={`/discussionHome`}>{bookmark}</a>
+                  <a href={`/disc`}>{bookmark}</a>
                   <button onClick={() => removeBookmark(bookmark)}>Remove Bookmark</button>
               </li>
             ))
