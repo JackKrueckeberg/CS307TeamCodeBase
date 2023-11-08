@@ -58,7 +58,8 @@ router.post("/createUser", async (req, res) => {
     achievements: {
       city_searches: 0
     },
-    bookmarked_discussions: []
+    bookmarked_discussions: [],
+    favorite_discussions: []
   };
   console.log("newDocument");
   let collection = db.collection("users");

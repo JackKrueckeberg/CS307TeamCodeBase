@@ -29,11 +29,29 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       setDiscussion(resp.discussion);
 
       if (type === "comment") {
-        setLikesNum(resp.discussion.comments[commentIndex].numLikes);
-        setDislikesNum(resp.discussion.comments[commentIndex].numDislikes);
+        if (resp.discussion.comments[commentIndex].numLikes) {
+          setLikesNum(resp.discussion.comments[commentIndex].numLikes);
+        } else {
+          setLikesNum(0);
+        }
+
+        if (resp.discussion.comments[commentIndex].numDislikes) {
+          setDislikesNum(resp.discussion.comments[commentIndex].numDislikes);
+        } else {
+          setDislikesNum(0);
+        }
       } else {
-        setLikesNum(resp.discussion.comments[commentIndex].replies[replyIndex].numLikes);
-        setDislikesNum(resp.discussion.comments[commentIndex].replies[replyIndex].numDislikes);
+        if (resp.discussion.comments[commentIndex].replies[replyIndex].numLikes) {
+          setLikesNum(resp.discussion.comments[commentIndex].replies[replyIndex].numLikes);
+        } else {
+          setLikesNum(0);
+        }
+
+        if (resp.discussion.comments[commentIndex].replies[replyIndex].numDislikes) {
+          setDislikesNum(resp.discussion.comments[commentIndex].replies[replyIndex].numDislikes);
+        } else {
+          setDislikesNum(0);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -319,7 +337,7 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       )}
       {isLiked && (
         <button className="flags-button like-button" onClick={() => removeLikeItem(type, commentIndex, replyIndex)}>
-          {"Unlike\n" + likesNum}
+          {"Unlike\n" + (likesNum + 1)}
         </button>
       )}
       {!isDisliked && (
@@ -329,7 +347,7 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       )}
       {isDisliked && (
         <button className="flags-button dislike-button" onClick={() => removeDislikeItem(type, commentIndex, replyIndex)}>
-          {"Undislike\n" + dislikesNum}
+          {"Undislike\n" + (dislikesNum + 1)}
         </button>
       )}
       {!isFlagged && (
