@@ -454,12 +454,26 @@ export default function Create() {
                     onChange={(e) => updateForm({ population: e.target.value })}
                   />
                 </td>
+                <td>
+                  <input
+                    className="padding"
+                    placeholder="preference weight"
+                    type="number"
+                  />
+                </td>
               </tr>
             </tbody>
             <tbody>
               <tr>
                 <td>
                   <label>Region Preference:</label>
+                </td>
+                <td>
+                  <input
+                    className="padding"
+                    placeholder="preference weight"
+                    type="number"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -589,6 +603,13 @@ export default function Create() {
                     <option value="WY">Wyoming</option>
                   </select>
                 </td>
+                <td>
+                  <input
+                    className="padding"
+                    placeholder="preference weight"
+                    type="number"
+                  />
+                </td>
               </tr>
             </tbody>
             <div className="padding" />
@@ -603,6 +624,13 @@ export default function Create() {
                     onChange={(e) => updateForm({ zip_code: e.target.value })}
                   />
                 </td>
+                <td>
+                  <input
+                    className="padding"
+                    placeholder="preference weight"
+                    type="number"
+                  />
+                </td>
               </tr>
             </tbody>
             <div className="padding" />
@@ -614,6 +642,13 @@ export default function Create() {
                     placeholder="County Preference"
                     value={form.county}
                     onChange={(e) => updateForm({ county: e.target.value })}
+                  />
+                </td>
+                <td>
+                  <input
+                    className="padding"
+                    placeholder="preference weight"
+                    type="number"
                   />
                 </td>
               </tr>
@@ -630,6 +665,13 @@ export default function Create() {
                     onChange={(e) =>
                       updateForm({ median_income: e.target.value })
                     }
+                  />
+                </td>
+                <td>
+                  <input
+                    className="padding"
+                    placeholder="preference weight"
+                    type="number"
                   />
                 </td>
               </tr>
