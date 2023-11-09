@@ -62,7 +62,7 @@ export const Login = () => {
                     sessionStorage.setItem('currentUser', JSON.stringify(data.user));
                     setLoggedInUser(data.user);
                 }
-                navigate("/view-city");                  
+                navigate("/TwoFactor");                  
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);
