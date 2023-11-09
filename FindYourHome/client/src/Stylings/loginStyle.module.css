@@ -162,11 +162,9 @@
 .logoutMessage {
   background-color: rgb(62, 202, 62);
   color: white;
-  margin-top: 40px;
   text-align: center;
   border-radius: 5px;
-  width: 1000px;
-  text-align: center;
+  width: 500px;
 }
 
 .wave {
