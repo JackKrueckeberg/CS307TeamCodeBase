@@ -29,7 +29,13 @@ export default function Create() {
     zip_code: "",
     county: "",
     median_income: "",
-    favorited: false
+    favorited: false,
+    population_weight: 1,
+    region_weight: 1,
+    state_weight: 1,
+    zip_weight: 1,
+    county_weight: 1,
+    income_weight: 1
   });
 
   const [results, setResults] = useLocalStorage("results", []);
