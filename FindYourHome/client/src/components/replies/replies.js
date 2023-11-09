@@ -64,7 +64,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
         const updatedReplies = [...replies, { username: currentUsername, content }];
         setReplies(updatedReplies);
 
-        discussion.comments[commentIndex].replies.push({ username: currentUsername, content, numLikes: 0, numFlags: 0, time: Date.now()});
+        discussion.comments[commentIndex].replies.push({ username: currentUsername, content, numLikes: 0, numDislikes: 0, numFlags: 0, time: Date.now()});
 
         await fetch("http://localhost:5050/city_info/" + _selectedCity, {
           method: "PATCH",

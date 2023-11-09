@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import AccountInfo from "./accountInfo.js";
 import MessageList from "./messageList";
 import Bookmarks from "./saved_discussions/bookmarks";
+import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
+import Favorites from "./favorites.js";
 
 export default function Profile() {
 
@@ -49,7 +51,14 @@ export default function Profile() {
                 </div>
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
+                <div>
+
+                <button className="logoutbtn" onClick={() => navigate('/delete-account')}>Delete Account</button>
+                </div>
+
+
             </div>
+            
             
 
             <div className="tabs-block">
@@ -59,8 +68,11 @@ export default function Profile() {
 
             <div className="contents">
             <div className="bookmarks">
-                    <p2><Bookmarks/></p2>
-                </div>
+                <p2><Bookmarks/></p2>
+            </div>
+            <div className="favorites">
+                <p2><FavDiscs/></p2>
+            </div>
                 
                 <div className={`${tabVal === 1 ? "content active-content" : "content"}`}>
                     <AccountInfo />

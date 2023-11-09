@@ -11,9 +11,8 @@ import Replies from "./replies/replies";
 import AddReply from "./replies/addReply"
 import Flags from "./strikes/flagComment";
 import AddBookmark from "./saved_discussions/addBookmark";
-import AddFavDisc from "./saved_discussions/addFavDisc.js";
 
-const DiscussionHome = () => {
+const Disc = () => {
   const [discussions, setDiscussions] = useState([]);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [showForm, setShowForm] = useState(false);
@@ -29,7 +28,7 @@ const DiscussionHome = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());
   const [cities, setCities] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCity, setSelectedCity] = useState("New York City");
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchBarCity, setSearchBarCity] = useState('');
@@ -436,7 +435,6 @@ const DiscussionHome = () => {
             Other
           </button>
           <AddBookmark _bookmark={selectedCity}/>
-          <AddFavDisc _favDisc={selectedCity}/>
         </div>
       )}
 
@@ -592,4 +590,4 @@ const DiscussionHome = () => {
   );
 };
 
-export default DiscussionHome;
+export default Disc;

@@ -22,6 +22,7 @@ import CompareCities from './components/compareCities';
 import DeleteAccount from './components/delete-account';
 import Flags from './components/strikes/flagComment';
 import DiscussionHome from './components/discussionHome';
+import Disc from './components/disc';
 import DiscussNav from './components/discussNav';
 
 import { UserContext } from "./contexts/UserContext";
@@ -81,6 +82,7 @@ const App = () => {
                         <Route path="/discussionHome" element={<DiscussionHome />} />
                         <Route path="/messageBoards" element={<MessageList/>} />
                         <Route path="/notification" element={<MessageNotification/>} />
+                        <Route path="/disc" element={<Disc/>} />
                     </Routes>
                 </CompareCitiesProvider>
             </CityContext.Provider>

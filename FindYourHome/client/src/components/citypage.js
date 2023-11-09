@@ -98,6 +98,10 @@ export default function CityPage(props) {
           <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
           <span class="profiletooltiptext">View your profile page and make edits</span>
         </div>
+        <div class="profiletooltip">
+            <button className="profilebtn" onClick={() => navigate("/view-city")}>City Search</button>
+            <span class="profiletooltiptext">Search for cities by name</span>
+        </div>
         <div class="advancedtooltip">
           <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
           <span class="advancedtooltiptext">Search based on attributes of cities</span>
