@@ -154,6 +154,7 @@ export default function Profile() {
                 <div className={`${tabVal === 2 ? 'profile-tab active-tab' : 'profile-tab'}`} onClick={() => handleTabChange(2)}> Messages </div>
                 <div className={`${tabVal === 3 ? 'profile-tab active-tab' : 'profile-tab'}`} onClick={() => handleTabChange(3)}> Favorites </div>
                 <div className={`${tabVal === 4 ? 'profile-tab active-tab' : 'profile-tab'}`} onClick={() => handleTabChange(4)}> Notifications </div>
+                <div className={`${tabVal === 5 ? 'profile-tab active-tab' : 'profile-tab'}`} onClick={() => handleTabChange(5)}> My Discussions </div>
             </div>
 
             <div className="contents">
@@ -178,6 +179,17 @@ export default function Profile() {
 
                 <div className={`${tabVal === 4 ? "content active-content" : "content"}`}>
                     <Notifications/>
+                </div>
+
+                <div className={`${tabVal === 5 ? "content active-content" : "content"}`}>
+                    <div className="disc">
+                        <div className="bookmarks">
+                            <p2><Bookmarks/></p2>
+                        </div>
+                        <div className="favorites">
+                            <p2><FavDiscs/></p2>
+                        </div>
+                    </div>
                 </div>
                 
             </div>

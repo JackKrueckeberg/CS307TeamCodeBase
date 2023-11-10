@@ -59,15 +59,15 @@
 .message-content.sent {
     flex: 1;
     background-color: #007bff;
-    padding: 15px 5px 5px 15px;
+    padding: 15px 15px 15px 15px;
     border-radius: 10px;
     margin-right: 5px;
 }
 
 .message-content.received {
     flex: 1;
-    background-color: #f1f0f0;
-    padding: 15px 5px 5px 15px;
+    background-color: #dedede;
+    padding: 15px 15px 15px 15px;
     border-radius: 10px;
     margin-left: 5px;
 }
