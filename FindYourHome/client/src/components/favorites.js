@@ -246,10 +246,34 @@ export default function Favorites() {
             setSuccessMessage('Your favorites have been sent to ', recipient, '!');
             handleCancel();
             handleShareCancel();
+
+            const response2 = await fetch('http://localhost:5050/notification/notify', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    senderUsername: username,
+                    recipientUsername: recipient,
+                    isMessage: true,
+                    timeSent: new Date(),
+                    city: '',
+                }),
+            });
+
+            if (response2.status === 200) {             
+                window.location.reload();
+                return;
+            } else {
+                alert("something went wrong");
+            }
+
             return;
         } else {
             setError('There was an error sending your favorites to ', recipient, '. Please try again.');
         }
+
+
 
     };
 

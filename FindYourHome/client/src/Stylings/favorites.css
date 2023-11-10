@@ -1,12 +1,6 @@
-*{
-    margin:0;
-    padding:10px;
-    box-sizing: border-box;
-}
-
 .container{
-    border:2px solid grey;
-    background: white;
+    border: 2px solid rgb(162, 123, 92);
+    background: rgba(255, 255, 255, 0.295);
     flex-direction: column;
     width: 100%;
     margin:auto;
@@ -16,11 +10,11 @@
 
 .tabs-block{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .tab{
-    background: #ccc;
+    background: rgba(255, 255, 255, 0.295);
     flex: 1;
     padding: 1px;
     text-align: center;
@@ -33,11 +27,11 @@
 
 .active-tab{
     border: none;
-    background: #fff;
-}
-
-.active-tab::after{
-    border-top: 2px solid goldenrod;
+    background: rgb(220, 215, 201);
+  }
+  
+  .active-tab::after{
+    border-bottom: 2px solid rgb(162, 123, 92);
     content:'';
     position: absolute;
     top: 0;
@@ -47,21 +41,21 @@
     width: 100%;
     background: initial;
     animation: tab-animation 0.5s;
-}
+  }
 
 @keyframes tab-animation{
     from{
         top: 50px;
         left: 0;
         right: 0;
-        background: goldenrod;
+        background: rgb(162, 123, 92);
     }
 
     to{
         top: 0px;
         right: 0;
         left: 0;
-        border-top: 2px solid goldenrod;
+        border-bottom: 2px solid rgb(162, 123, 92);
     }
 }
 
@@ -77,8 +71,6 @@
 .active-content{
     display: flex;
     flex-direction: column;
-    margin-left: 10px;
-    margin-right: 10px;
     transition: all is ease-in-out;
     animation: content-animation 0.3s;
 }
@@ -117,13 +109,13 @@ ul {
 }
 
 .share-favorite {
-    background-color: rgb(134, 190, 255);
+    background-color: rgb(220, 215, 201);
     padding-top: 2px;
     padding-bottom: 2px;
 }
 
 .share-button {
-    background-color: rgb(134, 190, 255);
+    background-color: rgb(220, 215, 201);
     margin-top: 10px;
 }
 
@@ -135,7 +127,7 @@ ul {
   }
 
   .shareTo-button {
-    background-color: rgb(134, 190, 255);
+    background-color: rgb(220, 215, 201);
     border-radius: 10px;
     cursor: pointer;
     margin-top: 10px;

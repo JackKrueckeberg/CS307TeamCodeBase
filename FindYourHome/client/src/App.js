@@ -29,6 +29,7 @@ import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
 import MessageNotification from './components/messageNotification';
 import AccountInfo from './components/accountInfo';
+import Notifications from './components/notifications';
 
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -81,7 +82,8 @@ const App = () => {
                         <Route path="/delete-account" element={<DeleteAccount />} />
                         <Route path="/discussionHome" element={<DiscussionHome />} />
                         <Route path="/messageBoards" element={<MessageList/>} />
-                        <Route path="/notification" element={<MessageNotification/>} />
+                        <Route path="/messageNotification" element={<MessageNotification/>} />
+                        <Route path="/notification" element={<Notifications/>} />
                         <Route path="/disc" element={<Disc/>} />
                     </Routes>
                 </CompareCitiesProvider>

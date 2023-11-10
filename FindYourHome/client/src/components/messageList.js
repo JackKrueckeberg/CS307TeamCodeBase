@@ -179,6 +179,35 @@ export default function MessageList() {
         }
     }
 
+    const addNotification = async () => {
+        const exists = await checkExistingUser(recipient);
+        if (!exists) {
+            setError('The username you provided does not match any in our records. Please try again.');
+            return;
+        }
+
+        const response = await fetch('http://localhost:5050/notification/notify', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    senderUsername: username,
+                    recipientUsername: recipient,
+                    isMessage: true,
+                    timeSent: new Date(),
+                    city: '',
+                }),
+            });
+
+            if (response.status === 200) {             
+                window.location.reload();
+                return;
+            } else {
+                alert("something went wrong");
+            }
+    }
+
     const handleNewMessageBoard = () => {
         setShowModal(true);
     }
@@ -261,13 +290,6 @@ export default function MessageList() {
 
         if (newMessage && recipient !== "") {
 
-            const messageData = {
-                senderUsername: username,
-                recipientUsername: recipient,
-                content: newMessage,
-                timeSent: new Date(),
-            };
-
             const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
                 method: "POST",
                 headers: {
@@ -285,6 +307,7 @@ export default function MessageList() {
             if (response.status === 200) {             
                 setNewMessage(""); // Clear the input field
                 messageInputRef.current.value = "";
+                addNotification();
                 window.location.reload();
                 return;
             } else {
@@ -357,7 +380,7 @@ export default function MessageList() {
             {selectedMessageBoard && (
                 <div>
                     <div className="message-board-container">
-                        <h2>Messages with<span>{selectedMessageBoard.messagesWith}</span></h2>
+                        <h2>Messages with <span>{selectedMessageBoard.messagesWith}</span></h2>
                         <ul className="message-board scrollable" ref={messagesRef}>
                             {messages.map((message, index) => {
                                 if (message.isList == true) {

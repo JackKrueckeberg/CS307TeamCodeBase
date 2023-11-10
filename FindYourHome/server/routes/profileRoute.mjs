@@ -63,7 +63,6 @@ router.patch("/update-info/:id", async (req, res) => {
         username: req.body.username,
         email: req.body.email,
         bio: req.body.bio,
-        password: req.body.password,
         //profile_image: req.body.profile_image,
       }
     };

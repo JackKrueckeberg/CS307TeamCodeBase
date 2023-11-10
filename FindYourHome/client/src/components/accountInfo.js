@@ -14,6 +14,7 @@ export default function AccountInfo() {
         bio: '',
         email: '',
         password: '',
+        profile_image: '',
     };
 
     // Create state variables for user info ad editing mode
@@ -63,16 +64,6 @@ export default function AccountInfo() {
             if (response.status === 200) {
                 const userInfo = await response.json();
                 console.log(userInfo);
-                setInfo({
-                    ...user,
-                    bio: userInfo.bio,
-                    email: userInfo.email,
-                    firstName: userInfo.firstName,
-                    lastName: userInfo.lastName,
-                    password: userInfo.password,
-                    profile_image: userInfo.profile_image,
-                    username: userInfo.username,
-                });
                 // Update the user state with the fetched data
                 if (userInfo.profile_image === "") {
                     setImage(defaultImage);
@@ -84,6 +75,17 @@ export default function AccountInfo() {
                         lastName: userInfo.lastName,
                         password: userInfo.password,
                         profile_image: defaultImage,
+                        username: userInfo.username,
+                    });
+                } else {
+                    setInfo({
+                        ...user,
+                        bio: userInfo.bio,
+                        email: userInfo.email,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        password: userInfo.password,
+                        profile_image: userInfo.profile_image,
                         username: userInfo.username,
                     });
                 }
@@ -365,7 +367,6 @@ export default function AccountInfo() {
             <div className="profile-header">
                 {/* Profile Picture */}
                 <div className="profile-avatar">
-                    <img src={profile_image} width={150} height={150} alt="Profile"/>
                     <button className="upload-image" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"
@@ -374,21 +375,27 @@ export default function AccountInfo() {
                         style={{ display: 'none' }}
                         onChange={handleImageUpload}
                     />
-                </div>
+                </div> 
 
                 {/* User's Name divided into first and last name */}
-                <div className="profile-name">
+            </div>
+
+            {/* Profile Details such as username, password, and bio */}
+            <div className="profile-details">
+
+            <p className="profile-username">
+                    <strong>Name: </strong>
                     {isEditing ? (
                         <div>
                             <input
-                                className = "round-corner"
+                                className = "edit"
                                 type="text"
                                 name="firstName"
                                 value={user.firstName}
                                 onChange={handleInputChange}
                             />
                             <input
-                                className = "round-corner"
+                                className = "edit"
                                 type="text"
                                 name="lastName"
                                 value={user.lastName}
@@ -396,34 +403,15 @@ export default function AccountInfo() {
                             />
                         </div>
                     ) : (
-                        <h2>{user.firstName} {user.lastName}</h2>
+                        <span className="bordered-section">{user.firstName} {user.lastName}</span>
                     )}
-                </div>
-
-                {/* Edit Profile and Save Changes */}
-                <div className="profile-actions">
-                    {successMessage && <div className="success-message">{successMessage}</div>}
-                    {isEditing ? (
-                        <div>
-                            <button className="save-button" onClick={handleSave}>Save</button>
-                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-                        </div>
-                    ) : (
-                        <button className="edit-button" onClick={handleEdit}>
-                            <FaEdit size={38}/> Edit
-                        </button>
-                    )}
-                </div>
-            </div>
-
-            {/* Profile Details such as username, password, and bio */}
-            <div className="profile-details">
+                </p>
 
                 {/* Profile Username */}
                 <p className="profile-username">
                     <strong> Username: </strong> {isEditing ? (
                     <input
-                        className = "round-corner"
+                        className = "edit"
                         type="text"
                         name="username"
                         value={user.username}
@@ -438,7 +426,7 @@ export default function AccountInfo() {
                 <p className="profile-email">
                     <strong> Email: </strong>{isEditing ? (
                         <input
-                            className = "round-corner"
+                            className = "edit"
                             type="text"
                             name="email"
                             value={user.email}
@@ -451,7 +439,7 @@ export default function AccountInfo() {
 
                 {/* Profile Password */}
                 <p className="profile-password">
-                    <strong>Password:</strong>
+                    <strong>Password: </strong>
                     <button className="change-password" onClick={handlePasswordChange}>Change Password</button>
                 </p>
 
@@ -506,7 +494,7 @@ export default function AccountInfo() {
                 <p className="profile-bio">
                     <strong> Bio: </strong> {isEditing ? (
                         <textarea
-                            className = "round-corner"
+                            className = "edit-bio"
                             placeholder="Tell us about yourself"
                             name="bio"
                             value={user.bio}
@@ -520,10 +508,27 @@ export default function AccountInfo() {
                 </p>
             </div>
 
-            {/* Profile Favorites Tabs */}
+            {/* Profile Favorites Tabs
             <div className="tabs">
                 <Favorites />
             </div>
+            */}
+
+            {/* Edit Profile and Save Changes */}
+            <div className="profile-actions">
+                    {successMessage && <div className="success-message">{successMessage}</div>}
+                    {isEditing ? (
+                        <div>
+                            <button className="save-button" onClick={handleSave}>Save</button>
+                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                        </div>
+                    ) : (
+                        <button className="edit-button" onClick={handleEdit}>
+                            <FaEdit size={38}/> Edit
+                        </button>
+                    )}
+                </div>
+
         </div>
     );
 };

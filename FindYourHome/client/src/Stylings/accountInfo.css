@@ -1,40 +1,77 @@
 .bordered-section {
     border: 1px solid #000; /* You can customize border styles as needed */
     border-radius: 10px;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.295);
     padding: 5px 8px;
+    margin: 5px;
+}
+
+.edit {
+  border: 1px solid #000; /* You can customize border styles as needed */
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.884);
+  padding: 5px 8px;
+  margin: 5px;
+}
+
+.edit-bio {
+  border: 1px solid #000; /* You can customize border styles as needed */
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.884);
+  padding: 5px 8px;
+  margin: 5px;
+  width: 100%;
+}
+
+.profile-avatar {
+  margin: 3px;
+}
+
+.profile-username {
+  margin-top: 10px;
+}
+
+.profile-email {
+  margin-top: 10px;
+}
+
+.profile-password {
+  margin-top: 10px;
 }
 
 .upload-image {
-    background: goldenrod;
+    background: rgb(220, 215, 201);
     border-radius: 10px;
     padding: 5px 10px;
+    border: 1px solid rgb(162, 123, 92);
   }
 
   .upload-image:hover {
-    background-color: rgb(241, 197, 85);
+    background-color: rgb(207, 195, 160);
   }
   
   .change-password {
-    background: goldenrod;
+    background: rgb(220, 215, 201);
     border-radius: 10px;
+    border: 1px solid rgb(162, 123, 92);
   }
   
   .change-password:hover {
-    background-color: rgb(241, 197, 85);
+    background-color: rgb(207, 195, 160);
   }
   
   .edit-button {
-    background-color: goldenrod;
+    background-color: rgb(220, 215, 201);
     color: black;
     border-radius: 10px;
     cursor: pointer;
     margin-top: 10px;
     padding: 5px, 5px;
+    border: 1px solid rgb(162, 123, 92);
   }
   
   .edit-button:hover {
-    background-color: rgb(241, 197, 85);
+    background-color: rgb(207, 195, 160);
   }
 
   .save-button {
@@ -42,7 +79,7 @@
     color: black;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 10px;
   }
   
   .save-button:hover {
@@ -53,7 +90,7 @@
     color: black;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
+    margin: 10px;
   }
 
   .success-message {
