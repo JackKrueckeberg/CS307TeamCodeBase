@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useUser } from '../contexts/UserContext';
+import '../Stylings/notifications.css';
 
 export default function Notifications() {
     const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -45,21 +46,43 @@ export default function Notifications() {
         }
     }
 
+    async function removeNotification(index) {
+        var newNots = [];
+        for (var i = 0; i < notifications.length; i++) {
+            if (i != index) {
+                newNots.push(notifications[i]);
+            }
+        }
+
+        await fetch(`http://localhost:5050/notification/${user._id}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({notifications: newNots})
+          }).catch((error) => {
+            window.alert(error);
+            return;
+          });
+
+        setNotifications(newNots);
+    }
 
 
     return (
         <div className="notification-content">
             {notifications.length > 0 ? (
-                <ul className="notifications-list">
+                <ul className="notifications-list scrollable">
                     {notifications.map((note, index) => (
                         <li
                             key={index}
-                            className={"TODO"}
+                            className="not-col"
                         >
                             <div className="notification">
-                            <h5 className="notification-message">{note.content}</h5>
-                            <p className="notification-timestamp">{new Date(note.time).toLocaleString()}</p>
+                                <div className="notification-message">{note.content}</div>
+                                <p className="notification-timestamp">{new Date(note.time).toLocaleString()}</p>
                             </div>
+                            <button onClick={() => removeNotification(index)} className="removeNote">Delete</button>
                         </li>
                     ))}
                 </ul>

@@ -55,4 +55,30 @@ router.post("/notify", async (req, res) => {
   }
 });
 
+// update the favorite searches list
+router.patch("/:id", async (req, res) => {
+    try {
+        let collection = await db.collection("users");
+        const validObjectId = validateAndConvertId(req.params.id);
+        if (!validObjectId) {
+            return res.status(400).send("Invalid ID format");
+        }
+
+        let q = {_id: new ObjectId(validObjectId)};
+        let query = await collection.findOne(q);
+        const updates =  {
+            $set: {
+                notifications: req.body.notifications
+            }
+        };
+    
+        let result = await collection.updateOne(query, updates);
+    
+        res.send(result).status(200);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
 export default router;
