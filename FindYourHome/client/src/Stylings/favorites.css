@@ -1,16 +1,15 @@
-.container{
-    border: 2px solid rgb(162, 123, 92);
+.favs{
     background: rgba(255, 255, 255, 0.295);
     flex-direction: column;
     width: 100%;
     margin:auto;
-    margin-top: 50px;
-    border-radius: 10px;
+    border-radius: 10px 10px 30px 30px;
 }
 
-.tabs-block{
+.tab-block{
     display: flex;
     justify-content: center;
+    width: 100;
 }
 
 .tab{
@@ -18,11 +17,12 @@
     flex: 1;
     padding: 1px;
     text-align: center;
-    border: 1px solid grey;
-    border-top: none;
     cursor: pointer;
     position: relative;
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .active-tab{
@@ -31,7 +31,10 @@
   }
   
   .active-tab::after{
-    border-bottom: 2px solid rgb(162, 123, 92);
+    border-top: 2px solid rgb(162, 123, 92);
+    border-left: 2px solid rgb(162, 123, 92);
+    border-right: 2px solid rgb(162, 123, 92);
+    border-radius: 10px 10px 0 0;
     content:'';
     position: absolute;
     top: 0;
@@ -69,10 +72,13 @@
 }
 
 .active-content{
-    display: flex;
-    flex-direction: column;
+    display: block;
+    margin: 0;
+    padding: 30px;
     transition: all is ease-in-out;
     animation: content-animation 0.3s;
+    border: 2px solid rgb(162, 123, 92);
+    border-radius: 0 0 30px 30px;
 }
 
 @keyframes content-animation{
@@ -112,33 +118,40 @@ ul {
     background-color: rgb(220, 215, 201);
     padding-top: 2px;
     padding-bottom: 2px;
+    border: 1px solid rgb(162, 123, 92);
 }
 
 .share-button {
     background-color: rgb(220, 215, 201);
-    margin-top: 10px;
+    margin: 5px;
+    border: 1px solid rgb(162, 123, 92);
+    padding: 10px;
 }
 
-.cancel-button {
+.share-cancel {
     color: black;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
-  }
+    margin: 5px;
+    border: 1px solid white;
+}
 
-  .shareTo-button {
+.shareTo-button {
     background-color: rgb(220, 215, 201);
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
-  }
+    padding-bottom: 0px;
+    padding-top: 0px;
+    margin: 5px;
+    border: 1px solid rgb(162, 123, 92);
+}
 
-  .city {
+.city {
     display: flex;
     flex-direction: column;
-  }
+}
 
-  .search {
+.search {
     display: flex;
     flex-direction: column;
-  }
+}

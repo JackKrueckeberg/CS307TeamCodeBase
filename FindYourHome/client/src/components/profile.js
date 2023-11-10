@@ -28,7 +28,15 @@ export default function Profile() {
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
-        fetchUserInfo();
+        const intervalId = setInterval(() => {
+            fetchUserInfo();
+
+          }, 5000); // 5000 milliseconds = 5 seconds
+      
+          // The cleanup function to clear the interval when the component unmounts
+          return () => {
+            clearInterval(intervalId);
+          };
     }, []);
     // fetch the user data from the backend
     const fetchUserInfo = async () => {
@@ -81,9 +89,6 @@ export default function Profile() {
     const handleTabChange = (index) => {
         setTabVal(index);
         localStorage.setItem('activeTab', index.toString());
-        if (index === 2) {
-            window.location.reload();
-        }
         console.log(index);
     };
     const handleLogout = () => {

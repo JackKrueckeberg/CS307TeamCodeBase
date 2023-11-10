@@ -21,12 +21,15 @@ router.post("/notify", async (req, res) => {
     const recipient = await collection.findOne({ username: recipientUsername});
     const sender = await collection.findOne({ username: senderUsername });
 
-    let notification = "";
+    const notification = {
+        content: "",
+        time: timeSent,
+    };
 
     if (isMessage) {
-        notification = `${senderUsername} sent you a message`;
+        notification.content = `${senderUsername} sent you a message`;
     } else {
-        notification = `${senderUsername} tagged you in a post under ${city}`;
+        notification.content = `${senderUsername} tagged you in a post under ${city}`;
     }
     
     if (recipient && sender) {

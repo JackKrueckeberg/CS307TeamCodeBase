@@ -12,14 +12,14 @@ export default function Notifications() {
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
-        const intervalId = setInterval(() => {
+        const intervals = setInterval(() => {
             fetchUserInfo();
 
           }, 5000); // 5000 milliseconds = 5 seconds
       
           // The cleanup function to clear the interval when the component unmounts
           return () => {
-            clearInterval(intervalId);
+            clearInterval(intervals);
           };
     }, []);
     // fetch the user data from the backend

@@ -300,8 +300,8 @@ export default function Favorites() {
 
 
     return (
-        <div className="container">
-            <div className="tabs-block">
+        <div className="favs">
+            <div className="tab-block">
                 <div onClick={() => handleTabChange(1)} className={`${tabVal === 1 ? 'tab active-tab' : 'tab'}`}> Favorite Cities </div>
                 <div className={`${tabVal === 2 ? 'tab active-tab' : 'tab'}`} onClick={() => handleTabChange(2)}> Favorite Searches </div>
             </div>
@@ -315,8 +315,8 @@ export default function Favorites() {
                             {isSelecting ? (
                                 <div>
                                     <div className="buttons">
-                                        <button className="shareTo-button" onClick={handleShareModal}>Share to</button>
-                                        <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                                        <button className="shareTo-button" onClick={handleShareModal}>Share</button>
+                                        <button className="share-cancel" onClick={handleCancel}>Cancel</button>
                                     </div>
                                     <Modal
                                         className={"share-modal"}
@@ -355,7 +355,7 @@ export default function Favorites() {
                                                 onChange={(e) => setRecipient(e.target.value)}
                                             />
                                             <button className="share-button" onClick={() => handleShare(recipient)}>Share</button>
-                                            <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
+                                            <button className="share-cancel" onClick={() => handleShareCancel()}>Cancel</button>
                                         </div>
                                     </Modal>
                                 <ul className="city">
@@ -367,7 +367,7 @@ export default function Favorites() {
                                                 checked={selectedCities[index]}
                                                 onChange={() => handleCheckboxChange(index)}
                                             />
-                                            <span>{city}</span>
+                                            <span> {city} </span>
                                             {/*{Object.entries(city).map(([key, value]) => {
                             
                             
@@ -393,7 +393,7 @@ export default function Favorites() {
                                         {favorite_cities.map((city, index) => (
                                             <li key={index}>
                                                 <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                                                <span>{city}</span>
+                                                <span> {city} </span>
                                                 {/*{Object.entries(city).map(([key, value]) => {
                                                     console.log(city);
                                                     return (
