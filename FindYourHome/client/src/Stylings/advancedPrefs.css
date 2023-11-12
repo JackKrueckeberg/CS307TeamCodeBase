@@ -1,7 +1,7 @@
 General styling
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: rgb(63, 78, 79);;
     color: #333;
     line-height: 1.6;
   }
@@ -11,8 +11,9 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    background-color: #333;
+    background-color: rgb(63, 78, 79);;
     padding: 10px 0;
+    border-radius: 10px;
   }
   
   .navBar button {
@@ -20,7 +21,7 @@ body {
     border: none;
     border-radius: 4px;
     background-color: #555;
-    color: white;
+    color: rgb(220, 215, 201);
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
@@ -39,7 +40,7 @@ body {
     visibility: hidden;
     width: 160px;
     background-color: black;
-    color: #fff;
+    color: rgb(220, 215, 201);
     text-align: center;
     padding: 5px 0;
     border-radius: 6px;

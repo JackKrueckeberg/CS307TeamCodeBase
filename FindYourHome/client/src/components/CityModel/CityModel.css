@@ -1,0 +1,59 @@
+.model {
+    background: rgb(63, 78, 79);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    text-align: center;
+  }
+  
+  .model h2 {
+    color: rgb(220, 215, 201);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .model p {
+    color: rgb(220, 215, 201);
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .model img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 1rem;
+  }
+  
+  /* If you're using a button or link, style it with Google's Material Design principles */
+  .model button {
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+  }
+  
+  .model button:hover {
+    background-color: #2a85f9;
+  }
+  
+  /* This style is for the income comparison line, to emphasize the comparison */
+  .income-comparison {
+    font-weight: bold;
+    color: #1a73e8; /* Adjust the color to match your design */
+  }
+  
+  /* Optional: Add responsiveness to your component */
+  @media (max-width: 768px) {
+    .model {
+      margin: 20px;
+    }
+  }
+  
