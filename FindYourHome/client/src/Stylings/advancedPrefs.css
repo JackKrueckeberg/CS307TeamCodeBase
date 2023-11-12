@@ -1,32 +1,79 @@
-.table_style {
-    margin-left: auto;
-    margin-right: auto;
-    outline-style: solid;
-    outline-width: 2px;
-    outline-color: black;
-    outline-offset: 4px;
+General styling
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+  }
+  
+  /* Navigation bar styling */
+  .navBar {
+    display: flex;
+    justify-content: space-around;
     align-items: center;
-}
-
-.padding {
-    padding-top: 4px;
-    padding-bottom: 4px;
-    padding-left: 4px;
-    padding-right: 4px;
-}
-
-.center {
-    margin-left: auto;
-    margin-right: auto;
-    align-items: center;
-    align-content: center;
+    background-color: #333;
+    padding: 10px 0;
+  }
+  
+  .navBar button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #555;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .navBar button:hover {
+    background-color: #777;
+  }
+  
+  /* Tooltip styling */
+  .profiletooltip, .advancedtooltip, .discussiontooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .profiletooltiptext, .advancedtooltiptext, .discussiontooltiptext {
+    visibility: hidden;
+    width: 160px;
+    background-color: black;
+    color: #fff;
     text-align: center;
-    vertical-align: middle;
-}
-
-.favBtn {
-    font-size: large;
-    scale: 5;
-}
-
+    padding: 5px 0;
+    border-radius: 6px;
+    
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+  }
+  
+  .profiletooltip:hover .profiletooltiptext, 
+  .advancedtooltip:hover .advancedtooltiptext, 
+  .discussiontooltip:hover .discussiontooltiptext {
+    visibility: visible;
+    color: gold;
+  }
+  
+  /* Result container styling */
+  .result {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  /* Attraction list styling */
+  h3 {
+    color: #444;
+  }
+  
+  p {
+    font-size: 1rem;
+  }
   
