@@ -464,6 +464,7 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.population_weight}
                     type="number"
                   />
                 </td>
@@ -478,6 +479,7 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.region_weight}
                     type="number"
                   />
                 </td>
@@ -613,6 +615,7 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.state_weight}
                     type="number"
                   />
                 </td>
@@ -634,6 +637,7 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.zip_weight}
                     type="number"
                   />
                 </td>
@@ -654,6 +658,7 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.county_weight}
                     type="number"
                   />
                 </td>
@@ -677,6 +682,7 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.income_weight}
                     type="number"
                   />
                 </td>
