@@ -19,6 +19,7 @@ const DiscussionHome = () => {
   const [showForm, setShowForm] = useState(false);
   const [showHist, setShowHist] = useState(false);
   const [title, setTitle] = useState("");
+  const [expanded, setExpanded] = useState(false);
   const [content, setContent] = useState("");
   const [selectorChoice, setSelectorChoice] = useState("");
   const [dropdownSelection, setDropdownSelection] = useState("");
@@ -459,13 +460,12 @@ const DiscussionHome = () => {
                     selectedCategory === "All" ||
                     discussion.category === selectedCategory
                 );
-
+                let expandedDiscussions = new Array(filteredDiscussions.length).fill(true);
                 return filteredDiscussions.length === 0 ? (
                   <div className={styles.noDiscussionsMessage}>
                     No discussions found in this category.  Start a Discussion for this Category above!
                   </div>
                 ) : (
-                  
                   filteredDiscussions.map((discussion) => (
                     <div
                       key={discussion.id || discussion.title}
@@ -478,15 +478,18 @@ const DiscussionHome = () => {
                             : "Anonymous"}
                         </h3>
                       </div>
-                      <div className={styles.postContent}>
-                        <h4 className={styles.postTitle}>{discussion.title}</h4>
-                        <p>{discussion.content}</p>
-                        <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
-                        <p className={styles.metadata}>
-                          City: {discussion.city} | Category: {discussion.category}
-                        </p>
-                        <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
-                      </div>
+                      <button onClick={() => expandedDiscussions[discussions.id] = !expandedDiscussions[discussions.id]}>Expand</button>
+                      {expandedDiscussions[discussion.id] && (
+                        <div className={styles.postContent}>
+                          <h4 className={styles.postTitle}>{discussion.title}</h4>
+                          <p>{discussion.content}</p>
+                          <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
+                          <p className={styles.metadata}>
+                            City: {discussion.city} | Category: {discussion.category}
+                          </p>
+                          <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
+                        </div>
+                      )}
                     </div>
                   ))
                 );
