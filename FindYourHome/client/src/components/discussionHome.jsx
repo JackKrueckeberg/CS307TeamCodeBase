@@ -19,7 +19,7 @@ const DiscussionHome = () => {
   const [showForm, setShowForm] = useState(false);
   const [showHist, setShowHist] = useState(false);
   const [title, setTitle] = useState("");
-  const [expanded, setExpanded] = useState(false);
+  const [expandedDiscussions, setExpandedDiscussions] = useState(new Array(discussions.length).fill(true));
   const [content, setContent] = useState("");
   const [selectorChoice, setSelectorChoice] = useState("");
   const [dropdownSelection, setDropdownSelection] = useState("");
@@ -47,6 +47,23 @@ const DiscussionHome = () => {
   useEffect(() => {
     fetchUserInfo();
   }, []);
+
+  const toggleExpansion = (index) => {
+    console.log(expandedDiscussions[index]);
+    console.log("toggling " + index);
+    console.log("old: " + expandedDiscussions);
+    const newExpansions = [...expandedDiscussions];
+    newExpansions[index] = !newExpansions[index];
+    setExpandedDiscussions(newExpansions);
+    console.log("new: " + expandedDiscussions);
+  };
+
+  useEffect(() => {
+    // Update the expandedDiscussions array only when discussions length changes
+    if (discussions.length !== expandedDiscussions.length) {
+      setExpandedDiscussions(new Array(discussions.length).fill(true));
+    }
+  }, [discussions]);
 
   const fetchUserInfo = async () => {
     try {
@@ -460,15 +477,15 @@ const DiscussionHome = () => {
                     selectedCategory === "All" ||
                     discussion.category === selectedCategory
                 );
-                let expandedDiscussions = new Array(filteredDiscussions.length).fill(true);
+                let expandedDiscussions = new Array(filteredDiscussions.length).fill(false);
                 return filteredDiscussions.length === 0 ? (
                   <div className={styles.noDiscussionsMessage}>
                     No discussions found in this category.  Start a Discussion for this Category above!
                   </div>
                 ) : (
-                  filteredDiscussions.map((discussion) => (
+                  filteredDiscussions.map((discussion, index) => (
                     <div
-                      key={discussion.id || discussion.title}
+                      key={index}
                       className={styles.discussionPost}
                     >
                       <div className={styles.authorInfo}>
@@ -478,8 +495,8 @@ const DiscussionHome = () => {
                             : "Anonymous"}
                         </h3>
                       </div>
-                      <button onClick={() => expandedDiscussions[discussions.id] = !expandedDiscussions[discussions.id]}>Expand</button>
-                      {expandedDiscussions[discussion.id] && (
+                      <button onClick={() => toggleExpansion(index)}>{expandedDiscussions[index] ? "Collapse" : "Expand"}</button>
+                      {expandedDiscussions[index] && (
                         <div className={styles.postContent}>
                           <h4 className={styles.postTitle}>{discussion.title}</h4>
                           <p>{discussion.content}</p>
