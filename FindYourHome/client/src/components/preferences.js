@@ -465,6 +465,7 @@ export default function Create() {
                     className="padding"
                     placeholder="preference weight"
                     value={form.population_weight}
+                    onChange={(e) => updateForm({ population_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -480,6 +481,7 @@ export default function Create() {
                     className="padding"
                     placeholder="preference weight"
                     value={form.region_weight}
+                    onChange={(e) => updateForm({ region_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -616,6 +618,7 @@ export default function Create() {
                     className="padding"
                     placeholder="preference weight"
                     value={form.state_weight}
+                    onChange={(e) => updateForm({ state_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -638,6 +641,7 @@ export default function Create() {
                     className="padding"
                     placeholder="preference weight"
                     value={form.zip_weight}
+                    onChange={(e) => updateForm({ zip_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -659,6 +663,7 @@ export default function Create() {
                     className="padding"
                     placeholder="preference weight"
                     value={form.county_weight}
+                    onChange={(e) => updateForm({ county_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -683,6 +688,7 @@ export default function Create() {
                     className="padding"
                     placeholder="preference weight"
                     value={form.income_weight}
+                    onChange={(e) => updateForm({ income_weight: e.target.value })}
                     type="number"
                   />
                 </td>
