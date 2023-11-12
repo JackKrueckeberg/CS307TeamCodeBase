@@ -233,7 +233,7 @@ export const Login = () => {
                     <button type="submit">Send Reset Email</button>
                     </div>
                 </form>
-                <button onClick={() => handleForgotPasswordSubmit}>Close</button>
+                <button onClick={() => setIsForgotPasswordPopupOpen(false)}>Close</button>
                 </div>
             )}
 
