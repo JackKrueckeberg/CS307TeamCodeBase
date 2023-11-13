@@ -5,7 +5,9 @@ import { useNavigate  } from 'react-router-dom';
 const TwoFactor = () => {
     const [codes, setCodes] = useState(Array(6).fill(''));
     const [message, setMessage] = useState("");
-    const [messageType, setMessageType] = useState("");  // can be 'success' or 'error'
+    const [messageType, setMessageType] = useState("");
+    const [qrCode, setQrCode] = useState('');
+    const [secret, setSecret] = useState('');
     const navigate = useNavigate();
 
     // References to each of the input boxes
@@ -30,12 +32,49 @@ const TwoFactor = () => {
     }
 
     const handleTwoFactorAuth = async () => {
-        
-    }
+        const token = codes.join('');
+
+        fetch('http://localhost:5050/twoFactor/verify-token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token, secret })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.verified) {
+                setMessage("Two-factor authentication successful.");
+                setMessageType("success");
+                navigate("/view-city");
+            } else {
+                setMessage("Invalid authentication code. Please try again.");
+                setMessageType("error");
+            }
+        })
+        .catch(error => {
+            console.error('Error verifying token:', error);
+        });
+    };
+
+    useEffect(() => {
+        fetch('http://localhost:5050/twoFactor/generate-secret')
+            .then(response => response.json())
+            .then(data => {
+                setQrCode(data.qrCode);
+                setSecret(data.secret);  // Store the secret here
+            })
+            .catch(error => {
+                console.error('Error fetching QR code:', error);
+            });
+    }, []);
 
     return (
         <div className={styles.twoFactorAuth}>
             <h1>Two-Factor Authentication</h1>
+            <div>  
+                {qrCode && <img src={qrCode} alt="QR Code" />}
+            </div>
             <p>Please enter the authentication code sent to your device:</p>
             <div className={styles.codeInputs}> 
                 {codes.map((code, index) => (
