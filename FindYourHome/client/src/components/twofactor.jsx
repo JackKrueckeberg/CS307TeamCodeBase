@@ -34,7 +34,7 @@ const TwoFactor = () => {
     const handleTwoFactorAuth = async () => {
         const token = codes.join('');
 
-        fetch('http://localhost:5050/twoFactor/verify-token', {
+        fetch('http://localhost:5050/two-factor/verify-token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const TwoFactor = () => {
     };
 
     useEffect(() => {
-        fetch('http://localhost:5050/twoFactor/generate-secret')
+        fetch('http://localhost:5050/two-factor/generate-secret')
             .then(response => response.json())
             .then(data => {
                 setQrCode(data.qrCode);

@@ -8,7 +8,7 @@ router.get('/generate-secret', async (req, res) => {
     try {
         const secret = speakeasy.generateSecret({ length: 20 });
         const qrCodeData = await qrcode.toDataURL(secret.otpauth_url);
-        res.json({ secret: secret.base32, qrCode: qrCodeData });
+        res.status(200).json({ secret: secret.base32, qrCode: qrCodeData });
     } catch (err) {
         res.status(500).json({ error: 'Error generating QR code' });
     }
