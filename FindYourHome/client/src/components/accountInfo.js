@@ -367,6 +367,7 @@ export default function AccountInfo() {
             <div className="profile-header">
                 {/* Profile Picture */}
                 <div className="profile-avatar">
+                <strong>Profile Image: </strong>
                     <button className="upload-image" onClick={openFileInput}>Upload Image</button>
                     <input
                         type="file"
@@ -393,6 +394,7 @@ export default function AccountInfo() {
                                 name="firstName"
                                 value={user.firstName}
                                 onChange={handleInputChange}
+                                placeholder="First Name"
                             />
                             <input
                                 className = "edit"
@@ -400,6 +402,7 @@ export default function AccountInfo() {
                                 name="lastName"
                                 value={user.lastName}
                                 onChange={handleInputChange}
+                                placeholder="Last Name"
                             />
                         </div>
                     ) : (
@@ -416,6 +419,7 @@ export default function AccountInfo() {
                         name="username"
                         value={user.username}
                         onChange={handleInputChange}
+                        placeholder="Username"
                     />
                     ) : (
                         <span className="bordered-section">{user.username}</span>
@@ -431,6 +435,7 @@ export default function AccountInfo() {
                             name="email"
                             value={user.email}
                             onChange={handleInputChange}
+                            placeholder="your.email@example.com"
                         />
                     ) : (
                         <span className="bordered-section">{user.email}</span>
@@ -524,7 +529,7 @@ export default function AccountInfo() {
                         </div>
                     ) : (
                         <button className="edit-button" onClick={handleEdit}>
-                            <FaEdit size={38}/> Edit
+                            <FaEdit size={25}/> Edit
                         </button>
                     )}
                 </div>

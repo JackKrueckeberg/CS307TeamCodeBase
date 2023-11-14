@@ -12,14 +12,13 @@ const validateAndConvertId = (id) => {
   return null;
 };
 
-// send favorites to another user
+// send a notification to another user
 router.post("/notify", async (req, res) => {
   const { senderUsername, recipientUsername, isMessage, timeSent, city } = req.body;
 
   try {
     const collection = await db. collection("users");
     const recipient = await collection.findOne({ username: recipientUsername});
-    const sender = await collection.findOne({ username: senderUsername });
 
     const notification = {
         content: "",
@@ -29,10 +28,10 @@ router.post("/notify", async (req, res) => {
     if (isMessage) {
         notification.content = `${senderUsername} sent you a message`;
     } else {
-        notification.content = `${senderUsername} tagged you in a post under ${city}`;
+        notification.content = `${senderUsername} tagged you in a post/comment under ${city}`;
     }
     
-    if (recipient && sender) {
+    if (recipient) {
       if (!recipient.notifications) {
         recipient.notifications= [];
       } 
@@ -55,7 +54,7 @@ router.post("/notify", async (req, res) => {
   }
 });
 
-// update the favorite searches list
+// update notifications list
 router.patch("/:id", async (req, res) => {
     try {
         let collection = await db.collection("users");

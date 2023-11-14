@@ -34,6 +34,8 @@ const DiscussionHome = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchBarCity, setSearchBarCity] = useState('');
 
+  const [tagged, setTagged] = useState("");
+
   // User Stuff
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -200,8 +202,48 @@ const DiscussionHome = () => {
     setSuggestions([]);
   };
 
+/* User tagging functions */
+
+  // function to check for tagging a user
+  const isTagging = async (text) => {
+    if (text.includes('@')) {
+      const indexOf = text.indexOf('@');
+      const spaceIndex = text.indexOf(' ', indexOf);
+      const extracted = spaceIndex !== -1 ? text.slice(indexOf + 1, spaceIndex) : text.slice(indexOf + 1);
+      console.log(extracted);
+
+      if (extracted !== '') {
+        setTagged(extracted);
+        return true;
+      } 
+    } 
+    return false;
+  }
+
+  // function to check that the user exists
+  const checkExistingUser = async (recipient) => {
+    try {
+      const response = await fetch(`http://localhost:5050/profileRoute/check-username/${recipient}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            console.log(!data.isAvailable);
+            return !data.isAvailable;
+        }
+    } catch (error) {
+        console.error("Error checking username availability: ", error);
+        return false;
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async () => {
+    let isTaggingUser = await isTagging(content); // check if the user is tagging another user
     let missingFields = [];
 
     if (!title) missingFields.push("Title of Post");
@@ -215,6 +257,61 @@ const DiscussionHome = () => {
       );
       return;
     }
+
+      if (isTaggingUser) {
+        console.log(tagged);
+        const existing = await checkExistingUser(tagged);
+
+        if (existing) {
+          if (selectorChoice === "Anonymous") {
+            const responseNotAnon = await fetch('http://localhost:5050/notification/notify', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                senderUsername: "Anonymous",
+                recipientUsername: tagged,
+                isMessage: false,
+                timeSent: new Date(),
+                city: selectedCity,
+              }),
+            });
+
+            if (responseNotAnon.status === 200) {             
+              alert("yay");
+            } else {
+              alert("something went wrong");
+              return;
+            }
+          } else {
+            const responseNotUser = await fetch('http://localhost:5050/notification/notify', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                senderUsername: user.username,
+                recipientUsername: tagged,
+                isMessage: false,
+                timeSent: new Date(),
+                city: selectedCity,
+              }),
+            });
+
+            if (responseNotUser.status === 200) {             
+              alert("yay");
+            } else {
+              alert("something went wrong");
+              return;
+            }
+          }
+        } else {
+          setError(`${tagged} is not an existing user. Please try again.`);
+          return;
+        }
+      }
+
     const encodedCity = encodeURIComponent(selectedCity);
     try {
       // Get the current discussions
@@ -255,6 +352,7 @@ const DiscussionHome = () => {
       );
 
       if (responsePatch.ok) {
+        
         // Place the new comment at the beginning of the discussions array
         setDiscussions((prev) => [
           currentDiscussion.comments[currentDiscussion.comments.length - 1],
@@ -279,8 +377,12 @@ const DiscussionHome = () => {
       setContent("");
       setDropdownSelection("");
       setSelectorChoice("");
+      setTagged("");
+      setError("");
     }
   };
+
+
 
   return (
     <div className={styles.DiscussionHome}>
@@ -565,7 +667,7 @@ const DiscussionHome = () => {
             <span>Tell us about your Thoughts:</span>
             <textarea
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => {setContent(e.target.value); isTagging(e.target.value);} }
               placeholder="Share your thoughts"
               className={styles.inputField}
               required
