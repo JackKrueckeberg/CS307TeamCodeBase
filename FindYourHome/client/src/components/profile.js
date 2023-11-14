@@ -31,7 +31,7 @@ export default function Profile() {
         const intervalId = setInterval(() => {
             fetchUserInfo();
 
-          }, 5000); // 5000 milliseconds = 5 seconds
+          }, 3000); // 3000 milliseconds = 3 seconds
       
           // The cleanup function to clear the interval when the component unmounts
           return () => {
