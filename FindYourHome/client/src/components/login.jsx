@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from '../Stylings/loginStyle.module.css';
+import WaveBackground from '../svg/wave';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -61,7 +62,7 @@ export const Login = () => {
                     sessionStorage.setItem('currentUser', JSON.stringify(data.user));
                     setLoggedInUser(data.user);
                 }
-                navigate("/view-city");                  
+                navigate("/TwoFactor");                  
             } else {
                 console.error(data.error);
                 setIncorrectAttempts(prev => prev + 1);
@@ -169,7 +170,7 @@ export const Login = () => {
                     <h3>Logged Out Successfully</h3>
                 </div>
             )}
-            <h1>Home is Where Your Journey Begins.</h1>
+            <h1 className={styles.text}>Home is Where Your Journey Begins.</h1>
             <form onSubmit={submission} className={styles.form}>
                 
                 {/*Email/Username Submission box*/}
@@ -199,7 +200,7 @@ export const Login = () => {
                 )}
 
                 
-                <div className={styles.buttonSectionWrapper}>
+                <span className={styles.buttonSectionWrapper}>
                     <button type="submit" className={styles.button}>Log In</button>
                     <input 
                         type="checkbox" 
@@ -213,7 +214,7 @@ export const Login = () => {
                         Remember Me
                         <span className={styles.customCheckbox}></span>
                     </label>
-                </div>
+                </span>
             </form>
             
             <button type="button" onClick={() => navigate("/createAccount")}className={styles.account}>Don't have an Account? Click here to Create one.</button>
@@ -236,8 +237,9 @@ export const Login = () => {
                 <button onClick={() => setIsForgotPasswordPopupOpen(false)}>Close</button>
                 </div>
             )}
-
-
+            <div className={styles.wave}>
+                <WaveBackground />
+            </div>
         </div>
     )
 }
