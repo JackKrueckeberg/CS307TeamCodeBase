@@ -59,6 +59,14 @@ export default function Create() {
   }
 
   function compareByScore(a, b) {
+    if (!a.score) {
+      return 1;
+    }
+
+    if (!b.score) {
+      return -1;
+    }
+
     if (a.score < b.score) {
         return 1;
     }
