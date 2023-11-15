@@ -277,34 +277,34 @@ export default function Create() {
       var total_prefs = 0;
       if (form.east_coast) {
         if (cities[i].region === "America/New_York") {
-            total_prefs++;
+            total_prefs += form.region_weight;
         }
       }
       if (form.central) {
         if (cities[i].region === "America/Chicago") {
-            total_prefs++;
+          total_prefs += form.region_weight;
         }
       }
       if (form.mountain_west) {
         if (cities[i].region === "America/Phoenix") {
-          total_prefs++;
+          total_prefs += form.region_weight;
         }
       }
       if (form.west_coast) {
         if (cities[i].region === "America/Los_Angeles") {
-            total_prefs++;
+          total_prefs += form.region_weight;
         }
       }
 
       if (form.zip_code !== "") {
         if (form.zip_code === cities[i].zip_code) {
-            total_prefs++;
+            total_prefs += form.zip_weight;
         }
       }
 
       if (form.county !== "") {
         if (form.county === cities[i].county) {
-            total_prefs++;
+            total_prefs += form.county_weight;
         }
       }
 
@@ -313,7 +313,7 @@ export default function Create() {
           const formPop = parseInt(form.population);
           const cityPop = parseInt(cities[i].population);
           if (Math.abs(formPop - cityPop) / formPop <= 0.25) {
-            total_prefs++;
+            total_prefs += form.population_weight;
           }
         } catch {}
       }
@@ -323,7 +323,7 @@ export default function Create() {
           const formIncome = parseInt(form.median_income);
           const cityIncome = parseInt(cities[i].population);
           if (Math.abs(formIncome - cityIncome) / formIncome <= 0.25) {
-            total_prefs++;
+            total_prefs += form.income_weight;
           }
         } catch {}
       }
@@ -332,7 +332,7 @@ export default function Create() {
         
         try {
           if (cities[i].state === form.state) {
-            total_prefs++;
+            total_prefs += form.state_weight;
           }
         } catch {}
       }
