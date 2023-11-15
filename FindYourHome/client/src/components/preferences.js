@@ -176,7 +176,13 @@ export default function Create() {
       state: form.state,
       zip_code: form.zip_code,
       county: form.county,
-      median_income: form.median_income
+      median_income: form.median_income,
+      population_weight: form.population_weight,
+      region_weight: form.region_weight,
+      state_weight: form.state_weight,
+      zip_weight: form.zip_weight,
+      county_weight: form.county_weight,
+      income_weight: form.income_weight
     }
     favs.push(newFavorite);
 
