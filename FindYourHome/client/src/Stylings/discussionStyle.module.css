@@ -204,4 +204,8 @@ body {
     background-color: grey; 
     color: white; 
   }
-  
+
+  .tagIndicator {
+    color: #ffcc00;
+    margin-left: 5px;
+  }

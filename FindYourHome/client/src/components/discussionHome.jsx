@@ -35,6 +35,7 @@ const DiscussionHome = () => {
   const [searchBarCity, setSearchBarCity] = useState('');
 
   const [tagged, setTagged] = useState("");
+  const [taggedIn, setTaggedIn] = useState([]);
 
   // User Stuff
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -137,6 +138,11 @@ const DiscussionHome = () => {
           (a, b) => b.date - a.date
         );
         setDiscussions(sortedComments);
+        const taggedPostsInCity = sortedComments.filter((post) =>
+          post.content.includes(`@${user.username}`)
+        );
+
+        setTaggedIn(taggedPostsInCity);
       } else {
         console.error(
           "Failed to fetch discussions for the selected city:",
@@ -581,7 +587,12 @@ const DiscussionHome = () => {
                         </h3>
                       </div>
                       <div className={styles.postContent}>
-                        <h4 className={styles.postTitle}>{discussion.title}</h4>
+                        <h4 className={styles.postTitle}>
+                          {taggedIn.includes(discussion) && (
+                            <span className={styles.tagIndicator}>⭐</span>
+                          )} 
+                          {discussion.title}
+                        </h4>
                         <p>{discussion.content}</p>
                         <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
                         <p className={styles.metadata}>

@@ -40,3 +40,8 @@
 .replyButton:hover {
   background-color: #ddd;
 }
+
+.taggedIndicator {
+  color: #ffcc00;
+  margin-left: 5px;
+}
