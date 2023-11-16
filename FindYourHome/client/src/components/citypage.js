@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import "../Stylings/advancedPrefs.css";
+import "../Stylings/citypage.css";
 import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
-import "../Stylings/ViewCity.css";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
 
@@ -73,7 +73,7 @@ export default function CityPage(props) {
 
         if (response.ok) {
           const data = await response.json();
-         // console.log(data.choices[0].message.content);
+          // console.log(data.choices[0].message.content);
           setApiResponse(data.choices[0].message.content);  // Set the fetched data to the state
         } else {
           console.log('Error: Unable to process your request.');
@@ -91,16 +91,16 @@ export default function CityPage(props) {
 
 
   return (
-    <div>
+    <div className="root">
       <div className="navBar">
-          
+
         <div class="profiletooltip">
           <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
           <span class="profiletooltiptext">View your profile page and make edits</span>
         </div>
         <div class="profiletooltip">
-            <button className="profilebtn" onClick={() => navigate("/view-city")}>City Search</button>
-            <span class="profiletooltiptext">Search for cities by name</span>
+          <button className="profilebtn" onClick={() => navigate("/view-city")}>City Search</button>
+          <span class="profiletooltiptext">Search for cities by name</span>
         </div>
         <div class="advancedtooltip">
           <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
@@ -111,13 +111,17 @@ export default function CityPage(props) {
           <span class="discussiontooltiptext">View discussions about different cities</span>
         </div>
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
-
       </div>
+
       <div className="result">
         {cityModel.name && <CityModel model={cityModel} />}
-        {cityModel.name && <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} />}
+        {cityModel.name && (
+          <div className="mapContainer">
+            <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} />
+          </div>
+        )}
       </div>
-      <div>
+      <div className="attractions">
         <h3>Top 10 City Attractions: (takes a second to load)</h3>
         <p>{apiResponse}</p>  {/* Render the response */}
       </div>

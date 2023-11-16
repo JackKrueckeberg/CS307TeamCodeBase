@@ -37,12 +37,12 @@ class Map extends Component {
             <button onClick={this.toggleMapVisibility}>
               {mapVisible ? 'Hide Map' : 'Show Map'}
             </button>
-            <h2>Map of: {this.props.cityName}</h2>
+            <h2 style={{ color: 'rgb(220, 215, 201)' }}>City Map</h2>
             <div
               id="map"
               style={{
                 width: '100%',
-                height: '400px',
+                height: '500px',
                 display: mapVisible ? 'block' : 'none', // Toggle visibility using CSS
               }}
             ></div>
