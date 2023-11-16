@@ -7,7 +7,7 @@ import Bookmarks from "./saved_discussions/bookmarks";
 import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
-import PageAnimation from "../animations/pageAnimation.jsx";
+import PageAnimation from "../animations/PageAnimation.jsx";
 
 export default function Profile() {
   const [tabVal, setTabVal] = useState(() => {

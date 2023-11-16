@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useNavigationContext } from "../contexts/NavigationContext";
 
 const animation = {
     initial: { opacity: 0},
@@ -8,18 +9,20 @@ const animation = {
   };
   
 
-const pageAnimation = ({ children }) => {
-  return (
-    <motion.div
-      variants={animation}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={{ duration: 0.5 }}
-    >
-      {children}
-    </motion.div>
-  );
-};
+  const PageAnimation = ({ children }) => {
+    const { isNavigated } = useNavigationContext();
+  
+    return (
+      <motion.div
+        variants={isNavigated ? animation : {}}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={{ duration: 1 }}
+      >
+        {children}
+      </motion.div>
+    );
+  };
 
-export default pageAnimation;
+export default PageAnimation;

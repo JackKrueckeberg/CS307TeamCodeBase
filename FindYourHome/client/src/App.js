@@ -24,6 +24,7 @@ import Flags from "./components/strikes/flagComment";
 import DiscussionHome from "./components/discussionHome";
 import Disc from "./components/disc";
 import TwoFactor from "./components/twofactor";
+import { NavigationProvider, useNavigationContext } from "./contexts/NavigationContext";
 
 import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from "./contexts/CityContext";
@@ -66,7 +67,21 @@ const App = () => {
   const [compareCities, setCompareCities] = useState([]);
   const location = useLocation();
 
+  const NavigationHandler = () => {
+    const location = useLocation();
+    const { setIsNavigated } = useNavigationContext();
+  
+    useEffect(() => {
+      setIsNavigated(true);
+    }, [location, setIsNavigated]);
+  
+    return null; // This component does not render anything
+  };
+  
+
   return (
+    <NavigationProvider>
+    <NavigationHandler />
     <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
       <CityContext.Provider value={{ city, setGlobalCity }}>
         <CompareCitiesProvider value={{ compareCities, setCompareCities }}>
@@ -92,6 +107,7 @@ const App = () => {
         </CompareCitiesProvider>
       </CityContext.Provider>
     </UserContext.Provider>
+    </NavigationProvider>
     //   <Flags/>
     // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
     //     <CityContext.Provider value={{city, setGlobalCity}}>

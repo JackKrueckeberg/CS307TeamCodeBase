@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styles from "../Stylings/twoFactorStyle.module.css";
 import { useNavigate } from "react-router-dom";
-import PageAnimation from "../animations/pageAnimation";
+import PageAnimation from "../animations/PageAnimation";
 
 const TwoFactor = () => {
   const [codes, setCodes] = useState(Array(6).fill(""));
