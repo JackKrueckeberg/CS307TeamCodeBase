@@ -5,6 +5,7 @@ import "../Stylings/compareCities.css";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useUser } from "../contexts/UserContext";
+import Graphs from './graphs';
 
 export default function CompareCities() {
     // Retrieve cities from localStorage
@@ -66,8 +67,11 @@ export default function CompareCities() {
                     <div key={index} className="city-box">
                         <CityModel model={city} />
                     </div>
+                    
                 ))}
-
+                <div>
+      <Graphs city1={citiesToCompare[0]} city2={citiesToCompare[1]} />
+    </div>
                 <ToastContainer />
             </div>
 
