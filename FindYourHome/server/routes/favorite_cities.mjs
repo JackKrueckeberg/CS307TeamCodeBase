@@ -5,13 +5,13 @@ import { ObjectId } from "mongodb";
 const router = express.Router();
 
 // update the favorite searches list
-router.patch("/:email", async (req, res) => {
-  let collection = await db.collection("users");
+router.patch("/:name", async (req, res) => {
+  let collection = await db.collection("cities");
   let q = {email: req.params.email};  // Search by email
   let query = await collection.findOne(q);
     const updates =  {
       $set: {
-        favorite_cities: req.body.favorite_cities
+        favorite_cities: req.body.discussion.comments
       }
     };
   

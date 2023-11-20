@@ -1,0 +1,25 @@
+body {
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+  background-color: #fff; /* Set background color for the entire body */
+}
+
+.property-list-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.sort-select {
+  margin-bottom: 10px;
+}
+
+.property-list {
+  list-style: none; /* Remove default list styling */
+  padding: 0;
+}
+
+.property-item {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
