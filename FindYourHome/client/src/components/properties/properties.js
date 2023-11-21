@@ -1,10 +1,35 @@
-import React, { useState } from 'react';
-import propertiesData from './properties.json';
+import React, { useState, useEffect } from 'react';
 import './propertyList.css';
 
 const PropertyList = () => {
-  const [properties] = useState(propertiesData);
+  const [properties, setProperties] = useState([]);
   const [propertyTypeFilter, setPropertyTypeFilter] = useState('');
+
+  useEffect(() => {
+    // Call the function to get favorite cities when the component mounts
+    getProperties();
+}, []); 
+
+async function getProperties() {
+  try {
+    const city_info = await fetch("http://localhost:5050/city_info/Dallas", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const resp = await city_info.json();
+    const properties = resp.properties;
+
+    setProperties(properties)
+    
+  } catch (error) {
+    window.alert(error);
+  }
+}
+
+  
 
   const handlePropertyTypeChange = (e) => {
     setPropertyTypeFilter(e.target.value);
