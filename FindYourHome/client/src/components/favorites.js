@@ -52,7 +52,7 @@ export default function Favorites() {
 
             setUsername(resp.username);
 
-            console.log(resp.username);
+            //console.log(resp.username);
     
             return resp.username;
         } catch (error) {
@@ -68,7 +68,7 @@ export default function Favorites() {
             getUser_favorite_cities();
         }
         setTabVal(index) // sets the state to whatever index the tab is
-        console.log(index);
+        //console.log(index);
     }
 
     async function getUser_favorite_searches() {
@@ -88,7 +88,7 @@ export default function Favorites() {
             setFavoriteSearches(resp.favorite_searches);
         }
 
-        console.log(resp.favorite_searches);
+        //console.log(resp.favorite_searches);
     
         return resp.favorite_searches;
     }
@@ -115,7 +115,7 @@ export default function Favorites() {
         setFavoriteSearches(newFavs);
     }
     
-    console.log(favorite_searches);
+    //console.log(favorite_searches);
 
 
     async function getUser_favorite_cities() {
@@ -140,7 +140,7 @@ export default function Favorites() {
 
         }
 
-        console.log(resp.favorite_cities);
+        //console.log(resp.favorite_cities);
     
         return resp.favorite_cities;
     }
@@ -206,7 +206,7 @@ export default function Favorites() {
         }
 
         setShareModal(true);
-        console.log(selectedCities);
+        //console.log(selectedCities);
     }
 
     const handleShareCancel = () => {
@@ -226,7 +226,7 @@ export default function Favorites() {
         // TODO finish the send method
         const citiesToSend = favorite_cities.filter((city, index) => selectedCities[index]);
         const message = `Here are my favorite cities: ${citiesToSend.join(', ')}`;
-        console.log(message);
+        //console.log(message);
 
         const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
             method: "POST",

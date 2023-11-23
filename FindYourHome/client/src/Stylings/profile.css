@@ -1,12 +1,8 @@
 .profile-background {
-  background: rgb(86, 149, 153);
+  background: #3f4e4f;
   display: flex;
   flex-direction: column;
   height: auto;
-}
-
-.fav {
-
 }
 
 .profile-page{
@@ -204,4 +200,8 @@
 .disc {
   display: flex;
   flex-direction: row;
+}
+
+.circleImage {
+  border-radius: 100px;
 }

@@ -5,7 +5,6 @@ import { useUser } from "../contexts/UserContext";
 import { Queue } from "./recentDiscussionsQueue.js";
 import RecentDiscussionsQueue from "./recentDiscussionsQueue.js";
 import Autosuggest from "react-autosuggest";
-import defaultImage from "../Stylings/Default_Profile_Picture.png";
 import { useNavigate } from "react-router";
 import Replies from "./replies/replies";
 import AddReply from "./replies/addReply"

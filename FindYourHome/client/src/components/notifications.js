@@ -27,7 +27,7 @@ export default function Notifications() {
     const fetchUserInfo = async () => {
         try {
 
-            console.log(`This is value of user ${user._id}`);
+            //console.log(`This is value of user ${user._id}`);
             const response = await fetch(`http://localhost:5050/profileRoute/profile/${user._id}`, {
                 method: "GET",
                 headers: {
@@ -37,7 +37,7 @@ export default function Notifications() {
 
             if (response.status === 200) {
                 const userInfo = await response.json();
-                console.log(userInfo);
+                //console.log(userInfo);
                 // Update the user state with the fetched data
                 setNotifications(userInfo.notifications);
             }

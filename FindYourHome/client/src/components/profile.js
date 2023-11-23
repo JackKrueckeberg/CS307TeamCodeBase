@@ -8,7 +8,6 @@ import Bookmarks from "./saved_discussions/bookmarks";
 import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
-import defaultImage from '../Stylings/Default_Profile_Picture.png';
 import Notifications from "./notifications";
 
 export default function Profile() {
@@ -17,11 +16,12 @@ export default function Profile() {
         firstName: '',
         lastName: '',
         profile_image: '',
+        bio: '',
     };
 
     const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
     const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
-    const [profile_image, setImage] = useState(defaultImage);
+    const [profile_image, setImage] = useState();
 
     const {user: userProfile } = useUser(); // the id of the current logged in user
     const [user, setInfo] = useState( storedSesUser || storedLocUser || userProfile || initialInfo);
@@ -42,7 +42,7 @@ export default function Profile() {
     const fetchUserInfo = async () => {
         try {
 
-            console.log(`This is value of user ${user._id}`);
+            //console.log(`This is value of user ${user._id}`);
             const response = await fetch(`http://localhost:5050/profileRoute/profile/${user._id}`, {
                 method: "GET",
                 headers: {
@@ -52,33 +52,20 @@ export default function Profile() {
 
             if (response.status === 200) {
                 const userInfo = await response.json();
-                console.log(userInfo);
+                //console.log(userInfo);
                 // Update the user state with the fetched data
-                if (userInfo.profile_image === "") {
-                    setImage(defaultImage);
-                    setInfo({
-                        ...user,
-                        firstName: userInfo.firstName,
-                        lastName: userInfo.lastName,
-                        profile_image: defaultImage,
-                        bio: userInfo.bio,
-                    });
-                } else {
-                    setInfo({
-                        ...user,
-                        firstName: userInfo.firstName,
-                        lastName: userInfo.lastName,
-                        profile_image: userInfo.profile_image,
-                        bio: userInfo.bio,
-                    });
-                }
+
+                setInfo({
+                    ...user,
+                    firstName: userInfo.firstName,
+                    lastName: userInfo.lastName,
+                    bio: userInfo.bio,
+                })
             }
         } catch (error) {
             console.error("Error fetching user info: ", error);
         }
     }
-
-
 
     const [tabVal, setTabVal] = useState(() => {
         return parseInt(localStorage.getItem('activeTab')) || 1;
@@ -89,7 +76,7 @@ export default function Profile() {
     const handleTabChange = (index) => {
         setTabVal(index);
         localStorage.setItem('activeTab', index.toString());
-        console.log(index);
+        //console.log(index);
     };
     const handleLogout = () => {
         localStorage.removeItem('authToken');
@@ -131,7 +118,7 @@ export default function Profile() {
             <div className="profile-content">
             <div className="profileCard">
                 <div className="profile-image">
-                    <img src={profile_image} width={150} height={150} alt="Profile"/>
+                    <img src={`http://localhost:5050/profileRoute/loadImage/${user._id}`} width={150} height={150} alt="Profile" className="circleImage"/>
                 </div>
                 
                 <div className="name">
