@@ -28,7 +28,7 @@ router.patch("/:name", async (req, res) => {
   let query = await collection.findOne(q);
   const updates =  {
     $set: {
-      discussion: req.body.discussion
+      properties: req.body.properties
     }
   };
   let result = await collection.updateOne(query, updates);

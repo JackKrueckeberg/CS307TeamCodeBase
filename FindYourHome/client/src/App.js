@@ -29,6 +29,7 @@ import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from './contexts/CityContext';
 import MessageNotification from './components/messageNotification';
 import AccountInfo from './components/accountInfo';
+import PropertyList from './components/properties/properties';
 
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -84,6 +85,7 @@ const App = () => {
                         <Route path="/notification" element={<MessageNotification/>} />
                         <Route path="/TwoFactor" element={<TwoFactor />}/>
                         <Route path="/disc" element={<Disc/>} />
+                        <Route path="/properties" element = {<PropertyList/>}/>
                     </Routes>
                 </CompareCitiesProvider>
             </CityContext.Provider>

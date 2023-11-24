@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const fs = require('fs').promises;
 
-const apiKey = '6a3d9417047e4ecebb8e90e10d2b3e8f'; // Replace with your actual API key
+const apiKey = '880b2dfa31df4895be9d0a7f7a428f7b'; // Replace with your actual API key
 
 // Function to retrieve all properties for sale in New York City
 const getAllPropertiesForSaleInNYC = async () => {
@@ -9,8 +9,8 @@ const getAllPropertiesForSaleInNYC = async () => {
     const apiUrl = 'https://api.rentcast.io/v1/listings/sale';
 
     const queryParams = new URLSearchParams({
-      city: 'New York City',
-      limit: 10000,
+      city: 'Danville',
+      limit: 150,
     });
 
     const url = `${apiUrl}?${queryParams.toString()}`;
@@ -40,8 +40,17 @@ getAllPropertiesForSaleInNYC()
   .then(async (data) => {
     try {
       // Write data to a local file
-      await fs.writeFile('properties.txt', JSON.stringify(data, null, 2));
-      console.log('All properties for sale in New York City data has been written to properties.txt');
+      await fetch("http://localhost:5050/city_info/Danville", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({properties: data})
+      }).catch((error) => {
+        //window.alert(error);
+        console.log("error")
+        return;
+      });
     } catch (writeError) {
       console.error('Error writing to file:', writeError);
     }
@@ -49,3 +58,7 @@ getAllPropertiesForSaleInNYC()
   .catch((error) => {
     console.error('Error:', error);
   });
+
+  async function reply(content) {
+      
+    } 

@@ -324,7 +324,7 @@ const ViewCity = () => {
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
             </div>
-
+           
             {showResults && (
                 <div>
                     <div>

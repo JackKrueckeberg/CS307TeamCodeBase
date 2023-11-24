@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import "../Stylings/advancedPrefs.css";
-import "../Stylings/citypage.css";
+//import "../Stylings/citypage.css";
 import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
@@ -112,7 +112,10 @@ export default function CityPage(props) {
         </div>
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
       </div>
+      <div>
+        <button onClick={() => navigate("/properties", cityModel.name)}>View Properties in {cityModel.name}</button>
 
+      </div>
       <div className="result">
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
