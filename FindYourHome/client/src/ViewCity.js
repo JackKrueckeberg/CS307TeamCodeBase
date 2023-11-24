@@ -388,14 +388,11 @@ const ViewCity = () => {
 
                 {!isValidSearch &&
                     <div className="errorMessage">
-                        {searchTerm === "" ? <h2>No City Searched</h2> : <h2>Invalid Search</h2>}
+                        {searchTerm === "" ? <h2>No City Searched</h2> : similarSearches.length === 0 ? <h2>No results matching your search</h2> : <h2>Invalid Search</h2>}
                         <div>
-
-                            <SimilarSearches suggestions={similarSearches} onSuggestionClick={handleSimilarSuggestionClick} />
-
+                            {similarSearches.length > 0 && <SimilarSearches suggestions={similarSearches} onSuggestionClick={handleSimilarSuggestionClick} />}
                         </div>
                     </div>
-                    
                 }
 
                 {showResults && city && <CityPage showResults={showResults} testProp="Test"></CityPage>}
