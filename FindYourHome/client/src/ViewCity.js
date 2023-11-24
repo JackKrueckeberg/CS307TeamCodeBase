@@ -252,8 +252,8 @@ const ViewCity = () => {
         setSearchTerm("");
     };
 
-    const handleInputChange = (e) => {
-        setSearchTerm(e.target.value);
+    const handleInputChange = (e, value) => {
+        setSearchTerm(value.newValue);
         setIsDropdownOpen(true);
     };
 
