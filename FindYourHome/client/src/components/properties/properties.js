@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import { useCity } from "../../contexts/CityContext";
+import { useNavigate } from "react-router-dom";
 import './propertyList.css';
 
 const PropertyList = () => {
   const [properties, setProperties] = useState([]);
   const [propertyTypeFilter, setPropertyTypeFilter] = useState('');
   const city = JSON.parse(localStorage.getItem('selectedCity')).name;
+  const navigate = useNavigate();
 
   
 
@@ -61,7 +63,12 @@ const PropertyList = () => {
     : `View all properties in ${properties.length > 0 ? properties[0].city : 'City'} on Zillow`;
 
   return (
+
     <div className="property-list-container">
+       <div>
+      
+        <button onClick={() => navigate('/view-city')}>Back to View City</button>
+      </div>
       <label htmlFor="propertyType">Filter By Property Type:</label>
       <select className="filter-select" id="propertyType" onChange={handlePropertyTypeChange}>
         <option value="">Select...</option>
@@ -73,9 +80,7 @@ const PropertyList = () => {
 
       {/* Display the common link at the top */}
       <div className="common-link">
-        <Link to={getZillowLink(properties.length > 0 ? properties[0].city : '', properties.length > 0 ? properties[0].state : '', propertyTypeFilter)}>
-          {commonLinkMessage}
-        </Link>
+        
       </div>
 
       <ul className="property-list">
