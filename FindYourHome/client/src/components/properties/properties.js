@@ -65,10 +65,9 @@ const PropertyList = () => {
   return (
 
     <div className="property-list-container">
-       <div>
-      
-        <button onClick={() => navigate('/view-city')}>Back to View City</button>
-      </div>
+      <button className="button" onClick={() => navigate('/view-city')}>
+        Back to View City
+      </button>
       <label htmlFor="propertyType">Filter By Property Type:</label>
       <select className="filter-select" id="propertyType" onChange={handlePropertyTypeChange}>
         <option value="">Select...</option>
