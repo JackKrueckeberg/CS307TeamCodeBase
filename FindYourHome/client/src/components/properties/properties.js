@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import { useCity } from "../../contexts/CityContext";
 import './propertyList.css';
 
-const PropertyList = ({city}) => {
+const PropertyList = () => {
   const [properties, setProperties] = useState([]);
   const [propertyTypeFilter, setPropertyTypeFilter] = useState('');
+  const city = JSON.parse(localStorage.getItem('selectedCity')).name;
+
   
 
   useEffect(() => {
-    console.log(city)
+ 
     // Call the function to get favorite cities when the component mounts
     getProperties();
   }, []);

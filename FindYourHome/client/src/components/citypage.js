@@ -113,9 +113,10 @@ export default function CityPage(props) {
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
       </div>
       <div>
-        <button onClick={() => navigate("/properties", cityModel.name)}>View Properties in {cityModel.name}</button>
-
-      </div>
+    <button onClick={() => navigate("/properties", { city: cityModel.name })}>
+      View Properties in {cityModel.name}
+    </button>
+  </div>
       <div className="result">
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
