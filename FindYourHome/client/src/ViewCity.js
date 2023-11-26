@@ -14,9 +14,9 @@ import CityPage from "./components/citypage"
 import { useCity } from "./contexts/CityContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import SimilarSearches from './components/SimilarSearches'; // Adjust the path accordingly
+import SimilarSearches from './components/SimilarSearches'; 
 import Fuse from 'fuse.js';
-
+import PageAnimation from "./animations/PageAnimation";
 
 
 
@@ -339,6 +339,7 @@ const ViewCity = () => {
 
 
     return (
+        <PageAnimation>
         <div>
             {!isVerified && (
                 <div className="verificationBanner">
@@ -436,7 +437,7 @@ const ViewCity = () => {
 
             <ToastContainer />
         </div>
-
+        </PageAnimation>
     );
 };
 

@@ -29,7 +29,13 @@ export default function Create() {
     zip_code: "",
     county: "",
     median_income: "",
-    favorited: false
+    favorited: false,
+    population_weight: 1,
+    region_weight: 1,
+    state_weight: 1,
+    zip_weight: 1,
+    county_weight: 1,
+    income_weight: 1
   });
 
   const [results, setResults] = useLocalStorage("results", []);
@@ -53,6 +59,14 @@ export default function Create() {
   }
 
   function compareByScore(a, b) {
+    if (!a.score) {
+      return 1;
+    }
+
+    if (!b.score) {
+      return -1;
+    }
+
     if (a.score < b.score) {
         return 1;
     }
@@ -170,7 +184,13 @@ export default function Create() {
       state: form.state,
       zip_code: form.zip_code,
       county: form.county,
-      median_income: form.median_income
+      median_income: form.median_income,
+      population_weight: form.population_weight,
+      region_weight: form.region_weight,
+      state_weight: form.state_weight,
+      zip_weight: form.zip_weight,
+      county_weight: form.county_weight,
+      income_weight: form.income_weight
     }
     favs.push(newFavorite);
 
@@ -265,34 +285,34 @@ export default function Create() {
       var total_prefs = 0;
       if (form.east_coast) {
         if (cities[i].region === "America/New_York") {
-            total_prefs++;
+            total_prefs += form.region_weight;
         }
       }
       if (form.central) {
         if (cities[i].region === "America/Chicago") {
-            total_prefs++;
+          total_prefs += form.region_weight;
         }
       }
       if (form.mountain_west) {
         if (cities[i].region === "America/Phoenix") {
-          total_prefs++;
+          total_prefs += form.region_weight;
         }
       }
       if (form.west_coast) {
         if (cities[i].region === "America/Los_Angeles") {
-            total_prefs++;
+          total_prefs += form.region_weight;
         }
       }
 
       if (form.zip_code !== "") {
         if (form.zip_code === cities[i].zip_code) {
-            total_prefs++;
+            total_prefs += form.zip_weight;
         }
       }
 
       if (form.county !== "") {
         if (form.county === cities[i].county) {
-            total_prefs++;
+            total_prefs += form.county_weight;
         }
       }
 
@@ -301,7 +321,7 @@ export default function Create() {
           const formPop = parseInt(form.population);
           const cityPop = parseInt(cities[i].population);
           if (Math.abs(formPop - cityPop) / formPop <= 0.25) {
-            total_prefs++;
+            total_prefs += form.population_weight;
           }
         } catch {}
       }
@@ -311,7 +331,7 @@ export default function Create() {
           const formIncome = parseInt(form.median_income);
           const cityIncome = parseInt(cities[i].population);
           if (Math.abs(formIncome - cityIncome) / formIncome <= 0.25) {
-            total_prefs++;
+            total_prefs += form.income_weight;
           }
         } catch {}
       }
@@ -320,7 +340,7 @@ export default function Create() {
         
         try {
           if (cities[i].state === form.state) {
-            total_prefs++;
+            total_prefs += form.state_weight;
           }
         } catch {}
       }
@@ -458,6 +478,8 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.population_weight}
+                    onChange={(e) => updateForm({ population_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -472,6 +494,8 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.region_weight}
+                    onChange={(e) => updateForm({ region_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -607,6 +631,8 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.state_weight}
+                    onChange={(e) => updateForm({ state_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -628,6 +654,8 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.zip_weight}
+                    onChange={(e) => updateForm({ zip_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -648,6 +676,8 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.county_weight}
+                    onChange={(e) => updateForm({ county_weight: e.target.value })}
                     type="number"
                   />
                 </td>
@@ -671,6 +701,8 @@ export default function Create() {
                   <input
                     className="padding"
                     placeholder="preference weight"
+                    value={form.income_weight}
+                    onChange={(e) => updateForm({ income_weight: e.target.value })}
                     type="number"
                   />
                 </td>

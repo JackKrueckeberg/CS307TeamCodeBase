@@ -8,10 +8,11 @@ import Autosuggest from "react-autosuggest";
 import defaultImage from "../Stylings/Default_Profile_Picture.png";
 import { useNavigate } from "react-router";
 import Replies from "./replies/replies";
-import AddReply from "./replies/addReply"
+import AddReply from "./replies/addReply";
 import Flags from "./strikes/flagComment";
 import AddBookmark from "./saved_discussions/addBookmark";
 import AddFavDisc from "./saved_discussions/addFavDisc.js";
+import PageAnimation from "../animations/PageAnimation.jsx";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -27,12 +28,14 @@ const DiscussionHome = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(new Queue());
+  const [recentDiscussionsQueue, setRecentDiscussionsQueue] = useState(
+    new Queue()
+  );
   const [cities, setCities] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [error, setError] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchBarCity, setSearchBarCity] = useState('');
+  const [searchBarCity, setSearchBarCity] = useState("");
 
   // User Stuff
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -93,18 +96,20 @@ const DiscussionHome = () => {
 
   const fetchData = async () => {
     try {
-        const response = await fetch(`http://localhost:5050/record/cities_full_2`);
-        if (!response.ok) {
-            const message = `An error occurred: ${response.statusText}`;
-            window.alert(message);
-            return;
-        }
-        const cities = await response.json();
-        setAllCities(cities);
+      const response = await fetch(
+        `http://localhost:5050/record/cities_full_2`
+      );
+      if (!response.ok) {
+        const message = `An error occurred: ${response.statusText}`;
+        window.alert(message);
+        return;
+      }
+      const cities = await response.json();
+      setAllCities(cities);
     } catch (error) {
-        console.error("There was an error fetching the cities", error);
+      console.error("There was an error fetching the cities", error);
     }
-}
+  };
 
   const handleCancel = () => {
     setShowForm(false);
@@ -164,11 +169,11 @@ const DiscussionHome = () => {
     setShowHist(true);
     // Check if there's a valid ??? DISCUSSION ??? to enqueue
     if (discussion) {
-        // Enqueue the city name to the recent cities queue
-        const updatedQueue = recentDiscussionsQueue.enqueue(discussion);
-        setRecentDiscussionsQueue(updatedQueue);
+      // Enqueue the city name to the recent cities queue
+      const updatedQueue = recentDiscussionsQueue.enqueue(discussion);
+      setRecentDiscussionsQueue(updatedQueue);
     } else {
-        console.warn("No valid discussion selected to queue.");
+      console.warn("No valid discussion selected to queue.");
     }
   };
 
@@ -181,18 +186,20 @@ const DiscussionHome = () => {
   const clearHistory = () => {
     setRecentDiscussionsQueue(new Queue());
     setShowHist(false);
-  }
+  };
 
   const onSuggestionsFetchRequested = ({ value }) => {
     if (value) {
-        const inputValue = value.trim().toLowerCase();
-        const matchingCities = allCities.filter((searchBarCity) =>
-            searchBarCity.name.toLowerCase().startsWith(inputValue)
-        );
+      const inputValue = value.trim().toLowerCase();
+      const matchingCities = allCities.filter((searchBarCity) =>
+        searchBarCity.name.toLowerCase().startsWith(inputValue)
+      );
 
-        setSuggestions(matchingCities.map((searchBarCity) => searchBarCity.name).slice(0, 10));
+      setSuggestions(
+        matchingCities.map((searchBarCity) => searchBarCity.name).slice(0, 10)
+      );
     } else {
-        setSuggestions([]);
+      setSuggestions([]);
     }
   };
 
@@ -219,58 +226,58 @@ const DiscussionHome = () => {
     try {
       // Get the current discussions
       if (!user.strikes.is_banned) {
-      const responseGet = await fetch(
-        `http://localhost:5050/city_info/${encodedCity}`
-      );
-      const data = await responseGet.json();
-      if (!responseGet.ok) throw new Error("Failed to get discussions");
+        const responseGet = await fetch(
+          `http://localhost:5050/city_info/${encodedCity}`
+        );
+        const data = await responseGet.json();
+        if (!responseGet.ok) throw new Error("Failed to get discussions");
 
-      let currentDiscussion = data.discussion || {};
-      handleQueueDiscussion(selectedCity);
-      currentDiscussion.comments = currentDiscussion.comments || [];
-      currentDiscussion.comments.push({
-        title,
-        content,
-        selectorChoice,
-        category: dropdownSelection,
-        city: selectedCity,
-        numLikes: 0,
-        numDislikes: 0,
-        numFlags: 0,
-        date: Date.now(),
-        replies: [],
-        postedBy: {
-          username: user.username,
-        },
-      });
+        let currentDiscussion = data.discussion || {};
+        handleQueueDiscussion(selectedCity);
+        currentDiscussion.comments = currentDiscussion.comments || [];
+        currentDiscussion.comments.push({
+          title,
+          content,
+          selectorChoice,
+          category: dropdownSelection,
+          city: selectedCity,
+          numLikes: 0,
+          numDislikes: 0,
+          numFlags: 0,
+          date: Date.now(),
+          replies: [],
+          postedBy: {
+            username: user.username,
+          },
+        });
 
-      // Now update the discussions with the new comment
-      const responsePatch = await fetch(
-        `http://localhost:5050/city_info/${encodedCity}`,
-        {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ discussion: currentDiscussion }),
-        }
-      );
+        // Now update the discussions with the new comment
+        const responsePatch = await fetch(
+          `http://localhost:5050/city_info/${encodedCity}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ discussion: currentDiscussion }),
+          }
+        );
 
-      if (responsePatch.ok) {
-        // Place the new comment at the beginning of the discussions array
-        setDiscussions((prev) => [
-          currentDiscussion.comments[currentDiscussion.comments.length - 1],
-          ...prev,
-        ]);
-        if(selectorChoice == "Anonymous") {
-          alert("Successfully Posted Anonymously");
+        if (responsePatch.ok) {
+          // Place the new comment at the beginning of the discussions array
+          setDiscussions((prev) => [
+            currentDiscussion.comments[currentDiscussion.comments.length - 1],
+            ...prev,
+          ]);
+          if (selectorChoice == "Anonymous") {
+            alert("Successfully Posted Anonymously");
+          } else {
+            alert(`Successfully Posted as ${user.username}`);
+          }
         } else {
-          alert(`Successfully Posted as ${user.username}`);
+          console.error("Failed to update discussion");
         }
       } else {
-        console.error("Failed to update discussion");
+        window.alert("you can not comment. You are banned!");
       }
-    } else {
-      window.alert("you can not comment. You are banned!")
-    }
     } catch (error) {
       console.error("Error in submitting discussion:", error);
     } finally {
@@ -283,312 +290,341 @@ const DiscussionHome = () => {
   };
 
   return (
-    <div className={styles.DiscussionHome}>
-      <h2>Discussions</h2>
+    <PageAnimation>
+      <div className={styles.DiscussionHome}>
+        <h2>Discussions</h2>
 
-      {!showForm && (
-        <div className="navBar">
-          <div className="profiletooltip">
-            <button className="profilebtn" onClick={() => navigate("/profile")}>
-              Profile
+        {!showForm && (
+          <div className="navBar">
+            <div className="profiletooltip">
+              <button
+                className="profilebtn"
+                onClick={() => navigate("/profile")}
+              >
+                Profile
+              </button>
+              <span className="profiletooltiptext">
+                View your profile page and make edits
+              </span>
+            </div>
+            <div className="discussiontooltip">
+              <button
+                className="discussionButton"
+                onClick={() => navigate("/view-city")}
+              >
+                City Search
+              </button>
+              <span className="discussiontooltiptext">
+                Search for cities by name
+              </span>
+            </div>
+            <div className="advancedtooltip">
+              <button
+                className="advancedSearch"
+                onClick={() => navigate("/preferences")}
+              >
+                Advanced Search
+              </button>
+              <span className="advancedtooltiptext">
+                Search based on attributes of cities
+              </span>
+            </div>
+            <button className="logoutbtn" onClick={() => handleLogout()}>
+              Logout
             </button>
-            <span className="profiletooltiptext">
-              View your profile page and make edits
-            </span>
           </div>
-          <div className="discussiontooltip">
-            <button
-              className="discussionButton"
-              onClick={() => navigate("/view-city")}
-            >
-              City Search
-            </button>
-            <span className="discussiontooltiptext">Search for cities by name</span>
-          </div>
-          <div className="advancedtooltip">
-            <button
-              className="advancedSearch"
-              onClick={() => navigate("/preferences")}
-            >
-              Advanced Search
-            </button>
-            <span className="advancedtooltiptext">
-              Search based on attributes of cities
-            </span>
-          </div>
-          <button className="logoutbtn" onClick={() => handleLogout()}>
-            Logout
-          </button>
-        </div>
-      )}
+        )}
 
-      {!showForm && (
-        <select
-          className={styles.filter}
-          value={selectedCity}
-          onChange={(e) => {setSelectedCity(e.target.value);
-                            handleQueueDiscussion(e.target.value);
-          }}
-        >
-          <option value="">Select a City to View or Post Discussions</option>
-          {(cities || []).map((city, index) => (
-            <option key={index} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {!showForm && (
-        <div>
-          <button
-            onClick={() => setShowForm(true)}
-            className={styles.createNew}
-            disabled={!selectedCity}
-          >
-            Create New Discussion
-          </button>
-        </div>
-      )}
-
-      {!showForm && (
-        <div>
-          <button
-            onClick={() => setShowSearchBar(!showSearchBar)}
-            className={styles.createNew}
-          >
-            Toggle Search Bar
-          </button>
-        </div>
-      )}
-      
-      {!showForm && showSearchBar && (
-        <div>
-          <Autosuggest
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={onSuggestionsClearRequested}
-            getSuggestionValue={(suggestion) => suggestion}
-            renderSuggestion={(suggestion) => (
-              <div key={suggestion} className="suggestion">{suggestion}</div>
-            )}
-            inputProps={{
-              type: "text",
-              placeholder: "Enter a city",
-              value: searchTerm,
-              onChange: handleInputChange,
+        {!showForm && (
+          <select
+            className={styles.filter}
+            value={selectedCity}
+            onChange={(e) => {
+              setSelectedCity(e.target.value);
+              handleQueueDiscussion(e.target.value);
             }}
-          />
-        </div>
-      )}
+          >
+            <option value="">Select a City to View or Post Discussions</option>
+            {(cities || []).map((city, index) => (
+              <option key={index} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        )}
 
-      {!showForm && showHist && <div className="recentlyDiscussedCities">
-        <RecentDiscussionsQueue queue={recentDiscussionsQueue}/>
-        <button className="clearHistory" onClick={() => clearHistory()}>Clear History</button>
-      </div>}
+        {!showForm && (
+          <div>
+            <button
+              onClick={() => setShowForm(true)}
+              className={styles.createNew}
+              disabled={!selectedCity}
+            >
+              Create New Discussion
+            </button>
+          </div>
+        )}
 
-      {!showForm && selectedCity && (
-        <div className={styles.categoryFilterButtons}>
-          <button
-            className={selectedCategory === "All" ? styles.selectedButton : ""}
-            onClick={() => setSelectedCategory("All")}
-          >
-            All
-          </button>
-          <button
-            className={
-              selectedCategory === "General" ? styles.selectedButton : ""
-            }
-            onClick={() => setSelectedCategory("General")}
-          >
-            General
-          </button>
-          <button
-            className={
-              selectedCategory === "Crime" ? styles.selectedButton : ""
-            }
-            onClick={() => setSelectedCategory("Crime")}
-          >
-            Crime
-          </button>
-          <button
-            className={
-              selectedCategory === "Dining" ? styles.selectedButton : ""
-            }
-            onClick={() => setSelectedCategory("Dining")}
-          >
-            Dining
-          </button>
-          <button
-            className={
-              selectedCategory === "Things To Do" ? styles.selectedButton : ""
-            }
-            onClick={() => setSelectedCategory("Things To Do")}
-          >
-            Things to Do
-          </button>
-          <button
-            className={
-              selectedCategory === "Other" ? styles.selectedButton : ""
-            }
-            onClick={() => setSelectedCategory("Other")}
-          >
-            Other
-          </button>
-          <AddBookmark _bookmark={selectedCity}/>
-          <AddFavDisc _favDisc={selectedCity}/>
-        </div>
-      )}
+        {!showForm && (
+          <div>
+            <button
+              onClick={() => setShowSearchBar(!showSearchBar)}
+              className={styles.createNew}
+            >
+              Toggle Search Bar
+            </button>
+          </div>
+        )}
 
-      <div
-        className={`${styles.threadContainer} ${
-          showForm ? styles.formActive : ""
-        }`}
-      >
-        
+        {!showForm && showSearchBar && (
+          <div>
+            <Autosuggest
+              suggestions={suggestions}
+              onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={onSuggestionsClearRequested}
+              getSuggestionValue={(suggestion) => suggestion}
+              renderSuggestion={(suggestion) => (
+                <div key={suggestion} className="suggestion">
+                  {suggestion}
+                </div>
+              )}
+              inputProps={{
+                type: "text",
+                placeholder: "Enter a city",
+                value: searchTerm,
+                onChange: handleInputChange,
+              }}
+            />
+          </div>
+        )}
+
+        {!showForm && showHist && (
+          <div className="recentlyDiscussedCities">
+            <RecentDiscussionsQueue queue={recentDiscussionsQueue} />
+            <button className="clearHistory" onClick={() => clearHistory()}>
+              Clear History
+            </button>
+          </div>
+        )}
+
         {!showForm && selectedCity && (
-          <div className={styles.commentsBox}>
-            {discussions.length === 0 ? (
-              <div className={styles.noDiscussionsMessage}>
-                Start a Discussion for this City above!
-              </div>
-            ) : (
-              (() => {
-                const filteredDiscussions = discussions.filter(
-                  (discussion) =>
-                    selectedCategory === "All" ||
-                    discussion.category === selectedCategory
-                );
+          <div className={styles.categoryFilterButtons}>
+            <button
+              className={
+                selectedCategory === "All" ? styles.selectedButton : ""
+              }
+              onClick={() => setSelectedCategory("All")}
+            >
+              All
+            </button>
+            <button
+              className={
+                selectedCategory === "General" ? styles.selectedButton : ""
+              }
+              onClick={() => setSelectedCategory("General")}
+            >
+              General
+            </button>
+            <button
+              className={
+                selectedCategory === "Crime" ? styles.selectedButton : ""
+              }
+              onClick={() => setSelectedCategory("Crime")}
+            >
+              Crime
+            </button>
+            <button
+              className={
+                selectedCategory === "Dining" ? styles.selectedButton : ""
+              }
+              onClick={() => setSelectedCategory("Dining")}
+            >
+              Dining
+            </button>
+            <button
+              className={
+                selectedCategory === "Things To Do" ? styles.selectedButton : ""
+              }
+              onClick={() => setSelectedCategory("Things To Do")}
+            >
+              Things to Do
+            </button>
+            <button
+              className={
+                selectedCategory === "Other" ? styles.selectedButton : ""
+              }
+              onClick={() => setSelectedCategory("Other")}
+            >
+              Other
+            </button>
+            <AddBookmark _bookmark={selectedCity} />
+            <AddFavDisc _favDisc={selectedCity} />
+          </div>
+        )}
 
-                return filteredDiscussions.length === 0 ? (
-                  <div className={styles.noDiscussionsMessage}>
-                    No discussions found in this category.  Start a Discussion for this Category above!
-                  </div>
-                ) : (
-                  
-                  filteredDiscussions.map((discussion) => (
-                    <div
-                      key={discussion.id || discussion.title}
-                      className={styles.discussionPost}
-                    >
-                      <div className={styles.authorInfo}>
-                        <h3>
-                          {discussion.selectorChoice === "Your Username"
-                            ? discussion.postedBy.username
-                            : "Anonymous"}
-                        </h3>
-                      </div>
-                      <div className={styles.postContent}>
-                        <h4 className={styles.postTitle}>{discussion.title}</h4>
-                        <p>{discussion.content}</p>
-                        <Flags type="comment" commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
-                        <p className={styles.metadata}>
-                          City: {discussion.city} | Category: {discussion.category}
-                        </p>
-                        <Replies commentIndex={filteredDiscussions.indexOf(discussion)} _selectedCity={selectedCity} />
-                      </div>
+        <div
+          className={`${styles.threadContainer} ${
+            showForm ? styles.formActive : ""
+          }`}
+        >
+          {!showForm && selectedCity && (
+            <div className={styles.commentsBox}>
+              {discussions.length === 0 ? (
+                <div className={styles.noDiscussionsMessage}>
+                  Start a Discussion for this City above!
+                </div>
+              ) : (
+                (() => {
+                  const filteredDiscussions = discussions.filter(
+                    (discussion) =>
+                      selectedCategory === "All" ||
+                      discussion.category === selectedCategory
+                  );
+
+                  return filteredDiscussions.length === 0 ? (
+                    <div className={styles.noDiscussionsMessage}>
+                      No discussions found in this category. Start a Discussion
+                      for this Category above!
                     </div>
-                  ))
-                );
-              })()
-            )}
+                  ) : (
+                    filteredDiscussions.map((discussion) => (
+                      <div
+                        key={discussion.id || discussion.title}
+                        className={styles.discussionPost}
+                      >
+                        <div className={styles.authorInfo}>
+                          <h3>
+                            {discussion.selectorChoice === "Your Username"
+                              ? discussion.postedBy.username
+                              : "Anonymous"}
+                          </h3>
+                        </div>
+                        <div className={styles.postContent}>
+                          <h4 className={styles.postTitle}>
+                            {discussion.title}
+                          </h4>
+                          <p>{discussion.content}</p>
+                          <Flags
+                            type="comment"
+                            commentIndex={filteredDiscussions.indexOf(
+                              discussion
+                            )}
+                            _selectedCity={selectedCity}
+                          />
+                          <p className={styles.metadata}>
+                            City: {discussion.city} | Category:{" "}
+                            {discussion.category}
+                          </p>
+                          <Replies
+                            commentIndex={filteredDiscussions.indexOf(
+                              discussion
+                            )}
+                            _selectedCity={selectedCity}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  );
+                })()
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className={styles.parentErr}>
+          {showForm && error && <div className={styles.errorMsg}>{error}</div>}
+        </div>
+
+        {showForm && (
+          <div className={styles.discussionForm}>
+            <h3>New Discussion about {selectedCity}</h3>
+
+            <label>
+              <span>Title of Post:</span>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter the title"
+                className={styles.inputField}
+                required
+              />
+            </label>
+
+            <label>
+              <span>Post as:</span>
+              <div className={styles.choiceGroup}>
+                <label>
+                  <input
+                    type="radio"
+                    value="Anonymous"
+                    required
+                    checked={selectorChoice === "Anonymous"}
+                    onChange={(e) => setSelectorChoice(e.target.value)}
+                  />
+                  <span>Anonymous</span>
+                </label>
+
+                <label>
+                  <input
+                    type="radio"
+                    value="Your Username"
+                    required
+                    checked={selectorChoice === "Your Username"}
+                    onChange={(e) => setSelectorChoice(e.target.value)}
+                  />
+                  <span>Username</span>
+                </label>
+              </div>
+            </label>
+
+            <label>
+              <span>Please Select a Discussion Category:</span>
+              <select
+                value={dropdownSelection}
+                onChange={(e) => setDropdownSelection(e.target.value)}
+                required
+              >
+                <option value="" disabled selected>
+                  Select an option
+                </option>
+                <option value="General">General</option>
+                <option value="Crime">Crime</option>
+                <option value="Dining">Dining</option>
+                <option value="Things To Do">Things to Do</option>
+                <option value="Other">Other</option>
+              </select>
+            </label>
+
+            <label>
+              <span>Tell us about your Thoughts:</span>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Share your thoughts"
+                className={styles.inputField}
+                required
+              ></textarea>
+            </label>
+
+            <div className={styles.button}>
+              <button onClick={handleSubmit} className={styles.submit}>
+                Submit
+              </button>
+              <button
+                onClick={() => {
+                  setShowForm(false);
+                  handleCancel();
+                }}
+                className={styles.cancel}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
       </div>
-
-      <div className={styles.parentErr}>
-        {showForm && error && <div className={styles.errorMsg}>{error}</div>}
-      </div>
-
-      {showForm && (
-        <div className={styles.discussionForm}>
-          <h3>New Discussion about {selectedCity}</h3>
-
-          <label>
-            <span>Title of Post:</span>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter the title"
-              className={styles.inputField}
-              required
-            />
-          </label>
-
-          <label>
-            <span>Post as:</span>
-            <div className={styles.choiceGroup}>
-              <label>
-                <input
-                  type="radio"
-                  value="Anonymous"
-                  required
-                  checked={selectorChoice === "Anonymous"}
-                  onChange={(e) => setSelectorChoice(e.target.value)}
-                />
-                <span>Anonymous</span>
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  value="Your Username"
-                  required
-                  checked={selectorChoice === "Your Username"}
-                  onChange={(e) => setSelectorChoice(e.target.value)}
-                />
-                <span>Username</span>
-              </label>
-            </div>
-          </label>
-
-          <label>
-            <span>Please Select a Discussion Category:</span>
-            <select
-              value={dropdownSelection}
-              onChange={(e) => setDropdownSelection(e.target.value)}
-              required
-            >
-              <option value="" disabled selected>
-                Select an option
-              </option>
-              <option value="General">General</option>
-              <option value="Crime">Crime</option>
-              <option value="Dining">Dining</option>
-              <option value="Things To Do">Things to Do</option>
-              <option value="Other">Other</option>
-            </select>
-          </label>
-
-          <label>
-            <span>Tell us about your Thoughts:</span>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder="Share your thoughts"
-              className={styles.inputField}
-              required
-            ></textarea>
-          </label>
-
-          <div className={styles.button}>
-            <button onClick={handleSubmit} className={styles.submit}>
-              Submit
-            </button>
-            <button
-              onClick={() => {
-                setShowForm(false);
-                handleCancel();
-              }}
-              className={styles.cancel}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    </PageAnimation>
   );
 };
 
