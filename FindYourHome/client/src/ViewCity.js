@@ -14,6 +14,7 @@ import CityPage from "./components/citypage"
 import { useCity } from "./contexts/CityContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PageAnimation from "./animations/PageAnimation";
 
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
@@ -298,6 +299,7 @@ const ViewCity = () => {
 
 
     return (
+        <PageAnimation>
         <div>
             {!isVerified && (
                 <div className="verificationBanner">
@@ -392,7 +394,7 @@ const ViewCity = () => {
 
             <ToastContainer />
         </div>
-
+        </PageAnimation>
     );
 };
 
