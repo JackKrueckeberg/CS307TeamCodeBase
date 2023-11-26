@@ -294,3 +294,36 @@ button:hover {
     font-weight: bold;
     border-radius: 5px;
 }
+
+/* Add this to your existing CSS file or create a new one for styles */
+.similar-searches {
+    /* Add your styles here */
+    margin-top: 10px; /* Example margin, adjust as needed */
+  }
+  
+  .similar-searches p {
+    font-weight: bold;
+  }
+  
+  .similar-searches ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .similar-searches li {
+    margin-bottom: 5px;
+  }
+  
+  .similar-searches button {
+    background-color: #3498db; /* Example background color, adjust as needed */
+    color: #fff; /* Example text color, adjust as needed */
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  
+  .similar-searches button:hover {
+    background-color: #2980b9; /* Example hover background color, adjust as needed */
+  }
+  
