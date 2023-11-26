@@ -329,6 +329,9 @@ const DiscussionHome = () => {
                 Search based on attributes of cities
               </span>
             </div>
+            <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
+            </div>
             <button className="logoutbtn" onClick={() => handleLogout()}>
               Logout
             </button>
