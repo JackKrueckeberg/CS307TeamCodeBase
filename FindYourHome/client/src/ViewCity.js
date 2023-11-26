@@ -18,8 +18,6 @@ import SimilarSearches from './components/SimilarSearches';
 import Fuse from 'fuse.js';
 import PageAnimation from "./animations/PageAnimation";
 
-
-
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
 const ViewCity = () => {
