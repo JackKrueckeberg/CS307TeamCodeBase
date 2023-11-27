@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import styles from '../Stylings/createAccountStyle.module.css';
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { getSelectUtilityClasses } from '@mui/material';
 // import login from "./components/login";
 
 
@@ -62,10 +63,11 @@ export const CreateAccount = () => {
 
     return (
         <div className={styles.accountCreation}>
-            <h1>Start Your Journey Here.</h1>
-            <form>
-                <label htmlFor="username">Username*</label>
+            <h1 className={styles.text}>Start Your Journey Here.</h1>
+            <form className={styles.form}>
+                <label className={styles.label} htmlFor="username">Username:</label>
                     <input 
+                        className={styles.input}
                         value={username} 
                         name="username" 
                         id="username" 
@@ -73,26 +75,29 @@ export const CreateAccount = () => {
                         onChange={(e) => setUsername(e.target.value)} 
                     />
                     {/* Name and email details form */}
-                    <label htmlFor="firstName">Name*</label>
+                    <label className={styles.label} htmlFor="firstName">Name:</label>
                     <input 
+                        className={styles.input}
                         value={firstName} 
                         name="firstName" 
                         id="firstName" 
                         placeholder='First Name' 
                         onChange={(e) => setFirstName(e.target.value)} 
                     />
-                    <label htmlFor="lastName"></label>
+                    <label className={styles.label} htmlFor="lastName"></label>
                     <input 
+                        className={styles.input}
                         value={lastName} 
                         name="lastName" 
                         id="lastName"
                         placeholder='Last Name'   
                         onChange={(e) => setLastName(e.target.value)} 
                     />
-                    <label htmlFor="email">Email*</label>
+                    <label className={styles.label} htmlFor="email">Email:</label>
                     <input 
+                        className={styles.input}
                         value={email} 
-                        placeholder='youremail@gmail.com'
+                        placeholder='youremail@example.com'
                         onChange={(e) => setEmail(e.target.value)} 
                         type="email"
                         id="email" 
@@ -100,9 +105,11 @@ export const CreateAccount = () => {
 
                     {/* Password accaptance form */}
                     <div className={styles.passwordEntryWrapper}>
-                        <label htmlFor="password">Password*</label>
+                        <label className={styles.label} htmlFor="password">Password:</label>
                         <input 
+                            className={styles.input}
                             value={password} 
+                            placeholder='password'
                             onChange={(e) => setPassword(e.target.value)} 
                             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
                             title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required
@@ -110,10 +117,10 @@ export const CreateAccount = () => {
                             id="password"
                         />
                     </div>
-                <button onClick={() => signup().then(navigate("/")).then(alert("Account created successfully, you can now log in"))}>Register</button>
+                <button className={styles.button} onClick={() => signup().then(navigate("/")).then(alert("Account created successfully, you can now log in"))}>Create Account</button>
             </form>
 
-            <button onClick={() => navigate("/")}id="login">Already have an Account? Click here to log in.</button>
+            <button className={styles.button} onClick={() => navigate("/")}id="login">Return to Log In.</button>
         </div>
     )
 }
