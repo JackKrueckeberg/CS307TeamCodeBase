@@ -391,6 +391,11 @@ export default function Create() {
         return;
     }
 
+    if (form.population_weight < 0 || form.region_weight < 0 || form.state_weight < 0 || form.zip_weight < 0 || form.county_weight < 0 || form.income_weight < 0) {
+      alert("Weights cannot be a negative number.");
+      return;
+    }
+
     const recent_searches = await getUser_recentSearches();
     await addRecent(recent_searches)
 
