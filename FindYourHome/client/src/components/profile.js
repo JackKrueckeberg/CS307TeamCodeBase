@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import '../Stylings/profile.css';
+import "../Stylings/profile.css";
 import { useUser } from '../contexts/UserContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import AccountInfo from "./accountInfo.js";
 import MessageList from "./messageList";
 import Bookmarks from "./saved_discussions/bookmarks";
@@ -9,6 +9,7 @@ import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
 import Notifications from "./notifications";
+import PageAnimation from "../animations/PageAnimation.jsx";
 
 export default function Profile() {
 
@@ -66,12 +67,11 @@ export default function Profile() {
             console.error("Error fetching user info: ", error);
         }
     }
+  const [tabVal, setTabVal] = useState(() => {
+    return parseInt(localStorage.getItem("activeTab")) || 1;
+  });
 
-    const [tabVal, setTabVal] = useState(() => {
-        return parseInt(localStorage.getItem('activeTab')) || 1;
-    });
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
     const handleTabChange = (index) => {
         setTabVal(index);
@@ -86,26 +86,47 @@ export default function Profile() {
         navigate("/", { state: { loggedOut: true }, replace: true });
     };
 
-    return (
-        <div className="profile-background">
-        
-            <div><MessageNotification /></div>
-            <div className="navBar">
-                
-                <div class="profiletooltip">
-                    <button className="profilebtn" onClick={() => navigate("/view-city")}>City Search</button>
-                    <span class="profiletooltiptext">Search for cities by name</span>
-                </div>
-
-                <div class="advancedtooltip">
-                    <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
-                    <span class="advancedtooltiptext">Search based on attributes of cities</span>
-                </div>
-
-                <div class="discussiontooltip">
-                    <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
-                    <span class="discussiontooltiptext">View discussions about different cities</span>
-                </div>
+  return (
+    <PageAnimation>
+      <div className="container">
+        <div>
+          <MessageNotification />
+        </div>
+        <div className="navBar">
+          <div class="profiletooltip">
+            <button
+              className="profilebtn"
+              onClick={() => navigate("/view-city")}
+            >
+              City Search
+            </button>
+            <span class="profiletooltiptext">Search for cities by name</span>
+          </div>
+          <div class="advancedtooltip">
+            <button
+              className="advancedSearch"
+              onClick={() => navigate("/preferences")}
+            >
+              Advanced Search
+            </button>
+            <span class="advancedtooltiptext">
+              Search based on attributes of cities
+            </span>
+          </div>
+          <div class="discussiontooltip">
+            <button
+              className="discussionButton"
+              onClick={() => navigate("/discussionHome")}
+            >
+              Discussions
+            </button>
+            <span class="discussiontooltiptext">
+              View discussions about different cities
+            </span>
+          </div>
+          <button className="logoutbtn" onClick={() => handleLogout()}>
+            Logout
+          </button>
 
                 <div>
                     <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
@@ -184,5 +205,7 @@ export default function Profile() {
             </div>
         </div>
         </div>
-    )
+      </div>
+    </PageAnimation>
+  );
 }

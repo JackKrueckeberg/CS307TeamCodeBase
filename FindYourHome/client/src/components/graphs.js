@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts';
 
 const Graphs = ({ city1, city2 }) => {
   const [chartData, setChartData] = useState(null);
+  const [isGraphVisible, setIsGraphVisible] = useState(true);
 
   useEffect(() => {
     // Prepare data for ApexCharts
@@ -28,9 +29,18 @@ const Graphs = ({ city1, city2 }) => {
     setChartData(chartData);
   }, [city1, city2]);
 
+  const toggleGraphVisibility = () => {
+    setIsGraphVisible(!isGraphVisible);
+  };
+
   return (
     <div>
-      {chartData && <Chart options={chartData.options} series={chartData.series} type="bar" height={350} />}
+      <button onClick={toggleGraphVisibility}>
+        {isGraphVisible ? 'Hide Graphs' : 'Show Graphs'}
+      </button>
+      {isGraphVisible && chartData && (
+        <Chart options={chartData.options} series={chartData.series} type="bar" height={350} />
+      )}
     </div>
   );
 };

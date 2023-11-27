@@ -14,6 +14,10 @@ import CityPage from "./components/citypage"
 import { useCity } from "./contexts/CityContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SimilarSearches from './components/SimilarSearches'; 
+import Fuse from 'fuse.js';
+import PageAnimation from "./animations/PageAnimation";
+
 
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
@@ -46,6 +50,7 @@ const ViewCity = () => {
     const [favorite, setFavorite] = useState(false)
     const [isVerified, setIsVerified] = useState(false);
     const { globalCity, setGlobalCity } = useCity();
+    const [similarSearches, setSimilarSearches] = useState([]);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -153,21 +158,55 @@ const ViewCity = () => {
 
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
-            const inputValue = value.trim().toLowerCase();
-            const matchingCities = allCities.filter((city) =>
-                city.name.toLowerCase().startsWith(inputValue)
-            );
-
-            setSuggestions(matchingCities.map((city) => city.name).slice(0, 10));
+          const inputValue = value.trim().toLowerCase();
+          const matchingCities = allCities.filter((city) =>
+            city.name.toLowerCase().startsWith(inputValue)
+          );
+    
+          if (matchingCities.length === 0) {
+            //const similarSuggestions = findSimilarSuggestions(inputValue);
+          } else {
+            //setSimilarSearches([]);
+          } 
+    
+          setSuggestions(matchingCities.map((city) => city.name).slice(0, 10));
         } else {
-            setSuggestions([]);
+          setSuggestions([]);
+          setSimilarSearches([]);
         }
-    };
+      };
 
     const onSuggestionsClearRequested = () => {
         setSuggestions([]);
     };
+    const findSimilarSuggestions = (input) => {
+        const options = {
+          keys: ['name'],
+          threshold: 0.2, // Adjust the threshold (0 to 1) to control the sensitivity
+          distance: 100, // Adjust the distance to control how close the matches should be
+        };
+      
+        const fuse = new Fuse(allCities, options);
+        const result = fuse.search(input);
+      
+        console.log("Fuse Result:", result); // Log the result
+        console.log("Input:", input);
+      
+        const similar = result
+          .map((item) => item.item.name) // Map to city names
+          .filter((name) => name);
+      
+        console.log("Similar Suggestions:", similar);
+        setSimilarSearches(similar.slice(0, 5));
+      };
+      
 
+      const handleSimilarSuggestionClick = (suggestion) => {
+        // Handle similar suggestion click here
+        setSearchTerm(suggestion);
+        setIsDropdownOpen(false);
+        handleCombinedActions(); // Assuming you want to perform similar actions as when a regular suggestion is clicked
+      };
 
     async function handleSubmit() {
         setShowResults(false);
@@ -252,9 +291,11 @@ const ViewCity = () => {
         setSearchTerm("");
     };
 
-    const handleInputChange = (e) => {
-        setSearchTerm(e.target.value);
+    const handleInputChange = (e, value) => {
+        setSearchTerm(value.newValue);
+        findSimilarSuggestions(value.newValue)
         setIsDropdownOpen(true);
+        setIsValidSearch(true);
     };
 
     // const handleSuggestionClick = (suggestion) => {
@@ -298,6 +339,7 @@ const ViewCity = () => {
 
 
     return (
+        <PageAnimation>
         <div>
             {!isVerified && (
                 <div className="verificationBanner">
@@ -347,7 +389,10 @@ const ViewCity = () => {
 
                 {!isValidSearch &&
                     <div className="errorMessage">
-                        {searchTerm === "" ? <h2>No City Searched</h2> : <h2>Invalid Search</h2>}
+                        {searchTerm === "" ? <h2>No City Searched</h2> : similarSearches.length === 0 ? <h2>No results matching your search</h2> : <h2>Invalid Search</h2>}
+                        <div>
+                            {similarSearches.length > 0 && <SimilarSearches suggestions={similarSearches} onSuggestionClick={handleSimilarSuggestionClick} />}
+                        </div>
                     </div>
                 }
 
@@ -392,7 +437,7 @@ const ViewCity = () => {
 
             <ToastContainer />
         </div>
-
+        </PageAnimation>
     );
 };
 
