@@ -351,17 +351,17 @@ const ViewCity = () => {
 
             <div className="navBar">
 
-                <div class="profiletooltip">
+                <div className="profiletooltip">
                     <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-                    <span class="profiletooltiptext">View your profile page and make edits</span>
+                    <span className="profiletooltiptext">View your profile page and make edits</span>
                 </div>
-                <div class="advancedtooltip">
+                <div className="advancedtooltip">
                     <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
-                    <span class="advancedtooltiptext">Search based on attributes of cities</span>
+                    <span className="advancedtooltiptext">Search based on attributes of cities</span>
                 </div>
-                <div class="discussiontooltip">
+                <div className="discussiontooltip">
                     <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
-                    <span class="discussiontooltiptext">View discussions about different cities</span>
+                    <span className="discussiontooltiptext">View discussions about different cities</span>
                 </div>
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 

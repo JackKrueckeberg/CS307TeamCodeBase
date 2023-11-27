@@ -292,7 +292,7 @@ const DiscussionHome = () => {
   return (
     <PageAnimation>
       <div className={styles.DiscussionHome}>
-        <h2>Discussions</h2>
+        <h2 className={styles.headertext}>Discussions</h2>
 
         {!showForm && (
           <div className="navBar">
@@ -399,9 +399,9 @@ const DiscussionHome = () => {
         )}
 
         {!showForm && showHist && (
-          <div className="recentlyDiscussedCities">
+          <div className={styles.text}>
             <RecentDiscussionsQueue queue={recentDiscussionsQueue} />
-            <button className="clearHistory" onClick={() => clearHistory()}>
+            <button className={styles.button} onClick={() => clearHistory()}>
               Clear History
             </button>
           </div>
