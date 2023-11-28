@@ -14,6 +14,10 @@ export default function Replies({ commentIndex, _selectedCity }) {
   const [replyContent, setReplyContent] = useState('');
   const [currentUsername, setCurrentUsername] = useState('');
 
+  const [taggedIn, setTaggedIn] = useState(false);
+  const [tagged, setTagged] = useState("");
+  const [taggedPost, setTaggedPost] = useState([]);
+
   useEffect(() => {
     getReplies();
     loadUserData();
@@ -33,6 +37,18 @@ export default function Replies({ commentIndex, _selectedCity }) {
 
       if (comments && comments[commentIndex] && comments[commentIndex].replies) {
         setReplies(comments[commentIndex].replies);
+
+        const taggedComments = comments[commentIndex].replies.filter((post) => 
+          post.content.includes(`@${currentUsername}`)
+        );
+
+        setTaggedPost(taggedComments);
+
+        if (taggedComments.length) {
+          setTaggedIn(true);
+        } else {
+          setTaggedIn(false);
+        }
       }
       
       setDiscussion(resp.discussion);
@@ -58,9 +74,80 @@ export default function Replies({ commentIndex, _selectedCity }) {
     }
   }
 
+  // function to check that the user exists
+  const checkExistingUser = async (recipient) => {
+    try {
+      const response = await fetch(`http://localhost:5050/profileRoute/check-username/${recipient}`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.status === 200) {
+            const data = await response.json();
+            console.log(!data.isAvailable);
+            return !data.isAvailable;
+        }
+    } catch (error) {
+        console.error("Error checking username availability: ", error);
+        return false;
+    }
+  };
+
+  // function to check for tagging a user
+  const isTagging = async (text) => {
+    if (text.includes('@')) {
+      const indexOf = text.indexOf('@');
+      const spaceIndex = text.indexOf(' ', indexOf);
+      const extracted = spaceIndex !== -1 ? text.slice(indexOf + 1, spaceIndex) : text.slice(indexOf + 1);
+      console.log(extracted);
+
+      if (extracted !== '') {
+        setTagged(extracted);
+        return true;
+      } 
+    } 
+    return false;
+  }
+
   async function reply(content) {
     try {
       if (!banned) {
+        let isTaggingUser = await isTagging(content); // check if the user is tagging another user
+
+        if (isTaggingUser) {
+          console.log(tagged);
+          const existing = await checkExistingUser(tagged);
+  
+          if (existing) {
+            const notifyResp = await fetch('http://localhost:5050/notification/notify', {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                senderUsername: currentUsername,
+                recipientUsername: tagged,
+                isMessage: false,
+                timeSent: new Date(),
+                city: _selectedCity,
+              }),
+            });
+  
+            if (notifyResp.status === 200) {             
+              alert("yay");
+            } else {
+              alert("something went wrong");
+              return;
+            }
+          } else {
+            alert(`${tagged} is not an existing user. Please try again.`);
+            setReplyContent('');
+            return;
+          }
+        } 
+
         const updatedReplies = [...replies, { username: currentUsername, content }];
         setReplies(updatedReplies);
 
@@ -73,6 +160,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
           },
           body: JSON.stringify({ discussion }),
         });
+        setReplyContent('');
       } else {
         window.alert("You are banned from commenting!");
       }
@@ -106,10 +194,17 @@ export default function Replies({ commentIndex, _selectedCity }) {
 
   return (
     <div className={styles.replyContainer}>
-      <h2>Replies:</h2>
+      <h2>
+        {taggedIn === true && (
+          <span className={styles.taggedIndicator}>⭐</span>
+        )}
+        Replies:</h2>
       {replies.map((reply, index) => (
         <div key={index} className={styles.replyItem}>
           <div className={styles.replyDetails}>
+            {taggedPost.includes(reply) && (
+              <span className={styles.taggedIndicator}>⭐</span>
+            )}
             <span className={styles.replyUsername}>{reply.username}</span>
           </div>
           <p className={styles.replyContent}>{reply.content}</p>
@@ -125,7 +220,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
         <input
           type="text"
           value={replyContent}
-          onChange={(e) => setReplyContent(e.target.value)}
+          onChange={(e) => { setReplyContent(e.target.value); isTagging((e.target.value)); }}
           placeholder="Type your reply"
           className={styles.replyInput}
         />

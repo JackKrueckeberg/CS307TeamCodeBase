@@ -1,16 +1,20 @@
 .message-board-container {
-    border: 1px solid black;
-    border-radius: 10px;
+    border-radius: 30px;
     margin-top: 10px;
     margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgb(220, 215, 201);
 }
 
 .message-board {
     list-style: none;
     display: flex;
     flex-direction: column;
-    padding: 0;
+    padding: 10px;
     margin: 0;
+    background: rgba(255, 255, 255, 0.863);
+    border: 1px solid rgb(162, 123, 92);
+    border-radius: 30px;
 }
 
 .message.new-message {
@@ -55,17 +59,17 @@
 .message-content.sent {
     flex: 1;
     background-color: #007bff;
-    padding-bottom: 5px;
+    padding: 15px 15px 15px 15px;
     border-radius: 10px;
-    margin: 0;
+    margin-right: 5px;
 }
 
 .message-content.received {
     flex: 1;
-    background-color: #f1f0f0;
-    padding-bottom: 5px;
+    background-color: #dedede;
+    padding: 15px 15px 15px 15px;
     border-radius: 10px;
-    margin: 0;
+    margin-left: 5px;
 }
 
 .message-timestamp {
@@ -85,7 +89,7 @@
     align-items: center;
     margin-top: 20px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 30px;
     background-color: #fff;
 }
 
@@ -94,6 +98,7 @@
     padding: 10px;
     border: none;
     outline: none;
+    border-radius: 30px;
 }
 
 .message-input button {
@@ -101,7 +106,7 @@
     background-color: #007bff; /* Background color for the Send button */
     color: #fff; /* Text color for the Send button */
     border: none;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 30px 30px 0;
     cursor: pointer;
 }
 
@@ -111,7 +116,7 @@
 
 .scrollable {
     max-height: 500px; /* Set your desired maximum height */
-    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-y: scroll; /* Enable vertical scrolling */
 }
 
 .city-button {
@@ -136,7 +141,7 @@
     /* Style the modal content */
     .modal-content {
         background-color: #fff;
-        border-radius: 5px;
+        border-radius: 30px;
         padding: 20px;
         width: 600px;
         text-align: center;
@@ -156,10 +161,10 @@
 
     button {
         padding: 10px 20px;
-        background-color: #007BFF;
+        background-color: rgb(220, 215, 201);
         color: #fff;
         border: none;
-        border-radius: 5px;
+        border-radius: 30px;
         cursor: pointer;
         margin: 5px;
     }
