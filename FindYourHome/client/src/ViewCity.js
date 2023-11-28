@@ -22,7 +22,7 @@ import PageAnimation from "./animations/PageAnimation";
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
-const ViewCity = () => {
+const ViewCity = () => {    
     const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
     const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -126,6 +126,7 @@ const ViewCity = () => {
     }
 
     const incrementAchievement = async (achievementName) => {
+        console.log(achievementName);
         try {
             const response = await fetch(`http://localhost:5050/achievements/${g_email}/${achievementName}`, {
                 method: 'PATCH',
@@ -154,7 +155,31 @@ const ViewCity = () => {
         }
     };
 
-
+    const incrementCityUsage = async (cityName) => {
+        console.log(`Incrementing usage for: ${cityName}`);
+        try {
+            const response = await fetch(`http://localhost:5050/usage_stats/${g_email}/${cityName}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: "incrementCityUsage"
+                })
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            console.log('Response from incrementing city usage:', data);
+        
+        } catch (error) {
+            console.error("Error incrementing city usage:", error);
+        }
+    };
+    
 
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
@@ -247,6 +272,7 @@ const ViewCity = () => {
         localStorage.setItem('selectedCity', JSON.stringify(cityModel));
 
         incrementAchievement("City-Explorer");
+        incrementCityUsage(matchedCity.name);
         setImageUrl(img);
         setCityModel(cityModel);
         setGlobalCity(matchedCity);
@@ -434,7 +460,6 @@ const ViewCity = () => {
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
-
             <ToastContainer />
         </div>
         </PageAnimation>
