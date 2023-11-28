@@ -100,8 +100,8 @@ const App = () => {
               <Route path="/delete-account" element={<DeleteAccount />} />
               <Route path="/discussionHome" element={<DiscussionHome />} />
               <Route path="/messageBoards" element={<MessageList />} />
-                        <Route path="/messageNotification" element={<MessageNotification/>} />
-              <Route path="/notification" element={<Notification s/>} />
+              <Route path="/messageNotification" element={<MessageNotification/>} />
+              <Route path="/notification" element={<Notifications/>} />
               <Route path="/TwoFactor" element={<TwoFactor />} />
               <Route path="/disc" element={<Disc />} />
             </Routes>

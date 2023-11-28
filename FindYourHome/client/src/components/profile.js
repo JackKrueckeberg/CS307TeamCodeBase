@@ -88,7 +88,7 @@ export default function Profile() {
 
   return (
     <PageAnimation>
-      <div className="container">
+      <div className="profile-background">
         <div>
           <MessageNotification />
         </div>
@@ -205,7 +205,6 @@ export default function Profile() {
             </div>
         </div>
         </div>
-      </div>
     </PageAnimation>
   );
 }
