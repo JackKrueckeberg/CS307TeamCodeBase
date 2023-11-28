@@ -1,5 +1,5 @@
 .feedbackContainer {
-  padding: 20px;
+  padding: 40px;
 }
 
 .buttonSpan {
@@ -49,6 +49,7 @@
   height: 40px;
   background-color: #dcd7c9;
   border: none;
+  padding: 15px;
 }
 
 .summary input::placeholder {
@@ -58,6 +59,9 @@
 
 .description textarea {
   border-radius: 20px;
+  padding: 15px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   width: 400px;
   height: 250px;
   border: none;
@@ -72,6 +76,7 @@
 .formButtons {
   display: flex;
   justify-content: space-evenly;
+  margin-bottom: 20px;
 }
 
 .formButtons button {
@@ -81,12 +86,18 @@
 .error {
   display: flex;
   justify-content: center;
+  align-items: center;
   background-color: red;
-  height: 60px;
+  height: 60px; 
   text-align: center;
   border-radius: 20px;
   color: white;
+  margin-bottom: 20px;
+  padding: 10px 10px 0px 10px;
+  box-sizing: border-box; /* Include padding in the height calculation */
+  visibility: hidden;
 }
+
 
 .filledStar {
   color: #a27b5c;
@@ -100,6 +111,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 20px;
 }
 
 .filledStar,
@@ -114,4 +126,13 @@
 
 .emptyStar {
   color: grey;
+}
+
+.navBar {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-evenly;
+  background-color: #3f4e4f;
+  border-radius: 20px;
+  padding: 5px;
 }

@@ -54,13 +54,13 @@ const Feedback = () => {
     e.preventDefault();
     setProblemError("");
     if (!problem.trim() && !problemTitle.trim()) {
-      setProblemError("Please enter your problem summary and description");
+      setProblemError("Please provide: your problem summary and description");
       return;
     } else if (!problem.trim()) {
-      setProblemError("Please enter your problem description");
+      setProblemError("Please provide: your problem description");
       return;
     } else if (!problemTitle.trim()) {
-      setProblemError("Please enter your problem summary");
+      setProblemError("Please provide: your problem summary");
       return;
     }
     // Need to Add logic to send problem report to the server
@@ -74,23 +74,29 @@ const Feedback = () => {
   const handleSubmitReview = (e) => {
     e.preventDefault();
     setReviewError("");
-    let missingFields = [];
   
-    if (rating === 0) missingFields.push("Star Rating");
-    if (!reviewTitle.trim()) missingFields.push("Review Title");
-    if (!review.trim()) missingFields.push("Review Thoughts");
-  
-    if (missingFields.length) {
-      setReviewError(`Please fill out the following fields: ${missingFields.join(", ")}`);
-      return;
+    if (rating === 0 && !reviewTitle.trim() && !review.trim()) {
+      setReviewError("Please provide: a Star Rating, a Review Title, and your Review Thoughts");
+    } else if (rating === 0 && !reviewTitle.trim()) {
+      setReviewError("Please provide: a Star Rating and a Review Title");
+    } else if (rating === 0 && !review.trim()) {
+      setReviewError("Please provide: a Star Rating and your Review Thoughts");
+    } else if (!reviewTitle.trim() && !review.trim()) {
+      setReviewError("Please provide: a Review Title and your Review Thoughts");
+    } else if (rating === 0) {
+      setReviewError("Please provide: a Star Rating");
+    } else if (!reviewTitle.trim()) {
+      setReviewError("Please provide: a Review Title");
+    } else if (!review.trim()) {
+      setReviewError("Please provide: your Review Thoughts");
+    } else {
+      // Logic to send review to the server
+      alert("Review submitted!");
+      setReview("");
+      setRating(0);
+      setReviewTitle("");
+      setShowForm(null);
     }
-    // Need to Add logic to send problem report to the server
-    alert("Problem report submitted!");
-    setReviewError("");
-    setReview("");
-    setRating(0);
-    setReviewTitle("");
-    setShowForm(null);
   };
 
   const handleLogout = () => {
@@ -105,7 +111,7 @@ const Feedback = () => {
     <PageAnimation>
       <div className={styles.feedbackContainer}>
         <h2 className={styles.title}>Feedback</h2>
-        <div className="navBar">
+        <div className={styles.navBar}>
           <div class="profiletooltip">
             <button className="profilebtn" onClick={() => navigate("/profile")}>
               Profile
@@ -160,16 +166,20 @@ const Feedback = () => {
                   placeholder="Your Thoughts"
                 />
               </div>
-              {reviewError && (
-                <div className={styles.error}>
-                  <p>{reviewError}</p>
-                </div>
-              )}
               <span className={styles.formButtons}>
                 <button type="submit">Submit Review</button>
                 <button onClick={handleCancel}>Cancel</button>
               </span>
             </form>
+            {reviewError && (
+                <div 
+                className={styles.error}
+                style={{ visibility: reviewError ? 'visible' : 'hidden' }}
+              >
+                <p>{reviewError}</p>
+              </div>
+              
+              )}
           </div>
         )}
 
@@ -192,16 +202,19 @@ const Feedback = () => {
                   placeholder="Describe the problem"
                 />
               </div>
-              {problemError && (
-                <div className={styles.error}>
-                  <p>{problemError}</p>
-                </div>
-              )}
               <span className={styles.formButtons}>
                 <button type="submit">Submit Problem Report</button>
                 <button onClick={handleCancel}>Cancel</button>
               </span>
             </form>
+             {problemError && (
+                <div 
+                className={styles.error}
+                style={{ visibility: problemError ? 'visible' : 'hidden' }}
+              >
+                <p>{problemError}</p>
+              </div>
+              )}
           </div>
         )}
 
