@@ -114,7 +114,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
             {replies.map((reply, index) => (
               <div key={index} className={styles.replyItem}>
                 <div className={styles.replyDetails}>
-                  <span className={styles.replyUsername}>{reply.username}</span>
+                  <span className={styles.replyUsername}>Reply from {reply.username}</span>
                 </div>
                 <p className={styles.replyContent}>{reply.content}</p>
                 {reply.username === currentUsername && (
