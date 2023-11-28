@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Stylings/profile.css";
 import { useNavigate } from "react-router-dom";
 import AccountInfo from "./accountInfo.js";
@@ -8,13 +8,50 @@ import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
 import PageAnimation from "../animations/PageAnimation.jsx";
+import { useUser } from "../contexts/UserContext";
 
 export default function Profile() {
+  const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  const { user: userProfile } = useUser(); // the id of the current logged in user
+  const [user, setInfo] = useState(
+    storedSesUser || storedLocUser || userProfile
+  );
+
+  const g_email = user.email;
+
   const [tabVal, setTabVal] = useState(() => {
     return parseInt(localStorage.getItem("activeTab")) || 1;
   });
 
   const navigate = useNavigate();
+  const [topCities, setTopCities] = useState([]);
+
+  
+  // Define the getTopThreeCities function
+  const getTopThreeCities = (usageStats) => {
+    const citiesArray = Object.entries(usageStats);
+    citiesArray.sort((a, b) => b[1] - a[1]);
+    return citiesArray.slice(0, 3);
+  };
+
+  useEffect(() => {
+    const fetchUsageStats = async () => {
+      try {
+        const response = await fetch(`http://localhost:5050/top_cities/${g_email}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch usage stats');
+        }
+        const data = await response.json();
+        setTopCities(getTopThreeCities(data));
+      } catch (error) {
+        console.error("Error fetching top cities:", error);
+      }
+    };
+
+    fetchUsageStats();
+  }, []);
 
   const handleTabChange = (index) => {
     setTabVal(index);
@@ -118,6 +155,15 @@ export default function Profile() {
           >
             <AccountInfo />
           </div>
+
+          <div className="top-cities">
+        <h3>Top Searched Cities</h3>
+        <ul>
+          {topCities.map((city, index) => (
+            <li key={index}>{`${city[0]}: ${city[1]} searches`}</li>
+          ))}
+        </ul>
+      </div>
 
           <div
             className={`${tabVal === 2 ? "content active-content" : "content"}`}
