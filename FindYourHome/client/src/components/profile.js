@@ -128,10 +128,6 @@ export default function Profile() {
             Logout
           </button>
 
-                <div>
-                    <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
-                </div>
-
             </div>
 
             <div className="profile-page">

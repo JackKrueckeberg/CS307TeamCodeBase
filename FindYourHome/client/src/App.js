@@ -96,12 +96,13 @@ const App = () => {
               <Route path="/profile" element={<Profile />} />
               <Route path="/accountInfo" element={<AccountInfo />} />
               <Route path="/citypage" element={<CityPage />} />
+              <Route path="/profile/favorite-city/citypage/:city" element={<CityPage />} />
+              <Route path="/profile/message-board/citypage/:city" element={<CityPage />} />
+              <Route path="/view-city/citypage/:city" element={<CityPage />} />
+              <Route path="/preferences/citypage/:city" element={<CityPage />} />
               <Route path="/compare" element={<CompareCities />} />
               <Route path="/delete-account" element={<DeleteAccount />} />
               <Route path="/discussionHome" element={<DiscussionHome />} />
-              <Route path="/messageBoards" element={<MessageList />} />
-              <Route path="/messageNotification" element={<MessageNotification/>} />
-              <Route path="/notification" element={<Notifications/>} />
               <Route path="/TwoFactor" element={<TwoFactor />} />
               <Route path="/disc" element={<Disc />} />
             </Routes>

@@ -415,7 +415,7 @@ export default function Create() {
           results[i].form = form;
           setGlobalCity(results[i]);
           localStorage.setItem('selectedCity', JSON.stringify(results[i]));
-          navigate("/cityPage", results[i]);
+          navigate(`/preferences/citypage/${results[i].name}`, results[i]);
           return;
         }
       }

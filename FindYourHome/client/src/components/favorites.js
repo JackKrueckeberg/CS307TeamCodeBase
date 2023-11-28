@@ -167,6 +167,27 @@ export default function Favorites() {
         setFavoriteCities(newFavs);
     }
 
+    const handleCityButtonClick = async (cityName) => {
+
+        const response = await fetch(`http://localhost:5050/city_info/${cityName}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const resp = await response.json();
+
+        if (response.status === 200) {
+            setGlobalCity(resp);
+            localStorage.setItem('selectedCity', JSON.stringify(resp));
+            navigate(`/profile/favorite-city/citypage/${resp.name}`, resp);
+            return resp;
+        } else {
+            alert("Something went wrong");
+        }
+    }
+
     /* Got this from preferences.js */
     /*const handleCity = async (value) => {
         for (var i = 0; i < favorite_cities.length; i++) {
@@ -393,7 +414,7 @@ export default function Favorites() {
                                         {favorite_cities.map((city, index) => (
                                             <li key={index}>
                                                 <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                                                <span> {city} </span>
+                                                <button className="city-button" key={city} onClick={() => handleCityButtonClick(city)}>{city}</button>
                                                 {/*{Object.entries(city).map(([key, value]) => {
                                                     console.log(city);
                                                     return (
