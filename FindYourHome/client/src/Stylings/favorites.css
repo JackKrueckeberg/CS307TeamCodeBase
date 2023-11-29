@@ -1,43 +1,40 @@
-*{
-    margin:0;
-    padding:10px;
-    box-sizing: border-box;
-}
-
-.container{
-    border:2px solid grey;
-    background: white;
+.favs{
+    background: rgba(255, 255, 255, 0.295);
     flex-direction: column;
     width: 100%;
     margin:auto;
-    margin-top: 50px;
-    border-radius: 10px;
+    border-radius: 10px 10px 30px 30px;
 }
 
-.tabs-block{
+.tab-block{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    width: 100;
 }
 
 .tab{
-    background: #ccc;
+    background: rgba(255, 255, 255, 0.295);
     flex: 1;
     padding: 1px;
     text-align: center;
-    border: 1px solid grey;
-    border-top: none;
     cursor: pointer;
     position: relative;
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .active-tab{
     border: none;
-    background: #fff;
-}
-
-.active-tab::after{
-    border-top: 2px solid goldenrod;
+    background: rgb(220, 215, 201);
+  }
+  
+  .active-tab::after{
+    border-top: 2px solid rgb(162, 123, 92);
+    border-left: 2px solid rgb(162, 123, 92);
+    border-right: 2px solid rgb(162, 123, 92);
+    border-radius: 10px 10px 0 0;
     content:'';
     position: absolute;
     top: 0;
@@ -47,21 +44,21 @@
     width: 100%;
     background: initial;
     animation: tab-animation 0.5s;
-}
+  }
 
 @keyframes tab-animation{
     from{
         top: 50px;
         left: 0;
         right: 0;
-        background: goldenrod;
+        background: rgb(162, 123, 92);
     }
 
     to{
         top: 0px;
         right: 0;
         left: 0;
-        border-top: 2px solid goldenrod;
+        border-bottom: 2px solid rgb(162, 123, 92);
     }
 }
 
@@ -75,12 +72,13 @@
 }
 
 .active-content{
-    display: flex;
-    flex-direction: column;
-    margin-left: 10px;
-    margin-right: 10px;
+    display: block;
+    margin: 0;
+    padding: 30px;
     transition: all is ease-in-out;
     animation: content-animation 0.3s;
+    border: 2px solid rgb(162, 123, 92);
+    border-radius: 0 0 30px 30px;
 }
 
 @keyframes content-animation{
@@ -117,36 +115,43 @@ ul {
 }
 
 .share-favorite {
-    background-color: rgb(134, 190, 255);
+    background-color: rgb(220, 215, 201);
     padding-top: 2px;
     padding-bottom: 2px;
+    border: 1px solid rgb(162, 123, 92);
 }
 
 .share-button {
-    background-color: rgb(134, 190, 255);
-    margin-top: 10px;
+    background-color: rgb(220, 215, 201);
+    margin: 5px;
+    border: 1px solid rgb(162, 123, 92);
+    padding: 10px;
 }
 
-.cancel-button {
+.share-cancel {
     color: black;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
-  }
+    margin: 5px;
+    border: 1px solid white;
+}
 
-  .shareTo-button {
-    background-color: rgb(134, 190, 255);
+.shareTo-button {
+    background-color: rgb(220, 215, 201);
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 10px;
-  }
+    padding-bottom: 0px;
+    padding-top: 0px;
+    margin: 5px;
+    border: 1px solid rgb(162, 123, 92);
+}
 
-  .city {
+.city {
     display: flex;
     flex-direction: column;
-  }
+}
 
-  .search {
+.search {
     display: flex;
     flex-direction: column;
-  }
+}

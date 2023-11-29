@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import '../Stylings/accountInfo.css';
 import Favorites from './favorites.js';
 import { FaEdit } from 'react-icons/fa';
-import defaultImage from '../Stylings/Default_Profile_Picture.png';
 import { useUser } from '../contexts/UserContext';
 import Modal from "react-modal";
 
@@ -14,6 +13,7 @@ export default function AccountInfo() {
         bio: '',
         email: '',
         password: '',
+        profile_image: '',
     };
 
     // Create state variables for user info ad editing mode
@@ -25,7 +25,7 @@ export default function AccountInfo() {
 
     const [isEditing, setIsEditing] = useState(false); // isEditing tracks whether the user is in edit mode
     const [prevUser, setPrevUser] = useState(initialInfo); // Store a copy of user data to revert if editing is canceled
-    const [profile_image, setImage] = useState(defaultImage); // image keeps track of the user's profile image
+    const [profile_image, setImage] = useState(''); // image keeps track of the user's profile image
     const fileInputRef = React.createRef();
     const [successMessage, setSuccessMessage] = useState(''); // successMessage will display when the user successfully updates their user info
     const [errorMessage, setError] = useState(''); // errorMessage will display when there is an error
@@ -52,7 +52,7 @@ export default function AccountInfo() {
     const fetchUserInfo = async () => {
         try {
 
-            console.log(`This is value of user ${user._id}`);
+            //console.log(`This is value of user ${user._id}`);
             const response = await fetch(`http://localhost:5050/profileRoute/profile/${user._id}`, {
                 method: "GET",
                 headers: {
@@ -62,20 +62,9 @@ export default function AccountInfo() {
 
             if (response.status === 200) {
                 const userInfo = await response.json();
-                console.log(userInfo);
-                setInfo({
-                    ...user,
-                    bio: userInfo.bio,
-                    email: userInfo.email,
-                    firstName: userInfo.firstName,
-                    lastName: userInfo.lastName,
-                    password: userInfo.password,
-                    profile_image: userInfo.profile_image,
-                    username: userInfo.username,
-                });
+                //console.log(userInfo);
                 // Update the user state with the fetched data
                 if (userInfo.profile_image === "") {
-                    setImage(defaultImage);
                     setInfo({
                         ...user,
                         bio: userInfo.bio,
@@ -83,7 +72,18 @@ export default function AccountInfo() {
                         firstName: userInfo.firstName,
                         lastName: userInfo.lastName,
                         password: userInfo.password,
-                        profile_image: defaultImage,
+                        profile_image: userInfo.image,
+                        username: userInfo.username,
+                    });
+                } else {
+                    setInfo({
+                        ...user,
+                        bio: userInfo.bio,
+                        email: userInfo.email,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        password: userInfo.password,
+                        profile_image: userInfo.image,
                         username: userInfo.username,
                     });
                 }
@@ -95,7 +95,7 @@ export default function AccountInfo() {
 
     // function to toggle between view and edit mode
     const handleEdit = () => {
-        console.log(user);
+        //console.log(user);
         // Store a copy of user data before editing
         setPrevUser(user);
         setIsEditing(!isEditing);
@@ -184,11 +184,11 @@ export default function AccountInfo() {
                 body: JSON.stringify({ password: newPassword }),
             });
 
-            console.log(newPassword);
+            //console.log(newPassword);
 
             if (response.status === 200) {
                 const data = await response.json();
-                console.log(data.message);
+                //console.log(data.message);
                 setSuccessMessage('Password updated successfully');
                 setTimeout(() => {
                     setSuccessMessage('');
@@ -200,7 +200,7 @@ export default function AccountInfo() {
             console.error("Error updating password:", error);
         }
 
-        console.log("New Password:", newPassword);
+        //console.log("New Password:", newPassword);
         handlePasswordCancel();
     }
 
@@ -278,7 +278,7 @@ export default function AccountInfo() {
     const saveChanges = async (e) => {
         // Check if the new username is available
         const isUsernameAvailable = await checkUsernameAvailability(user.username);
-        console.log(isUsernameAvailable);
+        //console.log(isUsernameAvailable);
 
         if (prevUser.username !== user.username && isUsernameAvailable === false) {
             alert('Username is already taken. Please choose a different one.');
@@ -307,7 +307,7 @@ export default function AccountInfo() {
             const data = await response.json();
 
             if (response.status === 200) {
-                console.log(data.message);
+                //console.log(data.message);
                 setSuccessMessage('Profile updated successfully');
                 sessionStorage.setItem("currentUser", JSON.stringify(userInfo));
                 setTimeout(() => {
@@ -320,114 +320,65 @@ export default function AccountInfo() {
         }
     }
 
-    const openFileInput = () => {
-        fileInputRef.current.click();
-    };
-
-    // function to edit the profile image
-    // TODO fix this 
-    const handleImageUpload = async (e) => {
-        console.log(e.target.files);
-        const file = e.target.files[0];
-        console.log(file);
-        if (file) {
-            const imageURL = URL.createObjectURL(file);
-            setImage(imageURL);
-            //console.log(imageURL);
-            try {
-                // Send a PATCH request to the server
-                const response = await fetch(`http://localhost:5050/profileRoute/update-image/${user._id}`, {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ profile_image: profile_image }),
-                });
-    
-                const data = await response.json();
-    
-                if (response.status === 200) {
-                    console.log(data.message);
-                    setSuccessMessage('Profile Image updated successfully');
-                    setTimeout(() => {
-                        setSuccessMessage('');
-                    }, 5000); // Clear the message after 5 seconds
-                }
-    
-            } catch (error) {
-                console.error("There was an error updating your info: ", error);
-            }
-        }
-    };
-
     return (
         <div className="profile">
             <div className="profile-header">
                 {/* Profile Picture */}
                 <div className="profile-avatar">
-                    <img src={profile_image} width={150} height={150} alt="Profile"/>
-                    <button className="upload-image" onClick={openFileInput}>Upload Image</button>
-                    <input
-                        type="file"
-                        ref={fileInputRef}
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        onChange={handleImageUpload}
-                    />
+                    <strong>Profile Image: </strong>
+
+                    <iframe name="dummyframe" id="dummyframe" className="noshow"></iframe>
+                    
+                    <form action={`http://localhost:5050/profileRoute/upload/${user._id}`} method="post" enctype="multipart/form-data" id="imageUpload" target="dummyframe">
+                        <label for="file">File</label>
+                        <input id="file" name="profile_image" type="file" class="form-control-file" />
+                        <button className="upload-image">Upload</button>
+                    </form>
+    
                 </div>
 
                 {/* User's Name divided into first and last name */}
-                <div className="profile-name">
-                    {isEditing ? (
-                        <div>
-                            <input
-                                className = "round-corner"
-                                type="text"
-                                name="firstName"
-                                value={user.firstName}
-                                onChange={handleInputChange}
-                            />
-                            <input
-                                className = "round-corner"
-                                type="text"
-                                name="lastName"
-                                value={user.lastName}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    ) : (
-                        <h2>{user.firstName} {user.lastName}</h2>
-                    )}
-                </div>
-
-                {/* Edit Profile and Save Changes */}
-                <div className="profile-actions">
-                    {successMessage && <div className="success-message">{successMessage}</div>}
-                    {isEditing ? (
-                        <div>
-                            <button className="save-button" onClick={handleSave}>Save</button>
-                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
-                        </div>
-                    ) : (
-                        <button className="edit-button" onClick={handleEdit}>
-                            <FaEdit size={38}/> Edit
-                        </button>
-                    )}
-                </div>
             </div>
 
             {/* Profile Details such as username, password, and bio */}
             <div className="profile-details">
 
+            <p className="profile-username">
+                    <strong>Name: </strong>
+                    {isEditing ? (
+                        <div>
+                            <input
+                                className = "edit"
+                                type="text"
+                                name="firstName"
+                                value={user.firstName}
+                                onChange={handleInputChange}
+                                placeholder="First Name"
+                            />
+                            <input
+                                className = "edit"
+                                type="text"
+                                name="lastName"
+                                value={user.lastName}
+                                onChange={handleInputChange}
+                                placeholder="Last Name"
+                            />
+                        </div>
+                    ) : (
+                        <span className="bordered-section">{user.firstName} {user.lastName}</span>
+                    )}
+                </p>
+
                 {/* Profile Username */}
                 <p className="profile-username">
                     <strong> Username: </strong> {isEditing ? (
                     <input
-                        className = "round-corner"
+                        className = "edit"
                         type="text"
                         name="username"
                         value={user.username}
                         onChange={handleInputChange}
+                        placeholder="Username"
                     />
                     ) : (
                         <span className="bordered-section">{user.username}</span>
@@ -438,11 +389,12 @@ export default function AccountInfo() {
                 <p className="profile-email">
                     <strong> Email: </strong>{isEditing ? (
                         <input
-                            className = "round-corner"
+                            className = "edit"
                             type="text"
                             name="email"
                             value={user.email}
                             onChange={handleInputChange}
+                            placeholder="your.email@example.com"
                         />
                     ) : (
                         <span className="bordered-section">{user.email}</span>
@@ -451,7 +403,7 @@ export default function AccountInfo() {
 
                 {/* Profile Password */}
                 <p className="profile-password">
-                    <strong>Password:</strong>
+                    <strong>Password: </strong>
                     <button className="change-password" onClick={handlePasswordChange}>Change Password</button>
                 </p>
 
@@ -506,7 +458,7 @@ export default function AccountInfo() {
                 <p className="profile-bio">
                     <strong> Bio: </strong> {isEditing ? (
                         <textarea
-                            className = "round-corner"
+                            className = "edit-bio"
                             placeholder="Tell us about yourself"
                             name="bio"
                             value={user.bio}
@@ -520,10 +472,27 @@ export default function AccountInfo() {
                 </p>
             </div>
 
-            {/* Profile Favorites Tabs */}
+            {/* Profile Favorites Tabs
             <div className="tabs">
                 <Favorites />
             </div>
+            */}
+
+            {/* Edit Profile and Save Changes */}
+            <div className="profile-actions">
+                    {successMessage && <div className="success-message">{successMessage}</div>}
+                    {isEditing ? (
+                        <div>
+                            <button className="save-button" onClick={handleSave}>Save</button>
+                            <button className="cancel-button" onClick={handleCancel}>Cancel</button>
+                        </div>
+                    ) : (
+                        <button className="edit-button" onClick={handleEdit}>
+                            <FaEdit size={25}/> Edit
+                        </button>
+                    )}
+                </div>
+
         </div>
     );
 };

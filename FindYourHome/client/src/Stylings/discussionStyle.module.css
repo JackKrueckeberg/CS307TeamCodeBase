@@ -3,8 +3,8 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    max-width: 600px;
-    min-height: 600px;
+    max-width: fit-content;
+    min-height: fit-content;
     margin: 0 auto;
     margin-top: 55px;
     position: absolute;
@@ -14,6 +14,7 @@
     background-color: #DCD7C9;
     text-align: center;
     border-radius: 20px;
+    padding: 15px;
 }
 
 body {
@@ -174,7 +175,7 @@ body {
     color: red;
     padding: 10px;
     max-width: fit-content;
-    margin-bottom: -10px;
+    margin-bottom: 15px;
     text-align: center;
     border-radius: 20px;
     background-color: rgb(255, 91, 91);
@@ -225,4 +226,8 @@ body {
     background-color: #A27B5C; 
     color: #DCD7C9; 
   }
-  
+
+  .tagIndicator {
+    color: #ffcc00;
+    margin-left: 5px;
+  }

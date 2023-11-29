@@ -164,12 +164,12 @@ button:hover {
 .advancedSearch {
     border-radius: 20px;
     visibility: visible;
-    background-color: rgb(199, 199, 199);
+    background-color:rgba(255, 255, 255, 0.295);
     margin: 10px;
 }
 
 .advancedSearch:hover {
-    background-color: rgb(145, 145, 145);
+    background-color: rgba(0, 0, 0, 0.39);;
 }
 
 .logouttooltip {
@@ -200,7 +200,7 @@ button:hover {
 
 .logoutbtn {
     visibility: visible;
-    background-color: rgb(255, 91, 91);
+    background-color: rgba(255, 84, 84, 0.842);
     margin: 10px;
 }
 
