@@ -27,9 +27,6 @@ import topThreeCities from "./routes/topThreeCities.mjs";
 import strikes from "./routes/strikes.mjs"
 import DiscussionHome from "./routes/discussionPost.mjs"
 import Feedback from "./routes/feedbackRoute.mjs";
-
-import strikes from "./routes/strikes.mjs";
-import DiscussionHome from "./routes/discussionPost.mjs";
 import notification from "./routes/notificationsRoutes.mjs";
 
 

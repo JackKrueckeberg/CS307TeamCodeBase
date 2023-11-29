@@ -363,7 +363,6 @@ const ViewCity = () => {
 
 
     return (
-        <PageAnimation>
         <div>
             {!isVerified && (
                 <div className="verificationBanner">
@@ -463,7 +462,6 @@ const ViewCity = () => {
             </div>
             <ToastContainer />
         </div>
-        </PageAnimation>
     );
 };
 
