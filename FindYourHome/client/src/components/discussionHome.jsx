@@ -11,7 +11,7 @@ import AddReply from "./replies/addReply";
 import Flags from "./strikes/flagComment";
 import AddBookmark from "./saved_discussions/addBookmark";
 import AddFavDisc from "./saved_discussions/addFavDisc.js";
-import PageAnimation from "../animations/pageAnimation";
+import PageAnimation from "../animations/PageAnimation";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);

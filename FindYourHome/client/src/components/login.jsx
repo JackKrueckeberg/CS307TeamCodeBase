@@ -3,7 +3,7 @@ import styles from "../Stylings/loginStyle.module.css";
 import WaveBackground from "../svg/wave";
 import { useUser } from "../contexts/UserContext";
 import { useNavigate, useLocation } from "react-router-dom";
-import PageAnimation from "../animations/pageAnimation";
+import PageAnimation from "../animations/PageAnimation";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
