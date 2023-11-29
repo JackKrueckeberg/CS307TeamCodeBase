@@ -18,9 +18,11 @@ import SimilarSearches from './components/SimilarSearches';
 import Fuse from 'fuse.js';
 import PageAnimation from "./animations/PageAnimation";
 
+
+
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
-const ViewCity = () => {    
+const ViewCity = () => {
     const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
     const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -124,7 +126,6 @@ const ViewCity = () => {
     }
 
     const incrementAchievement = async (achievementName) => {
-        console.log(achievementName);
         try {
             const response = await fetch(`http://localhost:5050/achievements/${g_email}/${achievementName}`, {
                 method: 'PATCH',
@@ -153,31 +154,7 @@ const ViewCity = () => {
         }
     };
 
-    const incrementCityUsage = async (cityName) => {
-        console.log(`Incrementing usage for: ${cityName}`);
-        try {
-            const response = await fetch(`http://localhost:5050/usage_stats/${g_email}/${cityName}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    action: "incrementCityUsage"
-                })
-            });
-    
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-    
-            const data = await response.json();
-            console.log('Response from incrementing city usage:', data);
-        
-        } catch (error) {
-            console.error("Error incrementing city usage:", error);
-        }
-    };
-    
+
 
     const onSuggestionsFetchRequested = ({ value }) => {
         if (value) {
@@ -270,7 +247,6 @@ const ViewCity = () => {
         localStorage.setItem('selectedCity', JSON.stringify(cityModel));
 
         incrementAchievement("City-Explorer");
-        incrementCityUsage(matchedCity.name);
         setImageUrl(img);
         setCityModel(cityModel);
         setGlobalCity(matchedCity);
@@ -363,6 +339,7 @@ const ViewCity = () => {
 
 
     return (
+        <PageAnimation>
         <div>
             {!isVerified && (
                 <div className="verificationBanner">
@@ -374,20 +351,17 @@ const ViewCity = () => {
 
             <div className="navBar">
 
-                <div class="profiletooltip">
+                <div className="profiletooltip">
                     <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-                    <span class="profiletooltiptext">View your profile page and make edits</span>
+                    <span className="profiletooltiptext">View your profile page and make edits</span>
                 </div>
-                <div class="advancedtooltip">
+                <div className="advancedtooltip">
                     <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
-                    <span class="advancedtooltiptext">Search based on attributes of cities</span>
+                    <span className="advancedtooltiptext">Search based on attributes of cities</span>
                 </div>
-                <div class="discussiontooltip">
+                <div className="discussiontooltip">
                     <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
-                    <span class="discussiontooltiptext">View discussions about different cities</span>
-                </div>
-                <div class="feedbacktooltip">
-                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
+                    <span className="discussiontooltiptext">View discussions about different cities</span>
                 </div>
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
@@ -460,8 +434,10 @@ const ViewCity = () => {
             <div className="recentlyViewedCities">
                 <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
+
             <ToastContainer />
         </div>
+        </PageAnimation>
     );
 };
 
