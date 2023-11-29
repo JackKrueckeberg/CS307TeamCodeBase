@@ -32,6 +32,7 @@ import MessageNotification from "./components/messageNotification";
 import AccountInfo from "./components/accountInfo";
 import { AnimatePresence } from "framer-motion";
 import Notifications from './components/notifications';
+import PropertyList from "./components/properties/properties";
 
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -104,6 +105,7 @@ const App = () => {
               <Route path="/notification" element={<Notifications/>} />
               <Route path="/TwoFactor" element={<TwoFactor />} />
               <Route path="/disc" element={<Disc />} />
+              <Route path="/properties" element = {<PropertyList/>}/>
             </Routes>
           </AnimatePresence>
         </CompareCitiesProvider>
