@@ -11,7 +11,7 @@ import AddReply from "./replies/addReply";
 import Flags from "./strikes/flagComment";
 import AddBookmark from "./saved_discussions/addBookmark";
 import AddFavDisc from "./saved_discussions/addFavDisc.js";
-import PageAnimation from "../animations/pageAnimation";
+import PageAnimation from "../animations/PageAnimation";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -435,6 +435,9 @@ const DiscussionHome = () => {
               <span className="advancedtooltiptext">
                 Search based on attributes of cities
               </span>
+            </div>
+            <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
             </div>
             <button className="logoutbtn" onClick={() => handleLogout()}>
               Logout

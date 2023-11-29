@@ -452,6 +452,9 @@ export default function Create() {
             <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
             <span class="discussiontooltiptext">View discussions about different cities</span>
         </div>
+        <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
+        </div>
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
       </div>

@@ -16,7 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SimilarSearches from './components/SimilarSearches'; 
 import Fuse from 'fuse.js';
-import PageAnimation from "./animations/pageAnimation";
+import PageAnimation from "./animations/PageAnimation";
 
 const apiKey = "GkImbhMWTdg4r2YHzb7J78I9HVrSTl7zKoAdszfxXfU";
 
@@ -363,7 +363,6 @@ const ViewCity = () => {
 
 
     return (
-        <PageAnimation>
         <div>
             {!isVerified && (
                 <div className="verificationBanner">
@@ -386,6 +385,9 @@ const ViewCity = () => {
                 <div class="discussiontooltip">
                     <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
                     <span class="discussiontooltiptext">View discussions about different cities</span>
+                </div>
+                <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
                 </div>
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
@@ -460,7 +462,6 @@ const ViewCity = () => {
             </div>
             <ToastContainer />
         </div>
-        </PageAnimation>
     );
 };
 
