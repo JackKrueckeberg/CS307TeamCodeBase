@@ -21,15 +21,10 @@ import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
 import favorite_discussions from "./routes/favorite_discussions.mjs";
 import achievementsData from "./routes/achievementsData.mjs";
 import twoFactor from "./routes/twoFactor.mjs";
-
 import usageData from "./routes/usageData.mjs";
 import topThreeCities from "./routes/topThreeCities.mjs";
 import strikes from "./routes/strikes.mjs"
 import DiscussionHome from "./routes/discussionPost.mjs"
-
-
-import strikes from "./routes/strikes.mjs";
-import DiscussionHome from "./routes/discussionPost.mjs";
 import notification from "./routes/notificationsRoutes.mjs";
 
 

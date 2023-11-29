@@ -10,17 +10,14 @@ import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
 import Notifications from "./notifications";
 import PageAnimation from "../animations/PageAnimation.jsx";
-import { useUser } from "../contexts/UserContext";
 
 export default function Profile() {
 
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
 
-  const { user: userProfile } = useUser(); // the id of the current logged in user
-  const [user, setInfo] = useState(
-    storedSesUser || storedLocUser || userProfile
-  );
+  const {user: userProfile } = useUser(); // the id of the current logged in user
+  const [user, setInfo] = useState( storedSesUser || storedLocUser || userProfile || initialInfo);
 
   const g_email = user.email;
 
@@ -31,13 +28,6 @@ export default function Profile() {
         profile_image: '',
         bio: '',
     };
-
-    const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
-    const storedLocUser = JSON.parse(localStorage.getItem('currentUser'));
-    const [profile_image, setImage] = useState();
-
-    const {user: userProfile } = useUser(); // the id of the current logged in user
-    const [user, setInfo] = useState( storedSesUser || storedLocUser || userProfile || initialInfo);
 
     useEffect(() => {
         // fetch user data from the backend when the component mounts
