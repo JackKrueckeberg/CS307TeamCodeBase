@@ -82,7 +82,7 @@ body {
 }
 
 .commentsBox {
-    margin-top: 25px;
+    /* margin-top: 25px; */
     flex-grow: 1;  
     overflow-y: auto;  
     text-align: center;
@@ -107,7 +107,7 @@ body {
 }
 
 .commentsBox {
-    margin-top: 20px;
+    margin: 10px;
 }
 
 .discussionPost {
@@ -160,7 +160,10 @@ body {
 }
 
 .createNew {
-    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
 }
 .filter {
     border-radius: 5px;

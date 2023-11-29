@@ -369,12 +369,11 @@ const DiscussionHome = () => {
               Toggle Search Bar
             </button>
             {selectedCity && (
-              <div>
+              <>
                 <AddBookmark _bookmark={selectedCity} />
                 <AddFavDisc _favDisc={selectedCity} />
-              </div>
+              </>
             )}
-            
           </div>
         )}
 
