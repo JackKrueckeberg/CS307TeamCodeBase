@@ -23,7 +23,7 @@ export default function CityPage(props) {
   // Parsing the cityModel from localStorage
   const cityModelStored = localStorage.getItem('selectedCity');
   const cityModel = cityModelStored ? JSON.parse(cityModelStored) : {};
-  console.log(cityModel);
+  // console.log(cityModel);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -151,7 +151,7 @@ export default function CityPage(props) {
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
           <div className="mapContainer">
-            <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} />
+            {/* <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} /> */}
           </div>
         )}
       </div>

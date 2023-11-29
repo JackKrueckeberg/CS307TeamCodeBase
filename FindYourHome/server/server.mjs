@@ -21,6 +21,11 @@ import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
 import favorite_discussions from "./routes/favorite_discussions.mjs";
 import achievementsData from "./routes/achievementsData.mjs";
 import twoFactor from "./routes/twoFactor.mjs";
+
+import usageData from "./routes/usageData.mjs";
+import topThreeCities from "./routes/topThreeCities.mjs";
+import strikes from "./routes/strikes.mjs"
+import DiscussionHome from "./routes/discussionPost.mjs"
 import Feedback from "./routes/feedbackRoute.mjs";
 
 import strikes from "./routes/strikes.mjs";
@@ -57,6 +62,8 @@ app.use("/messageBoard", messageBoard);
 app.use("/strikes", strikes);
 app.use("/notification", notification);
 app.use("/achievements", achievementsData);
+app.use("/usage_stats", usageData);
+app.use("/top_cities", topThreeCities);
 app.use("/discussionPost", DiscussionHome);
 app.use("/feedbackRoute", Feedback);
 
