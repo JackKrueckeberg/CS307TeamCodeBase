@@ -223,13 +223,7 @@ export default function Create() {
       state: form.state,
       zip_code: form.zip_code,
       county: form.county,
-      median_income: form.median_income,
-      population_weight: form.population_weight,
-      region_weight: form.region_weight,
-      state_weight: form.state_weight,
-      zip_weight: form.zip_weight,
-      county_weight: form.county_weight,
-      income_weight: form.income_weight
+      median_income: form.median_income
     }
     recent.push(newRecent);
 
@@ -389,11 +383,6 @@ export default function Create() {
     if (form.zip_code !== "" && (form.zip_code.toString().length !== 5 || form.zip_code < 0 || form.zip_code.toString().indexOf(".") !== -1)) {
         alert("Zip code must be a 5 digit positive zip code, leave blank for no preference.");
         return;
-    }
-
-    if (form.population_weight < 0 || form.region_weight < 0 || form.state_weight < 0 || form.zip_weight < 0 || form.county_weight < 0 || form.income_weight < 0) {
-      alert("Weights cannot be a negative number.");
-      return;
     }
 
     const recent_searches = await getUser_recentSearches();
