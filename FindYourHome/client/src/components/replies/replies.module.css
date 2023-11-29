@@ -6,30 +6,30 @@
   max-width: 600px;
   margin: 0 auto;
   border: 1px solid #ccc;
-  /* padding: 20px; */
+  padding: 20px;
   border-radius: 5px;
 }
 
 /* Individual reply item */
 .replyItem {
-  /* margin-bottom: 15px; */
+  margin-bottom: 15px;
 }
 
 /* Username */
 .replyUsername {
   font-weight: bold;
-  /* margin-right: 10px; */
+  margin-right: 10px;
 }
 
 /* Content of the reply */
 .replyContent {
-  /* margin: 5px 0; */
+  margin: 5px 0;
 }
 
 /* Remove Reply button */
 .replyButton {
   font-size: 0.9em;
-  /* padding: 5px 10px; */
+  padding: 5px 10px;
   border: 1px solid #ccc;
   background-color: #fff;
   border-radius: 3px;
@@ -39,4 +39,9 @@
 
 .replyButton:hover {
   background-color: #ddd;
+}
+
+.taggedIndicator {
+  color: #ffcc00;
+  margin-left: 5px;
 }

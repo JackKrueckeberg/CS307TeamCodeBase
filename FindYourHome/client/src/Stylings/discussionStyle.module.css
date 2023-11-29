@@ -3,31 +3,22 @@
     flex-direction: column;
     align-items: center;
     gap: 20px;
-    max-width: 600px;
-    min-height: 600px;
+    max-width: fit-content;
+    min-height: fit-content;
     margin: 0 auto;
     margin-top: 55px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #DCD7C9;
+    background-color: #f5f5f5;
     text-align: center;
     border-radius: 20px;
+    padding: 15px;
 }
 
 body {
     background-color: #2C3639;
-}
-
-.headertext {
-    color: #a27b5c;
-    font-size: 50px;
-}
-
-.text {
-    color: #a27b5c;
-    font-size: 16px;
 }
 
 .button {
@@ -82,13 +73,13 @@ body {
 }
 
 .commentsBox {
-    /* margin-top: 25px; */
+    margin-top: 25px;
     flex-grow: 1;  
     overflow-y: auto;  
     text-align: center;
     border-radius: 20px;
     padding: 1rem;
-    background-color: #A27B5C;
+    background-color: gray;
 }
 
 .DiscussionHome {
@@ -103,16 +94,16 @@ body {
     text-align: center;
     border-radius: 20px;
     padding: 1rem;
-    background-color: #3F4E4F;
+    background-color: gray;
 }
 
 .commentsBox {
-    margin: 10px;
+    margin-top: 20px;
 }
 
 .discussionPost {
     /* display: flex; */
-    background-color: #DCD7C9;
+    background-color: #fff;
     padding: 15px;
     min-height: 1600;
     /* margin-bottom: 20px; */
@@ -122,36 +113,28 @@ body {
 
 .authorInfo {
     display: flex;
-    font-size: 16px;
     flex-direction: column;
     align-items: center;
-    margin-bottom: -10px;
+    margin-right: 20px;
 }
 
 .fakeAvatar {
     width: 50px;
     height: 50px;
-    background-color: #3F4E4F;
+    background-color: #ccc;  /* gray as placeholder */
     border-radius: 50%;
     margin-bottom: 10px;
 }
 
 .postTitle {
     font-weight: bold;
-    font-size: 30px;
     margin-bottom: 10px;
 }
 
-.content {
-    font-size: 20px;
-    margin-bottom: 0px;
-}
-
 .metadata {
-    /* margin-top: 10px; */
+    margin-top: 10px;
     font-size: 0.9em;
-    color: #3F4E4F;  
-    margin: 0px;
+    color: #888;  
 }
 
 .formActive {
@@ -160,10 +143,7 @@ body {
 }
 
 .createNew {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 10px;
+    margin-top: 20px;
 }
 .filter {
     border-radius: 5px;
@@ -174,7 +154,7 @@ body {
     color: red;
     padding: 10px;
     max-width: fit-content;
-    margin-bottom: -10px;
+    margin-bottom: 15px;
     text-align: center;
     border-radius: 20px;
     background-color: rgb(255, 91, 91);
@@ -206,8 +186,7 @@ body {
   
   .categoryFilterButtons button {
     margin: 10px;
-    color: #3F4E4F;
-    /* background-color: #DCD7C9; */
+
     border: none;
     cursor: pointer;
   }
@@ -217,12 +196,16 @@ body {
   }
   
   .categoryFilterButtons button:not(.selectedButton):hover {
-    color: #3F4E4F;
-    background-color: #A27B5C;
+    background-color: #ddd;
+    color: black;
   }
   
   .selectedButton {
-    background-color: #A27B5C; 
-    color: #DCD7C9; 
+    background-color: grey; 
+    color: white; 
   }
-  
+
+  .tagIndicator {
+    color: #ffcc00;
+    margin-left: 5px;
+  }

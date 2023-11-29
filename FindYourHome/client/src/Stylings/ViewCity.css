@@ -19,9 +19,9 @@ div.container {
 .header {
     width: 100%;
     text-align: center;
-    color: #a27b5c;
-    font-size: 50px;
+    font-size: 2em;
     margin-bottom: 20px;
+    color: #2c3e50;
 }
 
 .mainContent {
@@ -29,7 +29,7 @@ div.container {
     /* take the available space */
     background-color: #ffffff;
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     margin-right: 20px;
 }
@@ -40,7 +40,6 @@ div.container {
     align-items: stretch;
     /* stretch to full width */
     gap: 20px;
-    border-radius: 20px;
 }
 
 .searchBar label {
@@ -48,33 +47,18 @@ div.container {
     color: #555;
 }
 
-button {
-    border-radius: 20px;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
-}
-
-button:hover {
-    transform: scale(1.05);
-    /* subtle grow effect */
-}
-
 .profiletooltip {
-    border-radius: 20px;
     position: relative;
     display: inline-block;
 }
 
 .profiletooltip .profiletooltiptext {
-    border-radius: 20px;
     visibility: hidden;
     width: 120px;
     background-color: black;
     color: #fff;
     text-align: center;
+    border-radius: 6px;
     padding: 5px;
     position: absolute;
     z-index: 1;
@@ -86,21 +70,18 @@ button:hover {
 }
 
 .profiletooltip:hover .profiletooltiptext {
-    border-radius: 20px;
     visibility: visible;
     opacity: 1;
 }
 
 .profilebtn {
-    border-radius: 20px;
     visibility: visible;
-    background-color: rgb(199, 199, 199);
-    /* margin: 10px; */
+    background-color: rgba(255, 255, 255, 0.295);
+    margin: 10px;
 }
 
 .profilebtn:hover {
-    background-color: rgb(145, 145, 145);
-    border-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.39);
 }
 
 .discussiontooltip {
@@ -114,6 +95,7 @@ button:hover {
     background-color: black;
     color: #fff;
     text-align: center;
+    border-radius: 6px;
     padding: 5px;
     position: absolute;
     z-index: 1;
@@ -131,8 +113,8 @@ button:hover {
 
 .discussionButton {
     visibility: visible;
-    background-color: rgb(199, 199, 199);
-    /* margin: 10px; */
+    background-color: rgba(255, 255, 255, 0.295);
+    margin: 10px;
 }
 
 .advancedtooltip {
@@ -146,6 +128,7 @@ button:hover {
     background-color: black;
     color: #fff;
     text-align: center;
+    border-radius: 6px;
     padding: 5px;
     position: absolute;
     z-index: 1;
@@ -162,14 +145,14 @@ button:hover {
 }
 
 .advancedSearch {
-    border-radius: 20px;
     visibility: visible;
-    background-color: rgb(199, 199, 199);
+    background-color:rgba(255, 255, 255, 0.295);
     margin: 10px;
+
 }
 
 .advancedSearch:hover {
-    background-color: rgb(145, 145, 145);
+    background-color: rgba(0, 0, 0, 0.39);;
 }
 
 .logouttooltip {
@@ -183,6 +166,7 @@ button:hover {
     background-color: black;
     color: #fff;
     text-align: center;
+    border-radius: 6px;
     padding: 5px;
     position: absolute;
     z-index: 1;
@@ -200,7 +184,7 @@ button:hover {
 
 .logoutbtn {
     visibility: visible;
-    background-color: rgb(255, 91, 91);
+    background-color: rgba(255, 84, 84, 0.842);
     margin: 10px;
 }
 
@@ -211,6 +195,20 @@ button:hover {
 .button-group {
     display: flex;
     gap: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+button:hover {
+    transform: scale(1.05);
+    /* subtle grow effect */
 }
 
 .submitButton {
@@ -244,7 +242,7 @@ button:hover {
     /* fixed width for this section */
     background-color: #ffffff;
     padding: 10px;
-    border-radius: 20px;
+    border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
 }
@@ -252,7 +250,7 @@ button:hover {
 .suggestion {
     padding: 10px;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 4px;
     transition: background-color 0.3s ease;
 }
 
@@ -275,13 +273,8 @@ button:hover {
   
     /* Other styles for the button in its default state */
   }
-
-.navBar {
-    border-radius: 20px;
-}
   
   .confirmButton:hover {
-    border-radius: 20px;
     background-color: #2980b9; /* Change the background color on hover */
     /* Additional styles for the button on hover */
   }
@@ -299,7 +292,7 @@ button:hover {
     padding: 5px;
     text-align: center;
     font-weight: bold;
-    border-radius: 20px;
+    border-radius: 5px;
 }
 
 /* Add this to your existing CSS file or create a new one for styles */
@@ -327,7 +320,7 @@ button:hover {
     border: none;
     padding: 5px 10px;
     cursor: pointer;
-    border-radius: 20px;
+    border-radius: 3px;
   }
   
   .similar-searches button:hover {
