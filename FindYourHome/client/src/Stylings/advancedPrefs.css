@@ -77,4 +77,8 @@ body {
   p {
     font-size: 1rem;
   }
+
+  div {
+    background-color: white;
+  }
   
