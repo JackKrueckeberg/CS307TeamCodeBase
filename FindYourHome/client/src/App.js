@@ -19,20 +19,18 @@ import Favorites from "./components/favorites";
 import CityPage from "./components/citypage";
 import MessageList from "./components/messageList";
 import CompareCities from "./components/compareCities";
-import Feedback from "./components/feedback";
 import DeleteAccount from "./components/delete-account";
 import Flags from "./components/strikes/flagComment";
 import DiscussionHome from "./components/discussionHome";
 import Disc from "./components/disc";
 import TwoFactor from "./components/twofactor";
 import { NavigationProvider, useNavigationContext } from "./contexts/NavigationContext";
+
 import { UserContext } from "./contexts/UserContext";
 import { CityContext, CompareCitiesProvider } from "./contexts/CityContext";
 import MessageNotification from "./components/messageNotification";
 import AccountInfo from "./components/accountInfo";
 import { AnimatePresence } from "framer-motion";
-import Notifications from './components/notifications';
-import PropertyList from "./components/properties/properties";
 
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -101,18 +99,30 @@ const App = () => {
               <Route path="/delete-account" element={<DeleteAccount />} />
               <Route path="/discussionHome" element={<DiscussionHome />} />
               <Route path="/messageBoards" element={<MessageList />} />
-              <Route path="/messageNotification" element={<MessageNotification/>} />
-              <Route path="/notification" element={<Notifications/>} />
+              <Route path="/notification" element={<MessageNotification />} />
               <Route path="/TwoFactor" element={<TwoFactor />} />
               <Route path="/disc" element={<Disc />} />
-              <Route path="/feedback" element={<Feedback />} />
-              <Route path="/properties" element = {<PropertyList/>}/>
             </Routes>
           </AnimatePresence>
         </CompareCitiesProvider>
       </CityContext.Provider>
     </UserContext.Provider>
     </NavigationProvider>
+    //   <Flags/>
+    // <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
+    //     <CityContext.Provider value={{city, setGlobalCity}}>
+    //         <Routes>
+    //             <Route path="/" element={<Login />} />
+    //             <Route path="/view-city" element={<ViewCity />} />
+    //             <Route path="/preferences" element={<Preferences />} />
+    //             <Route path="/verification" element={<Verification />} />
+    //             <Route path="/createAccount" element={<CreateAccount />} />
+    //             <Route path="/profile" element={<Profile />} />
+    //             <Route path="/citypage" element={<CityPage />} />
+    //             <Route path="/delete-account" element={<DeleteAccount />} />
+    //         </Routes>
+    //     </CityContext.Provider>
+    // </UserContext.Provider>
   );
 };
 

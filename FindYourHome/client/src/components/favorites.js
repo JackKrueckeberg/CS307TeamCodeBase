@@ -52,7 +52,7 @@ export default function Favorites() {
 
             setUsername(resp.username);
 
-            //console.log(resp.username);
+            console.log(resp.username);
     
             return resp.username;
         } catch (error) {
@@ -68,7 +68,7 @@ export default function Favorites() {
             getUser_favorite_cities();
         }
         setTabVal(index) // sets the state to whatever index the tab is
-        //console.log(index);
+        console.log(index);
     }
 
     async function getUser_favorite_searches() {
@@ -88,7 +88,7 @@ export default function Favorites() {
             setFavoriteSearches(resp.favorite_searches);
         }
 
-        //console.log(resp.favorite_searches);
+        console.log(resp.favorite_searches);
     
         return resp.favorite_searches;
     }
@@ -115,7 +115,7 @@ export default function Favorites() {
         setFavoriteSearches(newFavs);
     }
     
-    //console.log(favorite_searches);
+    console.log(favorite_searches);
 
 
     async function getUser_favorite_cities() {
@@ -140,7 +140,7 @@ export default function Favorites() {
 
         }
 
-        //console.log(resp.favorite_cities);
+        console.log(resp.favorite_cities);
     
         return resp.favorite_cities;
     }
@@ -206,7 +206,7 @@ export default function Favorites() {
         }
 
         setShareModal(true);
-        //console.log(selectedCities);
+        console.log(selectedCities);
     }
 
     const handleShareCancel = () => {
@@ -226,7 +226,7 @@ export default function Favorites() {
         // TODO finish the send method
         const citiesToSend = favorite_cities.filter((city, index) => selectedCities[index]);
         const message = `Here are my favorite cities: ${citiesToSend.join(', ')}`;
-        //console.log(message);
+        console.log(message);
 
         const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
             method: "POST",
@@ -246,34 +246,10 @@ export default function Favorites() {
             setSuccessMessage('Your favorites have been sent to ', recipient, '!');
             handleCancel();
             handleShareCancel();
-
-            const response2 = await fetch('http://localhost:5050/notification/notify', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    senderUsername: username,
-                    recipientUsername: recipient,
-                    isMessage: true,
-                    timeSent: new Date(),
-                    city: '',
-                }),
-            });
-
-            if (response2.status === 200) {             
-                window.location.reload();
-                return;
-            } else {
-                alert("something went wrong");
-            }
-
             return;
         } else {
             setError('There was an error sending your favorites to ', recipient, '. Please try again.');
         }
-
-
 
     };
 
@@ -300,8 +276,8 @@ export default function Favorites() {
 
 
     return (
-        <div className="favs">
-            <div className="tab-block">
+        <div className="container">
+            <div className="tabs-block">
                 <div onClick={() => handleTabChange(1)} className={`${tabVal === 1 ? 'tab active-tab' : 'tab'}`}> Favorite Cities </div>
                 <div className={`${tabVal === 2 ? 'tab active-tab' : 'tab'}`} onClick={() => handleTabChange(2)}> Favorite Searches </div>
             </div>
@@ -315,8 +291,8 @@ export default function Favorites() {
                             {isSelecting ? (
                                 <div>
                                     <div className="buttons">
-                                        <button className="shareTo-button" onClick={handleShareModal}>Share</button>
-                                        <button className="share-cancel" onClick={handleCancel}>Cancel</button>
+                                        <button className="shareTo-button" onClick={handleShareModal}>Share to</button>
+                                        <button className="cancel-button" onClick={handleCancel}>Cancel</button>
                                     </div>
                                     <Modal
                                         className={"share-modal"}
@@ -355,7 +331,7 @@ export default function Favorites() {
                                                 onChange={(e) => setRecipient(e.target.value)}
                                             />
                                             <button className="share-button" onClick={() => handleShare(recipient)}>Share</button>
-                                            <button className="share-cancel" onClick={() => handleShareCancel()}>Cancel</button>
+                                            <button className="cancel-button" onClick={() => handleShareCancel()}>Cancel</button>
                                         </div>
                                     </Modal>
                                 <ul className="city">
@@ -367,7 +343,7 @@ export default function Favorites() {
                                                 checked={selectedCities[index]}
                                                 onChange={() => handleCheckboxChange(index)}
                                             />
-                                            <span> {city} </span>
+                                            <span>{city}</span>
                                             {/*{Object.entries(city).map(([key, value]) => {
                             
                             
@@ -393,7 +369,7 @@ export default function Favorites() {
                                         {favorite_cities.map((city, index) => (
                                             <li key={index}>
                                                 <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                                                <span> {city} </span>
+                                                <span>{city}</span>
                                                 {/*{Object.entries(city).map(([key, value]) => {
                                                     console.log(city);
                                                     return (

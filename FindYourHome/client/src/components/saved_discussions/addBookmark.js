@@ -64,9 +64,9 @@ export default function AddBookmark({_bookmark}) {
   console.log(bookmarks);
 
   return (
-    <div className="button-container">
+    <div>
       {!isBookmarked && (
-        <button className="add-bookmark-button" onClick={() => addBookmark(_bookmark)}>Bookmark this Discussion</button>
+        <button onClick={() => addBookmark(_bookmark)}>Bookmark this Discussion</button>
       )}
     </div>
   );

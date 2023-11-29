@@ -18,7 +18,7 @@ const animation = {
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 1 }}
       >
         {children}
       </motion.div>

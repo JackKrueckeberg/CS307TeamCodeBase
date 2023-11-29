@@ -34,14 +34,14 @@ export default function MessageList() {
         fetchUsername(user._id);
         fetchUserMessageBoards();
 
-        const interval = setInterval(() => {
+        const intervalId = setInterval(() => {
             fetchUserMessageBoards();
 
           }, 5000); // 5000 milliseconds = 5 seconds
       
           // The cleanup function to clear the interval when the component unmounts
           return () => {
-            clearInterval(interval);
+            clearInterval(intervalId);
             setSelectedMessageBoard(null);
           };
 
@@ -79,15 +79,13 @@ export default function MessageList() {
                 }
             })
 
-            if (response.status === 200) {
-                const resp = await response.json();
+            const resp = await response.json();
 
-                if (resp.messageList) {
-                    setMessageBoards(resp.messageList);
-                }
-    
-                return resp.messageList;
+            if (resp.messageList) {
+                setMessageBoards(resp.messageList);
             }
+    
+            return resp.messageList;
         } catch (error) {
             console.error("Error fetching user info: ", error);
         }
@@ -263,6 +261,13 @@ export default function MessageList() {
 
         if (newMessage && recipient !== "") {
 
+            const messageData = {
+                senderUsername: username,
+                recipientUsername: recipient,
+                content: newMessage,
+                timeSent: new Date(),
+            };
+
             const response = await fetch('http://localhost:5050/messageRoute/share-favorite-cities', {
                 method: "POST",
                 headers: {
@@ -280,26 +285,7 @@ export default function MessageList() {
             if (response.status === 200) {             
                 setNewMessage(""); // Clear the input field
                 messageInputRef.current.value = "";
-                const response2 = await fetch('http://localhost:5050/notification/notify', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        senderUsername: username,
-                        recipientUsername: recipient,
-                        isMessage: true,
-                        timeSent: new Date(),
-                        city: '',
-                    }),
-                });
-
-                if (response2.status === 200) {             
-                    window.location.reload();
-                    return;
-                } else {
-                    alert("something went wrong");
-                }
+                window.location.reload();
                 return;
             } else {
                 alert("something went wrong");
@@ -371,7 +357,7 @@ export default function MessageList() {
             {selectedMessageBoard && (
                 <div>
                     <div className="message-board-container">
-                        <h2>Messages with <span>{selectedMessageBoard.messagesWith}</span></h2>
+                        <h2>Messages with<span>{selectedMessageBoard.messagesWith}</span></h2>
                         <ul className="message-board scrollable" ref={messagesRef}>
                             {messages.map((message, index) => {
                                 if (message.isList == true) {
