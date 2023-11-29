@@ -6,6 +6,7 @@ import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const OPENAI_API_KEY = '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'
 
@@ -18,6 +19,14 @@ export default function CityPage(props) {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  const [attrationLoc, setAttractionsLoc] = useLocalStorage("attractions-loc", {});
+
+  function updateAttractionsLoc(value) {
+    return setAttractionsLoc((prev) => {
+      return { ...prev, ...value };
+    });
+  }
 
 
   // Parsing the cityModel from localStorage
