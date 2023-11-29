@@ -9,7 +9,7 @@ import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
 import Notifications from "./notifications";
-import PageAnimation from "../animations/PageAnimation.jsx";
+import PageAnimation from "../animations/pageAnimation";
 
 export default function Profile() {
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
