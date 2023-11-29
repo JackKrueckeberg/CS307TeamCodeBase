@@ -16,19 +16,17 @@ export default function Profile() {
   const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
   const [profile_image, setImage] = useState();
 
-  const { user: userProfile } = useUser(); // the id of the current logged in user
-  const [user, setInfo] = useState(
-    storedSesUser || storedLocUser || userProfile || initialInfo
-  );
+  const {user: userProfile } = useUser(); // the id of the current logged in user
+  const [user, setInfo] = useState( storedSesUser || storedLocUser || userProfile || initialInfo);
 
   const g_email = user.email;
 
-  const initialInfo = {
-    firstName: "",
-    lastName: "",
-    profile_image: "",
-    bio: "",
-  };
+    const initialInfo = {
+        firstName: '',
+        lastName: '',
+        profile_image: '',
+        bio: '',
+    };
 
   useEffect(() => {
     // fetch user data from the backend when the component mounts
