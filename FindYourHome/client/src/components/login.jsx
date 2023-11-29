@@ -247,9 +247,9 @@ export const Login = () => {
         <button
           type="button"
           onClick={() => navigate("/createAccount")}
-          className={styles.button}
+          className={styles.account}
         >
-          Create Account
+          Don't have an Account? Click here to Create one.
         </button>
         <button
           type="button"
@@ -261,20 +261,19 @@ export const Login = () => {
 
         {isForgotPasswordPopupOpen && (
           <div className="popup">
-            <h3 className={styles.text}>Forgot Password</h3>
+            <h3>Forgot Password</h3>
             <form onSubmit={handleForgotPasswordSubmit}>
               <div className="form-content">
-                <label className={styles.label}>Email address:</label>
+                <label>Email address:</label>
                 <input
-                  className={styles.input}
                   type="email"
                   onChange={(e) => setForgotPasswordEmail(e.target.value)}
                   value={forgotPasswordEmail}
                 />
-                <button className={styles.button} type="submit">Send Reset Email</button>
+                <button type="submit">Send Reset Email</button>
               </div>
             </form>
-            <button className={styles.button} onClick={() => setIsForgotPasswordPopupOpen(false)}>
+            <button onClick={() => setIsForgotPasswordPopupOpen(false)}>
               Close
             </button>
           </div>
