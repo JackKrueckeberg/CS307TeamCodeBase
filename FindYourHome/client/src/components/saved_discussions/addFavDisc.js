@@ -63,9 +63,9 @@ export default function AddFavDisc({_favDisc}) {
   console.log(favDiscs);
 
   return (
-    <div>
+    <div className="button-container">
       {!isFavDisc && (
-        <button onClick={() => addFavDisc(_favDisc)}>Favorite this Discussion</button>
+        <button className="add-fav-disc-button" onClick={() => addFavDisc(_favDisc)}>Favorite this Discussion</button>
       )}
     </div>
   );
