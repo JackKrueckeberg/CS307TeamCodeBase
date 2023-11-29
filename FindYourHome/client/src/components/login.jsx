@@ -247,7 +247,7 @@ export const Login = () => {
         <button
           type="button"
           onClick={() => navigate("/createAccount")}
-          className={styles.account}
+          className={styles.button}
         >
           Create Account
         </button>
