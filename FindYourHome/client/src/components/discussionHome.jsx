@@ -399,7 +399,7 @@ const DiscussionHome = () => {
   return (
     <PageAnimation>
       <div className={styles.DiscussionHome}>
-        <h2>Discussions</h2>
+        <h2 className={styles.headertext}>Discussions</h2>
 
         {!showForm && (
           <div className="navBar">
@@ -461,7 +461,7 @@ const DiscussionHome = () => {
         )}
 
         {!showForm && (
-          <div>
+          <div className={styles.createNew}>
             <button
               onClick={() => setShowForm(true)}
               className={styles.createNew}
@@ -469,17 +469,18 @@ const DiscussionHome = () => {
             >
               Create New Discussion
             </button>
-          </div>
-        )}
-
-        {!showForm && (
-          <div>
             <button
               onClick={() => setShowSearchBar(!showSearchBar)}
               className={styles.createNew}
             >
               Toggle Search Bar
             </button>
+            {selectedCity && (
+              <>
+                <AddBookmark _bookmark={selectedCity} />
+                <AddFavDisc _favDisc={selectedCity} />
+              </>
+            )}
           </div>
         )}
 
@@ -506,9 +507,9 @@ const DiscussionHome = () => {
         )}
 
         {!showForm && showHist && (
-          <div className="recentlyDiscussedCities">
+          <div className={styles.text}>
             <RecentDiscussionsQueue queue={recentDiscussionsQueue} />
-            <button className="clearHistory" onClick={() => clearHistory()}>
+            <button className={styles.button} onClick={() => clearHistory()}>
               Clear History
             </button>
           </div>
@@ -564,8 +565,6 @@ const DiscussionHome = () => {
             >
               Other
             </button>
-            <AddBookmark _bookmark={selectedCity} />
-            <AddFavDisc _favDisc={selectedCity} />
           </div>
         )}
 
@@ -599,13 +598,6 @@ const DiscussionHome = () => {
                         key={discussion.id || discussion.title}
                         className={styles.discussionPost}
                       >
-                        <div className={styles.authorInfo}>
-                          <h3>
-                            {discussion.selectorChoice === "Your Username"
-                              ? discussion.postedBy.username
-                              : "Anonymous"}
-                          </h3>
-                        </div>
                         <div className={styles.postContent}>
                           <h4 className={styles.postTitle}>
                           {taggedIn.includes(discussion) && (
@@ -615,7 +607,16 @@ const DiscussionHome = () => {
                             {discussion.title}
                         
                           </h4>
-                          <p>{discussion.content}</p>
+                          <div className={styles.authorInfo}>
+                              {discussion.selectorChoice === "Your Username"
+                                ? `Posted by ${discussion.postedBy.username}`
+                                : "Posted Anonymously"}
+                            <div className={styles.content}>"{discussion.content}"</div>
+                          </div>
+                          <p className={styles.metadata}>
+                            City: {discussion.city} | Category:{" "}
+                            {discussion.category}
+                          </p>
                           <Flags
                             type="comment"
                             commentIndex={filteredDiscussions.indexOf(
@@ -623,10 +624,6 @@ const DiscussionHome = () => {
                             )}
                             _selectedCity={selectedCity}
                           />
-                          <p className={styles.metadata}>
-                            City: {discussion.city} | Category:{" "}
-                            {discussion.category}
-                          </p>
                           <Replies
                             commentIndex={filteredDiscussions.indexOf(
                               discussion
