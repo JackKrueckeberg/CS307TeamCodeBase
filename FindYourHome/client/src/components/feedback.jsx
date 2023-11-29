@@ -15,7 +15,13 @@ const Feedback = () => {
   const [reviewError, setReviewError] = useState("");
   const [problemError, setProblemError] = useState("");
   const [rating, setRating] = useState(0);
-
+  const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+  const { user: userProfile } = useUser();
+  const [user, setInfo] = useState(
+    storedSesUser || storedLocUser || userProfile
+  );
+  const email = user.email;
   const navigate = useNavigate();
 
   const handleShowForm = (formType) => {
@@ -50,7 +56,7 @@ const Feedback = () => {
     setShowForm(null);
   };
 
-  const handleSubmitProblem = (e) => {
+  const handleSubmitProblem = async (e) => {
     e.preventDefault();
     setProblemError("");
     if (!problem.trim() && !problemTitle.trim()) {
@@ -63,20 +69,47 @@ const Feedback = () => {
       setProblemError("Please provide: your problem summary");
       return;
     }
-    // Need to Add logic to send problem report to the server
-    alert("Problem report submitted!");
-    setProblemError("");
-    setProblem("");
-    setProblemTitle("");
-    setShowForm(null);
+
+    // Prepare data to send to the server
+    const errorData = {
+      errorTitle: problemTitle,
+      errorDescription: problem,
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:5050/feedbackRoute/send-error-email",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(errorData),
+        }
+      );
+
+      if (response.ok) {
+        alert("Problem report submitted!");
+        setProblem("");
+        setProblemTitle("");
+        setShowForm(null);
+      } else {
+        throw new Error("Problem report submission failed");
+      }
+    } catch (error) {
+      console.error(error);
+      setProblemError("An error occurred while submitting the report.");
+    }
   };
 
-  const handleSubmitReview = (e) => {
+  const handleSubmitReview = async (e) => {
     e.preventDefault();
     setReviewError("");
-  
+
     if (rating === 0 && !reviewTitle.trim() && !review.trim()) {
-      setReviewError("Please provide: a Star Rating, a Review Title, and your Review Thoughts");
+      setReviewError(
+        "Please provide: a Star Rating, a Review Title, and your Review Thoughts"
+      );
     } else if (rating === 0 && !reviewTitle.trim()) {
       setReviewError("Please provide: a Star Rating and a Review Title");
     } else if (rating === 0 && !review.trim()) {
@@ -89,13 +122,30 @@ const Feedback = () => {
       setReviewError("Please provide: a Review Title");
     } else if (!review.trim()) {
       setReviewError("Please provide: your Review Thoughts");
-    } else {
-      // Logic to send review to the server
-      alert("Review submitted!");
-      setReview("");
-      setRating(0);
-      setReviewTitle("");
-      setShowForm(null);
+    }
+    try {
+      const response = await fetch(
+        "http://localhost:5050/feedbackRoute/submit-review",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ reviewTitle, review, rating, email }),
+        }
+      );
+
+      if (response.ok) {
+        alert("Review submitted!");
+        setReview("");
+        setRating(0);
+        setReviewTitle("");
+        setShowForm(null);
+      } else {
+        throw new Error("Failed to submit review");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -157,7 +207,7 @@ const Feedback = () => {
                   placeholder="Review Title"
                 />
               </div>
-                <StarRating onRating={(rate) => setRating(rate)} />
+              <StarRating onRating={(rate) => setRating(rate)} />
 
               <div className={styles.description}>
                 <textarea
@@ -172,14 +222,13 @@ const Feedback = () => {
               </span>
             </form>
             {reviewError && (
-                <div 
+              <div
                 className={styles.error}
-                style={{ visibility: reviewError ? 'visible' : 'hidden' }}
+                style={{ visibility: reviewError ? "visible" : "hidden" }}
               >
                 <p>{reviewError}</p>
               </div>
-              
-              )}
+            )}
           </div>
         )}
 
@@ -207,14 +256,14 @@ const Feedback = () => {
                 <button onClick={handleCancel}>Cancel</button>
               </span>
             </form>
-             {problemError && (
-                <div 
+            {problemError && (
+              <div
                 className={styles.error}
-                style={{ visibility: problemError ? 'visible' : 'hidden' }}
+                style={{ visibility: problemError ? "visible" : "hidden" }}
               >
                 <p>{problemError}</p>
               </div>
-              )}
+            )}
           </div>
         )}
 

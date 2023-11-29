@@ -16,17 +16,19 @@ export default function Profile() {
   const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
   const [profile_image, setImage] = useState();
 
-  const {user: userProfile } = useUser(); // the id of the current logged in user
-  const [user, setInfo] = useState( storedSesUser || storedLocUser || userProfile || initialInfo);
+  const { user: userProfile } = useUser(); // the id of the current logged in user
+  const [user, setInfo] = useState(
+    storedSesUser || storedLocUser || userProfile || initialInfo
+  );
 
   const g_email = user.email;
 
-    const initialInfo = {
-        firstName: '',
-        lastName: '',
-        profile_image: '',
-        bio: '',
-    };
+  const initialInfo = {
+    firstName: "",
+    lastName: "",
+    profile_image: "",
+    bio: "",
+  };
 
   useEffect(() => {
     // fetch user data from the backend when the component mounts
@@ -154,15 +156,14 @@ export default function Profile() {
               View discussions about different cities
             </span>
           </div>
+          <div>
+            <button className="logoutbtn" onClick={() => navigate("/feedback")}>
+              Feedback
+            </button>
+          </div>
           <button className="logoutbtn" onClick={() => handleLogout()}>
             Logout
           </button>
-
-          <div>
-            <button className="logoutbtn" onClick={() => handleLogout()}>
-              Logout
-            </button>
-          </div>
         </div>
 
         <div className="profile-page">
