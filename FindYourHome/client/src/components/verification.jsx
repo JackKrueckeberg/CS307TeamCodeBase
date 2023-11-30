@@ -37,7 +37,7 @@ const Verification = () => {
     }
 
     const handleVerifyLater = () => {
-        navigate('/view-city');
+        navigate('/');
     }
 
     const handleSendVerificationCode = async () => {
@@ -82,7 +82,7 @@ const Verification = () => {
                 setMessageType('success');
                 setIsVerified(true);
                 localStorage.setItem('isVerified', 'true');
-                navigate("/view-city");
+                navigate("/");
                 return Promise.resolve();
             } else {
                 setMessage("Invalid Verification Code");

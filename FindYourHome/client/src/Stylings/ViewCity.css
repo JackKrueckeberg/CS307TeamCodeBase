@@ -16,22 +16,83 @@ div.container {
     /* centers the container */
 }
 
+.pageLayout {
+    display: flex;
+    width: 100%; /* Ensure it takes the full width */
+    flex-direction: row;
+    position: relative;
+}
+
 .header {
     width: 100%;
     text-align: center;
-    font-size: 2em;
+    font-size: 50px;
     margin-bottom: 20px;
-    color: #2c3e50;
+    color: #a27b5c;
 }
 
 .mainContent {
     flex: 1;
+    flex-grow: 1;
     /* take the available space */
-    background-color: #ffffff;
+    background-color: #3f4e4f;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 20px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     margin-right: 20px;
+    color: #dcd7c9;
+}
+
+.sidePanel {
+    flex: 1;
+    flex-grow: 1;
+    width: fit-content;
+    color: #dcd7c9;
+    background-color: #3f4e4f;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidePanel.open {
+    transform: translateX(90%);
+    width: fit-content;
+}
+
+.togglePanelButton {
+    /* Styles for the toggle button */
+    border-radius: 20px;
+}
+
+.pageLayout.searchLeft .mainContent {
+    order: 2;
+    margin-left: 300px; /* Offset by the width of the sidePanel */
+    flex-grow: 1;
+}
+
+.pageLayout.searchLeft .sidePanel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    width: fit-content;
+    order: 1;
+    margin-right: auto; /* Pushes all subsequent elements to the right */
+}
+
+.pageLayout.searchRight .mainContent {
+    flex-grow: 1;
+    margin-right: 300px;
+    order: 1;
+    margin-right: auto; /* Pushes the sidePanel to the right */
+}
+
+.pageLayout.searchRight .sidePanel {
+    order: 2;
+    position: left;
+    width: fit-content;
 }
 
 .searchBar {
@@ -40,11 +101,6 @@ div.container {
     align-items: stretch;
     /* stretch to full width */
     gap: 20px;
-}
-
-.searchBar label {
-    font-size: 1.1em;
-    color: #555;
 }
 
 .profiletooltip {
@@ -76,12 +132,13 @@ div.container {
 
 .profilebtn {
     visibility: visible;
-    background-color: rgba(255, 255, 255, 0.295);
+    border-radius: 20px;
+    background-color: #dcd7c9;
     margin: 10px;
 }
 
 .profilebtn:hover {
-    background-color: rgba(0, 0, 0, 0.39);
+    background-color: #a27b5c;
 }
 
 .discussiontooltip {
@@ -113,7 +170,8 @@ div.container {
 
 .discussionButton {
     visibility: visible;
-    background-color: rgba(255, 255, 255, 0.295);
+    border-radius: 20px;
+    background-color: #dcd7c9;
     margin: 10px;
 }
 
@@ -146,13 +204,13 @@ div.container {
 
 .advancedSearch {
     visibility: visible;
-    background-color:rgba(255, 255, 255, 0.295);
+    border-radius: 20px;
+    background-color: #dcd7c9;
     margin: 10px;
-
 }
 
 .advancedSearch:hover {
-    background-color: rgba(0, 0, 0, 0.39);;
+    background-color: #a27b5c;
 }
 
 .logouttooltip {
@@ -198,12 +256,12 @@ div.container {
 }
 
 button {
-    padding: 10px 20px;
+    align-self: center;
+    border-radius: 20px;
+    padding: 10px 15px;
     border: none;
-    border-radius: 5px;
+    background-color: #dcd7c9;
     cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: 600;
 }
 
 button:hover {
@@ -212,13 +270,13 @@ button:hover {
 }
 
 .submitButton {
-    background-color: #3498db;
-    color: #ffffff;
+    background-color: #dcd7c9;
+    color: #2C3639;
 }
 
 .clearButton {
-    background-color: #e74c3c;
-    color: #ffffff;
+    background-color: #a27b5c;
+    color: #dcd7c9
 }
 
 .queueButton {
@@ -237,8 +295,29 @@ button:hover {
     flex: 1; /* Makes the map take all available space after CityModel */
 }
 
+label,
+input {
+  width: 100%;
+}
+
+input {
+  border-radius: 20px;
+  height: 40px;
+  width: 100%;
+  padding: 10px 15px;
+  padding-right: 7px;
+  border: 0;
+  background-color: #dcd7c9;
+}
+
+label {
+    color: #a27b5c;
+    font: bold;
+    font-size: 30px;
+}
+
 .recentlyViewedCities {
-    width: 300px;
+    width: fit-content;
     /* fixed width for this section */
     background-color: #ffffff;
     padding: 10px;
@@ -287,12 +366,21 @@ button:hover {
 }
 
 .verificationBanner {
-    background-color: red;
+    background-color: #a27b5c;
     color: white;
     padding: 5px;
     text-align: center;
     font-weight: bold;
     border-radius: 5px;
+}
+
+.navBar {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    background-color: #3f4e4f;
+    border-radius: 20px;
+    padding: 5px;
 }
 
 /* Add this to your existing CSS file or create a new one for styles */
@@ -326,4 +414,3 @@ button:hover {
   .similar-searches button:hover {
     background-color: #2980b9; /* Example hover background color, adjust as needed */
   }
-  

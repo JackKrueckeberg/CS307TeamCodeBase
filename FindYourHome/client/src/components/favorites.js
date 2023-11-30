@@ -4,7 +4,7 @@ import Modal from "react-modal";
 import { useUser } from '../contexts/UserContext';
 import { useNavigate } from "react-router";
 import { useCity } from "../contexts/CityContext";
-
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 export default function Favorites() {
     
@@ -167,6 +167,27 @@ export default function Favorites() {
         setFavoriteCities(newFavs);
     }
 
+    const handleCityButtonClick = async (cityName) => {
+
+        const response = await fetch(`http://localhost:5050/city_info/${cityName}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        const resp = await response.json();
+
+        if (response.status === 200) {
+            setGlobalCity(resp);
+            localStorage.setItem('selectedCity', JSON.stringify(resp));
+            navigate(`/profile/favorite-city/citypage/${resp.name}`, resp);
+            return resp;
+        } else {
+            alert("Something went wrong");
+        }
+    }
+
     /* Got this from preferences.js */
     /*const handleCity = async (value) => {
         for (var i = 0; i < favorite_cities.length; i++) {
@@ -272,9 +293,41 @@ export default function Favorites() {
         } else {
             setError('There was an error sending your favorites to ', recipient, '. Please try again.');
         }
+    };
 
+    const [form, setForm] = useLocalStorage("form", {
+        population: "",
+        east_coast: false,
+        west_coast: false,
+        central: false,
+        mountain_west: false,
+        state: "",
+        zip_code: "",
+        county: "",
+        median_income: "",
+        favorited: false,
+        population_weight: 1,
+        region_weight: 1,
+        state_weight: 1,
+        zip_weight: 1,
+        county_weight: 1,
+        income_weight: 1
+      });
 
+    const updateForm = (value) => {
+        return setForm((prev) => {
+        return { ...prev, ...value };
+        });
+    };
 
+    console.log(useLocalStorage("form"));
+
+    const handleFavoriteSearchRoute = (key) => {
+        // set the local storage of the preferences
+        updateForm(key);
+        console.log(form);
+        // navigate to the preferences page
+        navigate("/profile/favorite-search/preferences");
     };
 
     // function to check that the user exists
@@ -393,7 +446,7 @@ export default function Favorites() {
                                         {favorite_cities.map((city, index) => (
                                             <li key={index}>
                                                 <button onClick={() => removeFavoriteCity(index)}>delete</button>
-                                                <span> {city} </span>
+                                                <button className="city-button" key={city} onClick={() => handleCityButtonClick(city)}>{city}</button>
                                                 {/*{Object.entries(city).map(([key, value]) => {
                                                     console.log(city);
                                                     return (
@@ -439,6 +492,7 @@ export default function Favorites() {
                                 }
                                 return null; // Don't display if the field is not populated
                             })}
+                            <button className="city-button" onClick={() => handleFavoriteSearchRoute(search) }> Search </button>
                             </li>
                         ))}
                         </ul>

@@ -7,6 +7,7 @@ import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
 import { useLocalStorage } from "@uidotdev/usehooks";
+import BreadcrumbTrails from "./breadcrumbTrails";
 
 const OPENAI_API_KEY = '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'
 
@@ -161,8 +162,15 @@ export default function CityPage(props) {
         </div>
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
       </div>
-
+      <div>
+        <button onClick={() => navigate("/properties", { city: cityModel.name })}>
+          View Properties in {cityModel.name}
+        </button>
+      </div>
       <div className="result">
+
+        <div className="breadcrumb"> <BreadcrumbTrails/></div>
+
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
           <div className="mapContainer">

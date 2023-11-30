@@ -35,7 +35,10 @@ const ViewCity = () => {
     const [city, setCity] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
-    const [cityName, setCityName] = useState(null);
+    const [cityName, setCityName] = useState("");
+    const [bannerHidden, setBannerHidden] = useState(false);
+    const [isPanelOpen, setIsPanelOpen] = useState(false);
+    const [searchBarOnLeft, setSearchBarOnLeft] = useState(true);
     const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
@@ -239,7 +242,8 @@ const ViewCity = () => {
 
         if (!matchedCity) {
             setIsValidSearch(false);
-            return false; // City not found
+            return null; // changed this for the breadcrumb trail
+            //return false; // City not found
         }
 
         const img = await searchImage();
@@ -277,14 +281,15 @@ const ViewCity = () => {
         setShowResults(true);
         setIsValidSearch(true);
         // Store it in localStorage
-        return true; // City is valid
+        return matchedCity.name; // changed this for the breadcrumb trail
+        //return true; // City is valid
     }
 
     // Combined action
     async function handleCombinedActions() {
         const isValidCity = await handleSubmit();
         if (isValidCity) {
-            navToCityPage();
+            navToCityPage(isValidCity);
         }
     }
 
@@ -353,8 +358,8 @@ const ViewCity = () => {
         }
     };
 
-    function navToCityPage() {
-        navigate("/citypage");
+    function navToCityPage(city) {
+        navigate(`/view-city/citypage/${city}`);
     }
 
     const handleVerification = () => {
@@ -363,21 +368,23 @@ const ViewCity = () => {
 
 
     return (
-        <PageAnimation>
         <div>
-            {!isVerified && (
+            {!isVerified && !bannerHidden && (
                 <div className="verificationBanner">
-                    Your account is not verified
-                    <button onClick={handleVerification}>Click here to verify</button>
+                    Your account is not verified!
+                    <button onClick={handleVerification}>Verify Email</button>
+                    <button onClick={() => setBannerHidden(!bannerHidden)}>Hide Banner</button>
                 </div>
             )}
-            <h1 className="header">View City Page</h1>
+            {bannerHidden && !isVerified && (
+                <button onClick={() => setBannerHidden(!bannerHidden)}>Show Banner</button>
+            )}
+            <h1 className="header">City Search Page</h1>
 
             <div className="navBar">
-
-                <div class="profiletooltip">
+                <div className="profiletooltip">
                     <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-                    <span class="profiletooltiptext">View your profile page and make edits</span>
+                    <span className="profiletooltiptext">View your profile page and make edits</span>
                 </div>
                 <div class="advancedtooltip">
                     <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
@@ -387,80 +394,84 @@ const ViewCity = () => {
                     <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
                     <span class="discussiontooltiptext">View discussions about different cities</span>
                 </div>
+                <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
+                </div>
                 <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
-
             </div>
 
-            {showResults && (
-                <div>
+            <div className={`pageLayout ${searchBarOnLeft ? 'searchLeft' : 'searchRight'}`}>
+                {showResults && (
                     <div>
-                        <label>favicon</label>
-
-                        <Checkbox
-                            icon={<FavoriteBorder />}
-                            checkedIcon={<Favorite />}
-                            defaultChecked={favorite}
-                            checked={favorite}
-                            className="fav_icon"
-                            onChange={(e) => setFavorite(!favorite)}
-                        />
-                    </div>
-                    <button className="confirmButton" onClick={confirm_fav}>Confirm favorite</button>
-                </div>
-            )}
-
-            <div className="container">
-
-                {!isValidSearch &&
-                    <div className="errorMessage">
-                        {searchTerm === "" ? <h2>No City Searched</h2> : similarSearches.length === 0 ? <h2>No results matching your search</h2> : <h2>Invalid Search</h2>}
                         <div>
-                            {similarSearches.length > 0 && <SimilarSearches suggestions={similarSearches} onSuggestionClick={handleSimilarSuggestionClick} />}
+                            <label>favicon</label>
+
+                            <Checkbox
+                                icon={<FavoriteBorder />}
+                                checkedIcon={<Favorite />}
+                                defaultChecked={favorite}
+                                checked={favorite}
+                                className="fav_icon"
+                                onChange={(e) => setFavorite(!favorite)}
+                            />
+                        </div>
+                        <button className="confirmButton" onClick={confirm_fav}>Confirm favorite</button>
+                    </div>
+                )}
+
+                <div className="container">
+
+                    {showResults && city && <CityPage showResults={showResults} testProp="Test"></CityPage>}
+
+                    <div className="mainContent">
+                        <div className="searchBar">
+                            <label className="label" htmlFor="city-input">Search for a City</label>
+                            <Autosuggest // Use Autosuggest component
+                                suggestions={suggestions}
+                                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                                getSuggestionValue={(suggestion) => suggestion}
+                                renderSuggestion={(suggestion) => (
+                                    <div
+                                        key={suggestion}
+                                        className="suggestion"
+                                    >
+                                        {suggestion}
+                                    </div>
+                                )}
+                                inputProps={{
+                                    type: "text",
+                                    placeholder: "Enter a city",
+                                    value: searchTerm,
+                                    onChange: handleInputChange,
+                                }}
+                            />
+                            <div className="button-group">
+                                <button className="submitButton" onClick={handleCombinedActions}>Submit</button>
+                                <button className="clearButton" onClick={handleClear}>Clear</button>
+                                <button onClick={() => setSearchBarOnLeft(!searchBarOnLeft)}>Swap Layout</button>
+                            </div>
+                            {!isValidSearch &&
+                                <div className="errorMessage">
+                                    {searchTerm === "" ? <h2>No City Searched</h2> : similarSearches.length === 0 ? <h2>No results matching your search</h2> : <h2>Invalid Search</h2>}
+                                    <div>
+                                        {similarSearches.length > 0 && <SimilarSearches suggestions={similarSearches} onSuggestionClick={handleSimilarSuggestionClick} />}
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
-                }
 
-                {showResults && city && <CityPage showResults={showResults} testProp="Test"></CityPage>}
-
-                <div className="mainContent">
-                    <div className="searchBar">
-                        <label htmlFor="city-input">Search</label>
-                        <Autosuggest // Use Autosuggest component
-                            suggestions={suggestions}
-                            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                            onSuggestionsClearRequested={onSuggestionsClearRequested}
-                            getSuggestionValue={(suggestion) => suggestion}
-                            renderSuggestion={(suggestion) => (
-                                <div
-                                    key={suggestion}
-                                    className="suggestion"
-                                >
-                                    {suggestion}
-                                </div>
-                            )}
-                            inputProps={{
-                                type: "text",
-                                placeholder: "Enter a city",
-                                value: searchTerm,
-                                onChange: handleInputChange,
-                            }}
-                        />
-                        <div className="button-group">
-                            <button className="submitButton" onClick={handleCombinedActions}>Submit</button>
-                            <button className="clearButton" onClick={handleClear}>Clear</button>
-                        </div>
-
-
+                    <div className={`sidePanel ${isPanelOpen ? 'open' : ''}`}>
+                        <button onClick={() => setIsPanelOpen(!isPanelOpen)} className="togglePanelButton">
+                            {isPanelOpen ? 'Close' : 'Open'} Recent Cities
+                        </button>
+                        {isPanelOpen && <RecentCitiesQueue queue={recentCitiesQueue} />}
                     </div>
                 </div>
-            </div>
-
-            <div className="recentlyViewedCities">
-                <RecentCitiesQueue queue={recentCitiesQueue} />
             </div>
             <ToastContainer />
         </div>
-        </PageAnimation>
     );
 };
 

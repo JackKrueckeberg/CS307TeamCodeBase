@@ -1,7 +1,7 @@
 General styling
 body {
     font-family: 'Arial', sans-serif;
-    background-color: rgb(63, 78, 79);;
+    background-color: #2C3639;
     color: #333;
     line-height: 1.6;
   }
@@ -39,6 +39,7 @@ body {
   .profiletooltiptext, .advancedtooltiptext, .discussiontooltiptext {
     visibility: hidden;
     width: 160px;
+    height: fit-content;
     background-color: black;
     color: rgb(220, 215, 201);
     text-align: center;
@@ -76,5 +77,12 @@ body {
   
   p {
     font-size: 1rem;
+  }
+
+  .breadcrumb {
+    background-color: #3f4e4f;
+    padding: 10px;
+    color: rgb(224, 218, 201);
+    border-radius: 20px;
   }
   

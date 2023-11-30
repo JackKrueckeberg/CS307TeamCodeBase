@@ -259,15 +259,10 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       await updateDiscussion(curr);
       alert("The comment has been removed due to multiple flags.");
 
-
-  
       strikes.comments_removed++;
       if (strikes.comments_removed === 2) {
         strikes.is_banned = true;
       }
-
-  
-  
     }
   }
 
@@ -285,13 +280,9 @@ export default function Flags({ type, commentIndex, replyIndex, _selectedCity })
       await updateDiscussion(curr);
       alert("The reply has been removed due to multiple flags.");
 
-      
       if (strikes.comments_removed === 2) {
         strikes.is_banned = true;
       }
-
-  
-  
     }
   }
 

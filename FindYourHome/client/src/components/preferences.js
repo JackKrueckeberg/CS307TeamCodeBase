@@ -11,7 +11,8 @@ import CityPage from "./citypage";
 import { useCity } from "../contexts/CityContext";
 import { useUser } from '../contexts/UserContext';
 import { useLocalStorage } from "@uidotdev/usehooks";
-
+import BreadcrumbTrails from "./breadcrumbTrails.js";
+import { useLocation } from 'react-router-dom';
 
 export default function Create() {
   const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
@@ -426,13 +427,16 @@ export default function Create() {
           results[i].form = form;
           setGlobalCity(results[i]);
           localStorage.setItem('selectedCity', JSON.stringify(results[i]));
-          navigate("/cityPage", results[i]);
+          navigate(`/preferences/citypage/${results[i].name}`, results[i]);
           return;
         }
       }
   }
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const pathnames = location.pathname;
 
   // This following section will display the form that takes the input from the user.
   return (
@@ -452,10 +456,19 @@ export default function Create() {
             <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
             <span class="discussiontooltiptext">View discussions about different cities</span>
         </div>
+        <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
+        </div>
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
       </div>
         <div>
+          {pathnames === "/profile/favorite-search/preferences" ? (
+            <div>
+              <BreadcrumbTrails/>
+            </div>) : (
+              <span></span>
+            )}
         <form onSubmit={onSubmit}>
           <div className="padding" />
           <table className={"table_style padding center"}>

@@ -230,7 +230,7 @@ export default function MessageList() {
         if (response.status === 200) {
             setGlobalCity(resp);
             localStorage.setItem('selectedCity', JSON.stringify(resp));
-            navigate("/cityPage", resp);
+            navigate(`/profile/message-board/citypage/${resp.name}`, resp);
             return resp;
         } else {
             alert("Something went wrong");

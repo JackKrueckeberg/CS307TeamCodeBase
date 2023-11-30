@@ -24,7 +24,8 @@ router.post("/", async (req, res) => {
       city_searches: 0
     },
     bookmarked_discussions: [],
-    favorite_discussions: []
+    favorite_discussions: [],
+    notifications: [],
   };
   // console.log(newDocument);
   let collection = db.collection("users");
