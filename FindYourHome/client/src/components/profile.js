@@ -8,13 +8,10 @@ import Bookmarks from "./saved_discussions/bookmarks";
 import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
-
 import PageAnimation from "../animations/PageAnimation.jsx";
-import { useUser } from "../contexts/UserContext";
-const OPENAI_API_KEY = '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'
-
 import Notifications from "./notifications";
-import PageAnimation from "../animations/PageAnimation";
+
+const OPENAI_API_KEY = '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'
 
 export default function Profile() {
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -280,6 +277,10 @@ export default function Profile() {
                 </h2>
               </div>
 
+              <div className="bio">
+                <span placeholder="Tell us about yourself">{user.bio}</span>
+              </div>
+
               <div className="top-cities">
                 <h3>Top Searched Cities</h3>
                 <ul>
@@ -288,15 +289,6 @@ export default function Profile() {
                   ))}
                 </ul>
               </div>
-
-          <div className="top-cities">
-            <h3>Top Searched Cities</h3>
-            <ul>
-              {topCities.map((city, index) => (
-                <li key={index}>{`${city[1]} searches`}</li>
-              ))}
-            </ul>
-          </div>
 
           <div>
       <h2>Suggested Cities</h2>
@@ -319,20 +311,6 @@ export default function Profile() {
         <p>No suggested cities available.</p>
       )}
     </div>
-
-              <div
-                className={`${
-                  tabVal === 2 ? "content active-content" : "content"
-                }`}
-              >
-                <p2>
-                  <MessageList />
-                </p2>
-              </div>
-
-              <div className="bio">
-                <span placeholder="Tell us about yourself">{user.bio}</span>
-              </div>
 
               <div className="prof-btn">
                 <button

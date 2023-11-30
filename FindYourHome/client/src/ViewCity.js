@@ -39,7 +39,6 @@ const ViewCity = () => {
     const [bannerHidden, setBannerHidden] = useState(false);
     const [isPanelOpen, setIsPanelOpen] = useState(false);
     const [searchBarOnLeft, setSearchBarOnLeft] = useState(true);
-    const [cityName, setCityName] = useState(null);
     const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
