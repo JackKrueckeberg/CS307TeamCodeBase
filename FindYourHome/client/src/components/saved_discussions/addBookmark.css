@@ -1,27 +1,6 @@
 /* AddBookmarkButton.css */
-.button-container {
-  position: relative; /* Create a relative positioning container */
-}
 
 .add-bookmark-button {
-  padding: 20px 20px;
-  background-color: #4CAF50; /* Green background */
-  color: white;
-  border: none;
-  border-radius: 4px;
-  text-align: left;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  transition-duration: 0.4s;
-  cursor: pointer;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  position: absolute; /* Set absolute positioning */
-  bottom: 300px; /* Moves the button up by 1 inch */
-  left: -200px; /* Moves the button to the right by 0.79 cm */
-  white-space: nowrap; /* Keeps the text on a single line */
-}
-
-.add-bookmark-button:hover {
-  background-color: #45a049; /* Darker green on hover */
+  border-radius: 20px;
+  background-color: #DCD7C9;
 }

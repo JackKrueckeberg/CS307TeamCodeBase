@@ -13,6 +13,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
   const [banned, setBanned] = useState(false);
   const [replyContent, setReplyContent] = useState('');
   const [currentUsername, setCurrentUsername] = useState('');
+  const [expanded, setExpanded] = useState(false);
 
   const [taggedIn, setTaggedIn] = useState(false);
   const [tagged, setTagged] = useState("");
@@ -194,40 +195,45 @@ export default function Replies({ commentIndex, _selectedCity }) {
 
   return (
     <div className={styles.replyContainer}>
-      <h2>
-        {taggedIn === true && (
-          <span className={styles.taggedIndicator}>⭐</span>
-        )}
-        Replies:</h2>
-      {replies.map((reply, index) => (
-        <div key={index} className={styles.replyItem}>
-          <div className={styles.replyDetails}>
-            {taggedPost.includes(reply) && (
+      <button className={styles.button} onClick={() => setExpanded(!expanded)}>{expanded ? "collapse replies" : `expand ${replies.length} replies`}</button>
+      {expanded &&
+        <div>
+          <h2>
+            {taggedIn === true && (
               <span className={styles.taggedIndicator}>⭐</span>
             )}
-            <span className={styles.replyUsername}>{reply.username}</span>
-          </div>
-          <p className={styles.replyContent}>{reply.content}</p>
-          {reply.username === currentUsername && (
-            <button onClick={() => removeReply(index)} className={styles.replyButton}>
-              Remove Reply
+            Replies:</h2>
+          {replies.map((reply, index) => (
+            <div key={index} className={styles.replyItem}>
+              <div className={styles.replyDetails}>
+                {taggedPost.includes(reply) && (
+                  <span className={styles.taggedIndicator}>⭐</span>
+                )}
+                <span className={styles.replyUsername}>Reply from {reply.username}</span>
+              </div>
+              <p className={styles.replyContent}>{reply.content}</p>
+              {reply.username === currentUsername && (
+                <button onClick={() => removeReply(index)} className={styles.replyButton}>
+                  Remove Reply
+                </button>
+              )}
+              <Flags type="reply" commentIndex={commentIndex} replyIndex={index} _selectedCity={_selectedCity} /> {/* Insert Flags component for replies */}
+            </div>
+          ))}
+          <div>
+            <input
+              type="text"
+              value={replyContent}
+              onChange={(e) => { setReplyContent(e.target.value); isTagging((e.target.value)); }}
+              placeholder="Type your reply"
+              className={styles.replyInput}
+            />
+            <button onClick={() => reply(replyContent)} className={styles.replyButton}>
+              Reply
             </button>
-          )}
-          <Flags type="reply" commentIndex={commentIndex} replyIndex={index} _selectedCity={_selectedCity} /> {/* Insert Flags component for replies */}
+          </div>
         </div>
-      ))}
-      <div>
-        <input
-          type="text"
-          value={replyContent}
-          onChange={(e) => { setReplyContent(e.target.value); isTagging((e.target.value)); }}
-          placeholder="Type your reply"
-          className={styles.replyInput}
-        />
-        <button onClick={() => reply(replyContent)} className={styles.replyButton}>
-          Reply
-        </button>
-      </div>
+      }
     </div>
   );
 }

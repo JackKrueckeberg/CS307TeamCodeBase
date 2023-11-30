@@ -11,6 +11,7 @@
   background-color: #3f4e4f;
   border-radius: 20px;
 }
+
 .form {
   display: flex;
   flex-direction: column;
@@ -22,6 +23,7 @@
   color: #a27b5c;
   font-size: 50px;
 }
+
 .button {
   align-self: center;
   border-radius: 20px;
@@ -128,6 +130,7 @@
   position: relative;
   font-weight: bold;
 }
+
 .label {
   color: #a27b5c;
   font-size: 20px;
