@@ -5,6 +5,7 @@ import './Stylings/graphs.css'; // Add your CSS file for styling
 const Graphs = ({ city1, city2 }) => {
   const [chartData, setChartData] = useState(null);
   const [selectedGraph, setSelectedGraph] = useState('population');
+  const [isGraphVisible, setIsGraphVisible] = useState(true);
 
   useEffect(() => {
     // Prepare data for ApexCharts based on the selected graph
@@ -49,27 +50,38 @@ const Graphs = ({ city1, city2 }) => {
     setChartData(dataForSelectedGraph[selectedGraph]);
   }, [city1, city2, selectedGraph]);
 
+  const toggleGraphVisibility = () => {
+    setIsGraphVisible(!isGraphVisible);
+  };
+
   const toggleGraph = (graph) => {
     setSelectedGraph(graph);
   };
 
   return (
     <div>
-      <button
-        className={selectedGraph === 'population' ? 'selected' : ''}
-        onClick={() => toggleGraph('population')}
-      >
-        Population
-      </button>
-      <button
-        className={selectedGraph === 'medianIncome' ? 'selected' : ''}
-        onClick={() => toggleGraph('medianIncome')}
-      >
-        Median Income
-      </button>
-      {chartData && (
-        <Chart options={chartData.options} series={chartData.series} type="bar" height={350} />
+      {isGraphVisible && (
+        <div>
+          <button
+            className={selectedGraph === 'population' ? 'selected' : ''}
+            onClick={() => toggleGraph('population')}
+          >
+            Population
+          </button>
+          <button
+            className={selectedGraph === 'medianIncome' ? 'selected' : ''}
+            onClick={() => toggleGraph('medianIncome')}
+          >
+            Median Income
+          </button>
+          {chartData && (
+            <Chart options={chartData.options} series={chartData.series} type="bar" height={350} />
+          )}
+        </div>
       )}
+      <button onClick={toggleGraphVisibility}>
+        {isGraphVisible ? 'Hide Graphs' : 'Show Graphs'}
+      </button>
     </div>
   );
 };
