@@ -8,13 +8,9 @@ import Bookmarks from "./saved_discussions/bookmarks";
 import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
-
-import PageAnimation from "../animations/PageAnimation.jsx";
-import { useUser } from "../contexts/UserContext";
-const OPENAI_API_KEY = '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'
-
 import Notifications from "./notifications";
 import PageAnimation from "../animations/PageAnimation";
+const OPENAI_API_KEY = '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'
 
 export default function Profile() {
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
@@ -126,6 +122,10 @@ export default function Profile() {
     sessionStorage.removeItem("currentUser");
 
     navigate("/", { state: { loggedOut: true }, replace: true });
+  };
+
+  const clearTopCities = () => {
+    setTopCities([]);
   };
 
 
@@ -291,6 +291,7 @@ export default function Profile() {
 
           <div className="top-cities">
             <h3>Top Searched Cities</h3>
+            <button onClick={clearTopCities}>Clear Top Cities</button>
             <ul>
               {topCities.map((city, index) => (
                 <li key={index}>{`${city[1]} searches`}</li>
