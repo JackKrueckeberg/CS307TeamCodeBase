@@ -8,8 +8,9 @@ import Bookmarks from "./saved_discussions/bookmarks";
 import FavDiscs from "./saved_discussions/favDiscs";
 import MessageNotification from "./messageNotification";
 import Favorites from "./favorites.js";
+import PageAnimation from "../animations/PageAnimation.jsx";
 import Notifications from "./notifications";
-import PageAnimation from "../animations/PageAnimation";
+
 const OPENAI_API_KEY = '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'
 
 export default function Profile() {
@@ -353,6 +354,20 @@ export default function Profile() {
                 <span placeholder="Tell us about yourself">{user.bio}</span>
               </div>
 
+              <div className="bio">
+                <span placeholder="Tell us about yourself">{user.bio}</span>
+              </div>
+
+              <div className="top-cities">
+                <h3>Top Searched Cities</h3>
+                <ul>
+                  {topCities.map((city, index) => (
+                    <li key={index}>{`${city[0]}: ${city[1]} searches`}</li>
+                  ))}
+                </ul>
+              </div>
+
+    
               <div className="prof-btn">
                 <button
                   className="deleteAcct"

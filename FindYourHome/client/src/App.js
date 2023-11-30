@@ -93,17 +93,19 @@ const App = () => {
               <Route path="/" element={<Login />} />
               <Route path="/view-city" element={<ViewCity />} />
               <Route path="/preferences" element={<Preferences />} />
+              <Route path="/profile/favorite-search/preferences" element={<Preferences />} />
               <Route path="/verification" element={<Verification />} />
               <Route path="/createAccount" element={<CreateAccount />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/accountInfo" element={<AccountInfo />} />
               <Route path="/citypage" element={<CityPage />} />
+              <Route path="/profile/favorite-city/citypage/:city" element={<CityPage />} />
+              <Route path="/profile/message-board/citypage/:city" element={<CityPage />} />
+              <Route path="/view-city/citypage/:city" element={<CityPage />} />
+              <Route path="/preferences/citypage/:city" element={<CityPage />} />
               <Route path="/compare" element={<CompareCities />} />
               <Route path="/delete-account" element={<DeleteAccount />} />
               <Route path="/discussionHome" element={<DiscussionHome />} />
-              <Route path="/messageBoards" element={<MessageList />} />
-              <Route path="/messageNotification" element={<MessageNotification/>} />
-              <Route path="/notification" element={<Notifications/>} />
               <Route path="/TwoFactor" element={<TwoFactor />} />
               <Route path="/disc" element={<Disc />} />
               <Route path="/feedback" element={<Feedback />} />

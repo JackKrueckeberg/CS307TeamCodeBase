@@ -6,6 +6,8 @@ import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import BreadcrumbTrails from "./breadcrumbTrails";
 
 const OPENAI_API_KEY = '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'
 
@@ -18,6 +20,16 @@ export default function CityPage(props) {
   const [isSearchBarVisible, setIsSearchBarVisible] = useState(false);
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  const [attrationsLoc, setAttractionsLoc] = useLocalStorage("attractions-loc", {});
+
+  function updateAttractionsLoc(value) {
+    return setAttractionsLoc((prev) => {
+      return { ...prev, ...value };
+    });
+  }
+
+  console.log(attrationsLoc);
 
 
   // Parsing the cityModel from localStorage
@@ -110,6 +122,9 @@ export default function CityPage(props) {
           const data = await response.json();
           // console.log(data.choices[0].message.content);
           setApiResponse(data.choices[0].message.content);  // Set the fetched data to the state
+          updateAttractionsLoc( {
+            [cityModel.name]: data.choices[0].message.content
+          })
         } else {
           console.log('Error: Unable to process your request.');
         }
@@ -123,6 +138,7 @@ export default function CityPage(props) {
       fetchAttractions(cityModel.name);
     }
   }, [cityModel.name]);
+
 
   return (
     <div className="root">
@@ -152,6 +168,9 @@ export default function CityPage(props) {
         </button>
       </div>
       <div className="result">
+
+        <div className="breadcrumb"> <BreadcrumbTrails/></div>
+
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
           <div className="mapContainer">
@@ -161,7 +180,7 @@ export default function CityPage(props) {
       </div>
       <div className="attractions">
         <h3>Top 10 City Attractions: (takes a second to load)</h3>
-        <p>{apiResponse}</p>  {/* Render the response */}
+        <p>{attrationsLoc[cityModel.name]}</p>  {/* Render the response */}
       </div>
 
       <button onClick={toggleSearchBar}>
