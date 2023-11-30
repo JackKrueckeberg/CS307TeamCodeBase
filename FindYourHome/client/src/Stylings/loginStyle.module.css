@@ -11,6 +11,7 @@
   background-color: #3f4e4f;
   border-radius: 20px;
 }
+
 .form {
   display: flex;
   flex-direction: column;
@@ -22,12 +23,14 @@
   color: #a27b5c;
   font-size: 50px;
 }
+
 .button {
   align-self: center;
   border-radius: 20px;
   padding: 10px 15px;
   border: none;
   background-color: #dcd7c9;
+  color: #a27b5c;
   cursor: pointer;
 }
 
@@ -122,12 +125,15 @@
   display: flex;
   align-items: center;
   background-color: #dcd7c9;
+  width: fit-content;
   border-radius: 20px;
   padding: 10px 15px;
+  font-size: 15px;
+  margin-left: 40px;
   cursor: pointer;
-  position: relative;
   font-weight: bold;
 }
+
 .label {
   color: #a27b5c;
   font-size: 20px;

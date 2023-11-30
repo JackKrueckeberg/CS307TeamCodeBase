@@ -1,0 +1,83 @@
+.recoverAccount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 10px;
+    padding: 50px;
+    background-color: #3f4e4f;
+    border-radius: 20px;
+  }
+  
+  .recoverAccount .headerText {
+    color: #a27b5c;
+    font-size: 50px;
+    text-align: center;
+  }
+  
+  .recoverAccount form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .recoverAccount .label,
+  .recoverAccount .input {
+    width: 100%;
+  }
+  
+  .recoverAccount .input {
+    border-radius: 20px;
+    height: 40px;
+    padding: 10px 15px;
+    border: 0;
+    background-color: #dcd7c9;
+  }
+  
+  .passwordEntryWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .password-entry-wrapper .button {
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: none;
+    background-color: #dcd7c9;
+    cursor: pointer;
+  }
+  
+  .password-entry-wrapper .button:hover {
+    background-color: #b0a897; /* Slightly darker shade for hover effect */
+  }
+  
+  .togglePassword {
+    transition: color 0.3s;
+  }
+  
+  .togglePassword[data-show="true"]:hover {
+    color: green;
+  }
+  
+  .button {
+    align-self: center;
+    border-radius: 20px;
+    padding: 10px 15px;
+    border: none;
+    background-color: #dcd7c9;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #b0a897; /* Slightly darker shade for hover effect */
+  }
+  
+  #login {
+    margin-top: 20px;
+  }
+  

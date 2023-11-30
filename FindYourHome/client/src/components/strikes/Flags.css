@@ -3,35 +3,41 @@
 /* Style for the button container */
 .flags-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 10px; /* Spacing between buttons */
-  max-width: 100px; /* Limit the maximum width of the container */
+  justify-content: center;
+  align-items: center;
+  /* margin-top: 10px; */
 }
 
 /* Style for the buttons */
 .flags-button {
-  padding: 8px; /* Adjust button padding */
-  background-color: gray; /* Blue background */
+  width: 50px; /* Fixed width for uniformity */
+  padding: 8px;
+  background-color: gray;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   text-align: center;
-  text-decoration: none;
-  display: inline-block;
+  display: flex; /* Use flexbox for internal alignment */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
   font-size: 14px;
   cursor: pointer;
   transition-duration: 0.4s;
-  margin-right: 10px; /* Spacing from the right */
 }
 
 /* Box styles for emojis */
 .flags-button::before {
-  content: ' ';
-  display: inline-block;
-  margin-right: 5px; /* Spacing between emoji box and button text */
-  padding: 8px; /* Box padding */
-  border: 1px solid #ccc; /* Border color */
-  border-radius: 4px; /* Rounded box corners */
+  margin-right: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 50%; /* Make emoji box circular */
+  width: 20px; /* Fixed width for emoji box */
+  height: 20px; /* Fixed height for emoji box */
+  display: flex; /* Use flexbox for alignment */
+  justify-content: center; /* Center emoji horizontally */
+  align-items: center; /* Center emoji vertically */
 }
 
 /* Additional styles for specific buttons */

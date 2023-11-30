@@ -223,7 +223,13 @@ export default function Create() {
       state: form.state,
       zip_code: form.zip_code,
       county: form.county,
-      median_income: form.median_income
+      median_income: form.median_income,
+      population_weight: form.population_weight,
+      region_weight: form.region_weight,
+      state_weight: form.state_weight,
+      zip_weight: form.zip_weight,
+      county_weight: form.county_weight,
+      income_weight: form.income_weight
     }
     recent.push(newRecent);
 
@@ -385,6 +391,11 @@ export default function Create() {
         return;
     }
 
+    if (form.population_weight < 0 || form.region_weight < 0 || form.state_weight < 0 || form.zip_weight < 0 || form.county_weight < 0 || form.income_weight < 0) {
+      alert("Weights cannot be a negative number.");
+      return;
+    }
+
     const recent_searches = await getUser_recentSearches();
     await addRecent(recent_searches)
 
@@ -440,6 +451,9 @@ export default function Create() {
         <div class="discussiontooltip">
             <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
             <span class="discussiontooltiptext">View discussions about different cities</span>
+        </div>
+        <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
         </div>
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
 
