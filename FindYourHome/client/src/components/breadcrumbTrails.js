@@ -16,12 +16,12 @@ const BreadcrumbTrails = () => {
             return (
               <li key={name}>
                 {isLast ? (
-                  <span>{name}</span>
+                  <span className='name'>{name}</span>
                 ) : (
                   <span> 
-                    {name === "citypage" || name === "favorite-city" || name === "message-board" ? (
+                    {name === "citypage" || name === "favorite-city" || name === "message-board" || name === "favorite-search" ? (
                         <span>
-                            <span>{name}</span>
+                            <span className='name'>{name}</span>
                             <span className={'arrow'}>➤</span>
                         </span>
                     ) : (

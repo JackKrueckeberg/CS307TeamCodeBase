@@ -2,6 +2,11 @@
   .arrow {
     display: inline;
     margin-left: 15px;
+    color: rgb(224, 218, 201);
+  }
+
+  .name {
+    color:rgb(224, 218, 201);
   }
   
   .a {

@@ -91,6 +91,7 @@ const App = () => {
               <Route path="/" element={<Login />} />
               <Route path="/view-city" element={<ViewCity />} />
               <Route path="/preferences" element={<Preferences />} />
+              <Route path="/profile/favorite-search/preferences" element={<Preferences />} />
               <Route path="/verification" element={<Verification />} />
               <Route path="/createAccount" element={<CreateAccount />} />
               <Route path="/profile" element={<Profile />} />
