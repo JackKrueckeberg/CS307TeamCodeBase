@@ -141,9 +141,8 @@ export const CreateAccount = () => {
                         </div>
                         {!passwordValid && <div className={styles.passwordError}>Password must be at least 8 characters long and contain a number, an uppercase and a lowercase letter.</div>}
                     </div>
-                <button className={styles.button} onClick={() => signup().then(navigate("/")).then(alert("Account created successfully, you can now log in"))}>Create Account</button>
+                <button className={styles.button} onClick={() => signup().then(navigate("/verification"))}>Create Account</button>
             </form>
-
             <button className={styles.button} onClick={() => navigate("/")}id="login">Return to Log In.</button>
         </div>
     )
