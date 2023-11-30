@@ -154,7 +154,9 @@ export default function Profile() {
   // Clear Suggested Cities
   const clearSuggestedCities = () => {
     setSuggestedCities([]);
+    setLikedCities(new Set()); // Also clear the liked cities state
   };
+
 
   return (
     <PageAnimation>
@@ -253,25 +255,26 @@ export default function Profile() {
           </div>
 
           <div>
-            <h2>Suggested Cities</h2>
-            {suggestedCities.length > 0 ? (
-              <ul>
-                {suggestedCities.map((city, index) => (
-                  <li key={index}>
-                    {city}
-                    {!likedCities.has(city) && (
-                      <>
-                        <button onClick={() => handleLike(city)}>Like</button>
-                        <button onClick={() => handleDislike(city)}>Dislike</button>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No suggested cities available.</p>
-            )}
-          </div>
+      <h2>Suggested Cities</h2>
+      <button onClick={clearSuggestedCities}>Clear All</button>
+      {suggestedCities.length > 0 ? (
+        <ul>
+          {suggestedCities.map((city, index) => (
+            <li key={index}>
+              {city}
+              {!likedCities.has(city) && (
+                <>
+                  <button onClick={() => handleLike(city)}>Like</button>
+                  <button onClick={() => handleDislike(city)}>Dislike</button>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>No suggested cities available.</p>
+      )}
+    </div>
 
 
           <div
