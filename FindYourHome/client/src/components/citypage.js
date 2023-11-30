@@ -169,8 +169,6 @@ export default function CityPage(props) {
       </div>
       <div className="breadcrumb"> <BreadcrumbTrails/></div>
       <div className="result">
-
-
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
           <div className="mapContainer">

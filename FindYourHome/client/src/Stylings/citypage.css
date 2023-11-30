@@ -8,7 +8,6 @@
   
   /* Main Content Styling */
   .result {
-    background: rgb(220, 215, 201);
     padding: 1rem;
     margin: 1rem;
     border-radius: 12px;
@@ -16,6 +15,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 0.5rem;
+    background-color: #a27b5c;
   }
   
   /* Attractions Section */
@@ -57,6 +57,7 @@
   
     .result {
       grid-template-columns: 1fr;
+      background-color: #a27b5c;
     }
 
     .mapContainer {
@@ -69,6 +70,7 @@
     .result {
       grid-template-columns: 1fr;
       gap: 0.5rem; /* Ensure gap is consistent on smaller screens */
+      background-color: #a27b5c;
     }
   
     .cityModel, .mapContainer {

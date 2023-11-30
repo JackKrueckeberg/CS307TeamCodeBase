@@ -126,6 +126,7 @@ body {
     /* margin-bottom: 20px; */
     border-radius: 20px;
     align-items: flex-start;
+    color: #3F4E4F;
 }
 
 .authorInfo {
@@ -133,7 +134,7 @@ body {
     font-size: 16px;
     flex-direction: column;
     align-items: center;
-    margin-bottom: -10px;
+    color: #3F4E4F;
 }
 
 .fakeAvatar {
@@ -148,11 +149,13 @@ body {
     font-weight: bold;
     font-size: 30px;
     margin-bottom: 10px;
+    color: #3F4E4F;
 }
 
 .content {
     font-size: 20px;
-    margin-bottom: 0px;
+    margin-bottom: 10px;
+    color: #3F4E4F;
 }
 
 .metadata {
