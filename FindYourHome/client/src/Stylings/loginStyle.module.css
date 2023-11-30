@@ -36,13 +36,13 @@
 
 .label,
 .input {
-  width: 100%;
+  min-width: 100%;
 }
 
 .input {
   border-radius: 20px;
   height: 40px;
-  width: 100%;
+  min-width: 100%;
   padding: 10px 15px;
   padding-right: 7px;
   border: 0;
@@ -137,6 +137,7 @@
 .label {
   color: #a27b5c;
   font-size: 20px;
+  width: 100%;
 }
 
 .checkboxLabel:hover,

@@ -5,20 +5,6 @@
     box-sizing: border-box;
   }
   
-  body, html {
-    font-family: 'Roboto', sans-serif;
-    background-color: rgb(162, 123, 92);
-    margin: 0;
-  }
-
-  .root {
-    background-color: rgb(162, 123, 92);
-  }
-
-  .attractions {
-    background-color: rgb(162, 123, 92);
-  }
-  
   
   /* Main Content Styling */
   .result {
@@ -43,12 +29,6 @@
     color: rgb(220, 215, 201);
   }
   
-  
-  
-  /* Twitter Widget */
-  .Twitter {
-    /* Add styling for the Twitter component here */
-  }
 
   /* Style for the Map Container */
 .mapContainer {

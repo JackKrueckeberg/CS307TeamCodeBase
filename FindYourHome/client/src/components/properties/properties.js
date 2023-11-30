@@ -11,12 +11,7 @@ const PropertyList = () => {
   const city = JSON.parse(localStorage.getItem('selectedCity')).name;
   const navigate = useNavigate();
 
-
- 
-
-
   useEffect(() => {
- 
     // Call the function to get favorite cities when the component mounts
     getProperties();
   }, []);
@@ -76,41 +71,38 @@ const PropertyList = () => {
 
   return (
 
+    <div className="root">
+      <div className="property-list-container">
+        <button className="button" onClick={() => navigate('/view-city')}>
+          Back to View City
+        </button>
+        <label htmlFor="propertyType">Filter By Property Type:</label>
+        <select className="filter-select" id="propertyType" onChange={handlePropertyTypeChange}>
+          <option value="">Select...</option>
+          <option value="Single Family">Single Family</option>
+          <option value="Apartment">Apartment</option>
+          <option value="Condo">Condo</option>
+        </select>
 
-    <div className="property-list-container">
-       <button className="button" onClick={() => navigate('/view-city')}>
-  Back to View City
-</button>
-      <label htmlFor="propertyType">Filter By Property Type:</label>
-      <select className="filter-select" id="propertyType" onChange={handlePropertyTypeChange}>
-        <option value="">Select...</option>
-        {/* Replace property types with your actual property types */}
-        <option value="Single Family">Single Family</option>
-        <option value="Apartment">Apartment</option>
-        <option value="Condo">Condo</option>
-      </select>
+
+        {/* Display the common link at the top */}
+        <div className="common-link">
+        
+        </div>
 
 
-      {/* Display the common link at the top */}
-      <div className="common-link">
-       
+        <ul className="property-list">
+          {filterPropertiesByType().map((property, index) => (
+            <li key={index} className="property-item">
+              <strong>{property.formattedAddress}</strong>
+              <p className='property-text'>Property Type: {property.propertyType}</p>
+              <p className='property-text'>Bedrooms: {property.bedrooms}</p>
+              <p className='property-text'>Bathrooms: {property.bathrooms}</p>
+              <p className='property-text'>Listed Price: ${property.price}</p>
+            </li>
+          ))}
+        </ul>
       </div>
-
-
-      <ul className="property-list">
-        {filterPropertiesByType().map((property, index) => (
-          <li key={index} className="property-item">
-            <strong>{property.formattedAddress}</strong>
-            <p>Property Type: {property.propertyType}</p>
-            <p>Bedrooms: {property.bedrooms}</p>
-            <p>Bathrooms: {property.bathrooms}</p>
-            <p>Listed Price: ${property.price}</p>
-           
-
-
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };

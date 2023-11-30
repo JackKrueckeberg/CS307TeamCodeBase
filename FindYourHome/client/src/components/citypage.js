@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import "../Stylings/advancedPrefs.css";
+import "../Stylings/citypage.css";
 //import "../Stylings/citypage.css";
 import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
@@ -167,9 +167,9 @@ export default function CityPage(props) {
           View Properties in {cityModel.name}
         </button>
       </div>
+      <div className="breadcrumb"> <BreadcrumbTrails/></div>
       <div className="result">
 
-        <div className="breadcrumb"> <BreadcrumbTrails/></div>
 
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
