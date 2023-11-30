@@ -6,7 +6,7 @@
     max-width: fit-content;
     min-height: fit-content;
     margin: 0 auto;
-    margin-top: 55px;
+    margin-top: 25px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -68,8 +68,8 @@ body {
 
 .inputField {
     border-radius: 20px;
-    height: 40px;
-    width: 100%;
+    height: 60px;
+    width: fit-content;
     padding: 10px 15px;
     padding-right: 15px;
     border: 0;
@@ -91,6 +91,11 @@ body {
     background-color: #A27B5C;
 }
 
+.navBar {
+    margin-right: 20px;
+    flex-grow: 1;
+}
+
 .DiscussionHome {
     display: flex;
     flex-direction: column;
@@ -101,6 +106,8 @@ body {
     margin-top: 5sxpx;
     flex-grow: 1;
     /* overflow-y: auto; */
+    margin-left: 20px;
+    margin-right: 20px;
     text-align: center;
     border-radius: 20px;
     padding: 1rem;
@@ -117,7 +124,7 @@ body {
     padding: 25px;
     min-height: 1600;
     /* margin-bottom: 20px; */
-    border-radius: 5px;
+    border-radius: 20px;
     align-items: flex-start;
 }
 
@@ -171,6 +178,8 @@ body {
 
 .createNewBar {
     display: flex;
+    margin-left: 20px;
+    margin-right: 20px;
     align-items: center;
     justify-content: flex-start;
     border-radius: 20px;
@@ -181,6 +190,8 @@ body {
     border-radius: 5px;
     border: none;
     margin-top: 5px;
+    margin-left: 20px;
+    margin-right: 20px;
     background-color: #DCD7C9;
 }
 

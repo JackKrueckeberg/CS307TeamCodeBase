@@ -442,6 +442,7 @@ export default function Create() {
   return (
     // name, population, region, state, zip code, county, median income
     <div>
+      <h3 className="headerText">Preference Search</h3>
       <div class="navBar">
 
         <div class="profiletooltip">
@@ -475,15 +476,14 @@ export default function Create() {
             <tbody>
               <tr>
                 <td>
-                    <Checkbox
-                    icon={<FavoriteBorder />}
-                    checkedIcon={<Favorite />}
-                    defaultChecked={form.favorited}
-                    checked={form.favorited}
-                    className="favBtn"
-                    onChange={(e) => addFavorite()}
-                    />
-                  <h3>Preferences:</h3>
+                  <Checkbox
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                  defaultChecked={form.favorited}
+                  checked={form.favorited}
+                  className="favBtn"
+                  onChange={(e) => addFavorite()}
+                  />
                 </td>
               </tr>
             </tbody>
