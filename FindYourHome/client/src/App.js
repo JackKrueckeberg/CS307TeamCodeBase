@@ -33,6 +33,7 @@ import AccountInfo from "./components/accountInfo";
 import { AnimatePresence } from "framer-motion";
 import Notifications from './components/notifications';
 import PropertyList from "./components/properties/properties";
+import RecoverAccount from "./components/recover-account";
 
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
@@ -107,6 +108,7 @@ const App = () => {
               <Route path="/disc" element={<Disc />} />
               <Route path="/feedback" element={<Feedback />} />
               <Route path="/properties" element = {<PropertyList/>}/>
+              <Route path="/recover-account" element = {<RecoverAccount/>}/>
             </Routes>
           </AnimatePresence>
         </CompareCitiesProvider>
