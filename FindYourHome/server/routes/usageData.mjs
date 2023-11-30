@@ -46,4 +46,30 @@ router.patch('/:email/:cityName', async (req, res) => {
     }
 });
 
+router.patch('/clear_usage/:email', async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        // Check if the user exists
+        const user = await db.collection('users').findOne({ email: email });
+        if (!user) {
+            return res.status(404).send({ message: 'User not found' });
+        }
+
+        // Clear the usage_stats field
+        await db.collection('users').updateOne(
+            { email: email },
+            { $set: { usage_stats: {} } } // Sets usage_stats to an empty object
+            // Alternatively, use $unset to remove the field entirely:
+            // { $unset: { usage_stats: "" } }
+        );
+
+        res.status(200).send({ message: 'Usage stats cleared' });
+
+    } catch (error) {
+        console.error('Server Error:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
 export default router;
