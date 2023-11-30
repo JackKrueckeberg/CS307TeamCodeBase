@@ -20,4 +20,22 @@ router.patch("/:email", async (req, res) => {
     res.send(result).status(200);
 });
 
+router.get("/:email", async (req, res) => {
+  try {
+      const collection = await db.collection("users");
+      const userEmail = req.params.email;
+      const userDoc = await collection.findOne({ email: userEmail });
+
+      if (!userDoc) {
+          return res.status(404).send({ message: "User not found" });
+      }
+
+      const favoriteCities = userDoc.favorite_cities || [];
+      res.status(200).send(favoriteCities);
+  } catch (error) {
+      console.error("Error retrieving favorite cities:", error);
+      res.status(500).send({ message: "Internal server error" });
+  }
+});
+
 export default router;

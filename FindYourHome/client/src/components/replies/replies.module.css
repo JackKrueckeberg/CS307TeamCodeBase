@@ -5,34 +5,30 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  border: 1px solid #ccc;
-  padding: 20px;
-  border-radius: 5px;
+  border-radius: 20px;
+  margin-top: 10px;
 }
 
-/* Individual reply item */
-.replyItem {
-  margin-bottom: 15px;
+.button {
+  border-radius: 20px;
+}
+
+.replyContent {
+  margin: 0px;
 }
 
 /* Username */
 .replyUsername {
   font-weight: bold;
-  margin-right: 10px;
-}
-
-/* Content of the reply */
-.replyContent {
-  margin: 5px 0;
 }
 
 /* Remove Reply button */
 .replyButton {
   font-size: 0.9em;
-  padding: 5px 10px;
+  /* padding: 5px 10px; */
   border: 1px solid #ccc;
   background-color: #fff;
-  border-radius: 3px;
+  border-radius: 20px;
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
 }

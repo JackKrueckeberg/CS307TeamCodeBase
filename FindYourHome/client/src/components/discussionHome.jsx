@@ -11,7 +11,7 @@ import AddReply from "./replies/addReply";
 import Flags from "./strikes/flagComment";
 import AddBookmark from "./saved_discussions/addBookmark";
 import AddFavDisc from "./saved_discussions/addFavDisc.js";
-import PageAnimation from "../animations/PageAnimation.jsx";
+import PageAnimation from "../animations/PageAnimation";
 
 const DiscussionHome = () => {
   const [discussions, setDiscussions] = useState([]);
@@ -399,7 +399,7 @@ const DiscussionHome = () => {
   return (
     <PageAnimation>
       <div className={styles.DiscussionHome}>
-        <h2>Discussions</h2>
+        <h2 className={styles.headertext}>Discussions</h2>
 
         {!showForm && (
           <div className="navBar">
@@ -436,6 +436,9 @@ const DiscussionHome = () => {
                 Search based on attributes of cities
               </span>
             </div>
+            <div class="feedbacktooltip">
+                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
+            </div>
             <button className="logoutbtn" onClick={() => handleLogout()}>
               Logout
             </button>
@@ -461,7 +464,7 @@ const DiscussionHome = () => {
         )}
 
         {!showForm && (
-          <div>
+          <div className={styles.createNewBar}>
             <button
               onClick={() => setShowForm(true)}
               className={styles.createNew}
@@ -469,17 +472,18 @@ const DiscussionHome = () => {
             >
               Create New Discussion
             </button>
-          </div>
-        )}
-
-        {!showForm && (
-          <div>
             <button
               onClick={() => setShowSearchBar(!showSearchBar)}
               className={styles.createNew}
             >
               Toggle Search Bar
             </button>
+            {selectedCity && (
+              <>
+                <AddBookmark _bookmark={selectedCity} />
+                <AddFavDisc _favDisc={selectedCity} />
+              </>
+            )}
           </div>
         )}
 
@@ -506,9 +510,9 @@ const DiscussionHome = () => {
         )}
 
         {!showForm && showHist && (
-          <div className="recentlyDiscussedCities">
+          <div className={styles.text}>
             <RecentDiscussionsQueue queue={recentDiscussionsQueue} />
-            <button className="clearHistory" onClick={() => clearHistory()}>
+            <button className={styles.createNew} onClick={() => clearHistory()}>
               Clear History
             </button>
           </div>
@@ -564,8 +568,6 @@ const DiscussionHome = () => {
             >
               Other
             </button>
-            <AddBookmark _bookmark={selectedCity} />
-            <AddFavDisc _favDisc={selectedCity} />
           </div>
         )}
 
@@ -602,8 +604,8 @@ const DiscussionHome = () => {
                         <div className={styles.authorInfo}>
                           <h3>
                             {discussion.selectorChoice === "Your Username"
-                              ? discussion.postedBy.username
-                              : "Anonymous"}
+                              ? "Posted by " + discussion.postedBy.username
+                              : "Posted Anonymously"}
                           </h3>
                         </div>
                         <div className={styles.postContent}>
@@ -611,11 +613,9 @@ const DiscussionHome = () => {
                           {taggedIn.includes(discussion) && (
                             <span className={styles.tagIndicator}>⭐</span>
                           )} 
-                          
                             {discussion.title}
-                        
                           </h4>
-                          <p>{discussion.content}</p>
+                          <p>"{discussion.content}"</p>
                           <Flags
                             type="comment"
                             commentIndex={filteredDiscussions.indexOf(

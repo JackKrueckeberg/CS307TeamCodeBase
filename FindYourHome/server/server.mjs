@@ -21,9 +21,11 @@ import bookmarked_discussions from "./routes/bookmarked_discussions.mjs";
 import favorite_discussions from "./routes/favorite_discussions.mjs";
 import achievementsData from "./routes/achievementsData.mjs";
 import twoFactor from "./routes/twoFactor.mjs";
-
-import strikes from "./routes/strikes.mjs";
-import DiscussionHome from "./routes/discussionPost.mjs";
+import usageData from "./routes/usageData.mjs";
+import topThreeCities from "./routes/topThreeCities.mjs";
+import strikes from "./routes/strikes.mjs"
+import DiscussionHome from "./routes/discussionPost.mjs"
+import Feedback from "./routes/feedbackRoute.mjs";
 import notification from "./routes/notificationsRoutes.mjs";
 
 
@@ -43,9 +45,7 @@ app.use("/emailForgotPassword", EmailResetPassword)
 app.use("/profileRoute", profile);
 app.use("/users", usersData);
 app.use("/two-factor", twoFactor);
-
 app.use("/createUser", usersData);
-
 app.use("/favorite_searches", favorite_searches);
 app.use("/favorite_cities", favorite_cities);
 app.use("/recent_searches", recent_searches);
@@ -57,12 +57,11 @@ app.use("/messageRoute", message);
 app.use("/messageBoard", messageBoard);
 app.use("/strikes", strikes);
 app.use("/notification", notification);
-
 app.use("/achievements", achievementsData);
-
-//app.use("/discussionPost", discussion);
-
+app.use("/usage_stats", usageData);
+app.use("/top_cities", topThreeCities);
 app.use("/discussionPost", DiscussionHome);
+app.use("/feedbackRoute", Feedback);
 
 
 
