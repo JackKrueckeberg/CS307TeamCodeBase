@@ -19,6 +19,7 @@ export default function Profile() {
   const [favoriteCities, setFavoriteCities] = useState([]);
   const [suggestedCities, setSuggestedCities] = useState([]);
   const [likedCities, setLikedCities] = useState(new Set());
+  const [fetchError, setFetchError] = useState(false);
 
   const [profile_image, setImage] = useState();
 
@@ -92,24 +93,52 @@ export default function Profile() {
     return citiesArray.slice(0, 3);
   };
 
+  const clearTopCities = () => {
+    setTopCities([]);
+  };
+
   useEffect(() => {
     const fetchUsageStats = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5050/top_cities/${g_email}`
-        );
+        const response = await fetch(`http://localhost:5050/top_cities/${g_email}`);
         if (!response.ok) {
           throw new Error("Failed to fetch usage stats");
         }
         const data = await response.json();
         setTopCities(getTopThreeCities(data));
+        setFetchError(false);
       } catch (error) {
         console.error("Error fetching top cities:", error);
+        setFetchError(true);
       }
     };
 
     fetchUsageStats();
   }, []);
+
+  const clearUsageStats = async () => {
+    try {
+      const url = `http://localhost:5050/usage_stats/clear_usage/${g_email}`;
+      console.log(`Making request to: ${url}`); // Log the URL for debugging
+  
+      const response = await fetch(url, {
+        method: "PATCH",
+      });
+  
+      if (response.ok) {
+        console.log('Usage stats cleared');
+        setTopCities([]); // Clear top cities from the state as well
+      } else {
+        console.error(`Failed to clear usage stats: Status ${response.status}`);
+        const resText = await response.text();
+        console.error(`Response text: ${resText}`);
+      }
+    } catch (error) {
+      console.error("Error clearing usage stats: ", error);
+    }
+  };
+
+  
 
   const handleTabChange = (index) => {
     setTabVal(index);
@@ -122,10 +151,6 @@ export default function Profile() {
     sessionStorage.removeItem("currentUser");
 
     navigate("/", { state: { loggedOut: true }, replace: true });
-  };
-
-  const clearTopCities = () => {
-    setTopCities([]);
   };
 
 
@@ -280,51 +305,44 @@ export default function Profile() {
                 </h2>
               </div>
 
-              <div className="top-cities">
-                <h3>Top Searched Cities</h3>
-                <ul>
-                  {topCities.map((city, index) => (
-                    <li key={index}>{`${city[0]}: ${city[1]} searches`}</li>
-                  ))}
-                </ul>
+              {!fetchError && topCities.length > 0 && (
+                <div className="top-cities">
+                  <h3>Top Searched Cities</h3>
+                  <button onClick={clearTopCities}>Clear Top Cities</button>
+                  <ul>
+                    {topCities.map((city, index) => (
+                      <li key={index}>{`${city[0]}: ${city[1]} searches`}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+
+              <div>
+                <h2>Suggested Cities</h2>
+                <button onClick={clearSuggestedCities}>Clear All</button>
+                {suggestedCities.length > 0 ? (
+                  <ul>
+                    {suggestedCities.map((city, index) => (
+                      <li key={index}>
+                        {city}
+                        {!likedCities.has(city) && (
+                          <>
+                            <button onClick={() => handleLike(city)}>Like</button>
+                            <button onClick={() => handleDislike(city)}>Dislike</button>
+                          </>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No suggested cities available.</p>
+                )}
               </div>
 
-          <div className="top-cities">
-            <h3>Top Searched Cities</h3>
-            <button onClick={clearTopCities}>Clear Top Cities</button>
-            <ul>
-              {topCities.map((city, index) => (
-                <li key={index}>{`${city[1]} searches`}</li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-      <h2>Suggested Cities</h2>
-      <button onClick={clearSuggestedCities}>Clear All</button>
-      {suggestedCities.length > 0 ? (
-        <ul>
-          {suggestedCities.map((city, index) => (
-            <li key={index}>
-              {city}
-              {!likedCities.has(city) && (
-                <>
-                  <button onClick={() => handleLike(city)}>Like</button>
-                  <button onClick={() => handleDislike(city)}>Dislike</button>
-                </>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No suggested cities available.</p>
-      )}
-    </div>
-
               <div
-                className={`${
-                  tabVal === 2 ? "content active-content" : "content"
-                }`}
+                className={`${tabVal === 2 ? "content active-content" : "content"
+                  }`}
               >
                 <p2>
                   <MessageList />
@@ -349,44 +367,39 @@ export default function Profile() {
               <div className="tabs-block">
                 <div
                   onClick={() => handleTabChange(1)}
-                  className={`${
-                    tabVal === 1 ? "profile-tab active-tab" : "profile-tab"
-                  }`}
+                  className={`${tabVal === 1 ? "profile-tab active-tab" : "profile-tab"
+                    }`}
                 >
                   {" "}
                   Account Info{" "}
                 </div>
                 <div
-                  className={`${
-                    tabVal === 2 ? "profile-tab active-tab" : "profile-tab"
-                  }`}
+                  className={`${tabVal === 2 ? "profile-tab active-tab" : "profile-tab"
+                    }`}
                   onClick={() => handleTabChange(2)}
                 >
                   {" "}
                   Messages{" "}
                 </div>
                 <div
-                  className={`${
-                    tabVal === 3 ? "profile-tab active-tab" : "profile-tab"
-                  }`}
+                  className={`${tabVal === 3 ? "profile-tab active-tab" : "profile-tab"
+                    }`}
                   onClick={() => handleTabChange(3)}
                 >
                   {" "}
                   Favorites{" "}
                 </div>
                 <div
-                  className={`${
-                    tabVal === 4 ? "profile-tab active-tab" : "profile-tab"
-                  }`}
+                  className={`${tabVal === 4 ? "profile-tab active-tab" : "profile-tab"
+                    }`}
                   onClick={() => handleTabChange(4)}
                 >
                   {" "}
                   Notifications{" "}
                 </div>
                 <div
-                  className={`${
-                    tabVal === 5 ? "profile-tab active-tab" : "profile-tab"
-                  }`}
+                  className={`${tabVal === 5 ? "profile-tab active-tab" : "profile-tab"
+                    }`}
                   onClick={() => handleTabChange(5)}
                 >
                   {" "}
@@ -403,41 +416,36 @@ export default function Profile() {
     </div>*/}
 
                 <div
-                  className={`${
-                    tabVal === 1 ? "content active-content" : "content"
-                  }`}
+                  className={`${tabVal === 1 ? "content active-content" : "content"
+                    }`}
                 >
                   <AccountInfo />
                 </div>
 
                 <div
-                  className={`${
-                    tabVal === 2 ? "content active-content" : "content"
-                  }`}
+                  className={`${tabVal === 2 ? "content active-content" : "content"
+                    }`}
                 >
                   <MessageList />
                 </div>
 
                 <div
-                  className={`${
-                    tabVal === 3 ? "content active-content" : "content"
-                  }`}
+                  className={`${tabVal === 3 ? "content active-content" : "content"
+                    }`}
                 >
                   <Favorites />
                 </div>
 
                 <div
-                  className={`${
-                    tabVal === 4 ? "content active-content" : "content"
-                  }`}
+                  className={`${tabVal === 4 ? "content active-content" : "content"
+                    }`}
                 >
-                  <Notifications />
+                  {/* <Notifications /> */}
                 </div>
 
                 <div
-                  className={`${
-                    tabVal === 5 ? "content active-content" : "content"
-                  }`}
+                  className={`${tabVal === 5 ? "content active-content" : "content"
+                    }`}
                 >
                   <div className="disc">
                     <div className="bookmarks">
