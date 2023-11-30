@@ -6,6 +6,7 @@ import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
+import BreadcrumbTrails from "./breadcrumbTrails";
 
 const OPENAI_API_KEY = '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'
 
@@ -152,6 +153,9 @@ export default function CityPage(props) {
         </button>
       </div>
       <div className="result">
+
+        <div className="breadcrumb"> <BreadcrumbTrails/></div>
+
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
           <div className="mapContainer">

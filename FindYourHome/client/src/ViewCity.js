@@ -35,10 +35,10 @@ const ViewCity = () => {
     const [city, setCity] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
+    const [cityName, setCityName] = useState("");
     const [bannerHidden, setBannerHidden] = useState(false);
     const [isPanelOpen, setIsPanelOpen] = useState(false);
     const [searchBarOnLeft, setSearchBarOnLeft] = useState(true);
-    const [cityName, setCityName] = useState(null);
     const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
     const [suggestions, setSuggestions] = useState([]);
     const [imageUrl, setImageUrl] = useState(null);
@@ -242,7 +242,8 @@ const ViewCity = () => {
 
         if (!matchedCity) {
             setIsValidSearch(false);
-            return false; // City not found
+            return null; // changed this for the breadcrumb trail
+            //return false; // City not found
         }
 
         const img = await searchImage();
@@ -280,14 +281,15 @@ const ViewCity = () => {
         setShowResults(true);
         setIsValidSearch(true);
         // Store it in localStorage
-        return true; // City is valid
+        return matchedCity.name; // changed this for the breadcrumb trail
+        //return true; // City is valid
     }
 
     // Combined action
     async function handleCombinedActions() {
         const isValidCity = await handleSubmit();
         if (isValidCity) {
-            navToCityPage();
+            navToCityPage(isValidCity);
         }
     }
 
@@ -356,8 +358,8 @@ const ViewCity = () => {
         }
     };
 
-    function navToCityPage() {
-        navigate("/citypage");
+    function navToCityPage(city) {
+        navigate(`/view-city/citypage/${city}`);
     }
 
     const handleVerification = () => {
