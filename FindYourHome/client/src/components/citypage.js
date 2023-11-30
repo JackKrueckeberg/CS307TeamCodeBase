@@ -155,6 +155,7 @@ export default function CityPage(props) {
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
           <div className="mapContainer">
+             <h2 style={{ color: 'rgb(220, 215, 201)' }}>Map of {cityModel.name}</h2>
             { <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} /> }
           </div>
         )}
