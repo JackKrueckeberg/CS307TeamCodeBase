@@ -39,6 +39,7 @@ body {
   .profiletooltiptext, .advancedtooltiptext, .discussiontooltiptext {
     visibility: hidden;
     width: 160px;
+    height: fit-content;
     background-color: black;
     color: rgb(220, 215, 201);
     text-align: center;

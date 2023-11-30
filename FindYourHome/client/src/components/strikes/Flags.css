@@ -7,16 +7,17 @@
   gap: 10px; /* Spacing between buttons */
   justify-content: center;
   align-items: center;
+  /* margin-top: 10px; */
 }
 
 /* Style for the buttons */
 .flags-button {
-  width: 100px; /* Fixed width for uniformity */
+  width: 50px; /* Fixed width for uniformity */
   padding: 8px;
   background-color: gray;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 20px;
   text-align: center;
   display: flex; /* Use flexbox for internal alignment */
   justify-content: center; /* Center content horizontally */

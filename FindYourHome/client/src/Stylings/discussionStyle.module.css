@@ -114,7 +114,7 @@ body {
 .discussionPost {
     /* display: flex; */
     background-color: #DCD7C9;
-    padding: 15px;
+    padding: 25px;
     min-height: 1600;
     /* margin-bottom: 20px; */
     border-radius: 5px;
@@ -164,6 +164,16 @@ body {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    border-radius: 20px;
+    gap: 10px;
+    background-color: #DCD7C9;
+}
+
+.createNewBar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 20px;
     gap: 10px;
 }
 
@@ -171,6 +181,7 @@ body {
     border-radius: 5px;
     border: none;
     margin-top: 5px;
+    background-color: #DCD7C9;
 }
 
 .errorMsg {
@@ -213,6 +224,7 @@ body {
     margin: 10px;
     color: #3F4E4F;
     border: none;
+    border-radius: 20px;
     cursor: pointer;
   }
 
@@ -228,7 +240,7 @@ body {
   
   .selectedButton {
     background-color: #A27B5C; 
-    color: #DCD7C9; 
+    color: #DCD7C9;
   }
 
   .tagIndicator {

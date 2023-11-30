@@ -464,7 +464,7 @@ const DiscussionHome = () => {
         )}
 
         {!showForm && (
-          <div className={styles.createNew}>
+          <div className={styles.createNewBar}>
             <button
               onClick={() => setShowForm(true)}
               className={styles.createNew}
@@ -512,7 +512,7 @@ const DiscussionHome = () => {
         {!showForm && showHist && (
           <div className={styles.text}>
             <RecentDiscussionsQueue queue={recentDiscussionsQueue} />
-            <button className={styles.button} onClick={() => clearHistory()}>
+            <button className={styles.createNew} onClick={() => clearHistory()}>
               Clear History
             </button>
           </div>
@@ -568,8 +568,6 @@ const DiscussionHome = () => {
             >
               Other
             </button>
-            <AddBookmark _bookmark={selectedCity} />
-            <AddFavDisc _favDisc={selectedCity} />
           </div>
         )}
 
@@ -606,8 +604,8 @@ const DiscussionHome = () => {
                         <div className={styles.authorInfo}>
                           <h3>
                             {discussion.selectorChoice === "Your Username"
-                              ? discussion.postedBy.username
-                              : "Anonymous"}
+                              ? "Posted by " + discussion.postedBy.username
+                              : "Posted Anonymously"}
                           </h3>
                         </div>
                         <div className={styles.postContent}>
@@ -615,11 +613,9 @@ const DiscussionHome = () => {
                           {taggedIn.includes(discussion) && (
                             <span className={styles.tagIndicator}>⭐</span>
                           )} 
-                          
                             {discussion.title}
-                        
                           </h4>
-                          <p>{discussion.content}</p>
+                          <p>"{discussion.content}"</p>
                           <Flags
                             type="comment"
                             commentIndex={filteredDiscussions.indexOf(

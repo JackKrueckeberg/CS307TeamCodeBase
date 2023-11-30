@@ -195,7 +195,7 @@ export default function Replies({ commentIndex, _selectedCity }) {
 
   return (
     <div className={styles.replyContainer}>
-      <button onClick={() => setExpanded(!expanded)}>{expanded ? "collapse replies" : `expand ${replies.length} replies`}</button>
+      <button className={styles.button} onClick={() => setExpanded(!expanded)}>{expanded ? "collapse replies" : `expand ${replies.length} replies`}</button>
       {expanded &&
         <div>
           <h2>
