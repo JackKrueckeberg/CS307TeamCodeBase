@@ -93,7 +93,9 @@ const PropertyList = () => {
 
       {/* Display the common link at the top */}
       <div className="common-link">
-       
+        <Link to={getZillowLink(properties.length > 0 ? properties[0].city : '', properties.length > 0 ? properties[0].state : '', propertyTypeFilter)}>
+          {commonLinkMessage}
+        </Link>
       </div>
 
 
