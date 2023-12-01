@@ -677,6 +677,7 @@ export default function Create() {
                     placeholder="County Preference"
                     value={form.county}
                     onChange={(e) => updateForm({ county: e.target.value })}
+                    type="number"
                   />
                 </td>
                 <td>

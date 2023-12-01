@@ -1,13 +1,15 @@
 .notification-modal {
-    position: fixed;
     background: #ffd49c;
     padding: 10px 10px;
     border-radius: 4px;
     z-index: 999; /* Ensure it's above other content */
+    position: middle;
+    color: #2c3639;
   }
 
   .notification-content {
     border-radius: 5px;
+    position: middle;
     padding: 10px;
     width: 600px;
     text-align: center;
@@ -15,7 +17,7 @@
   
   /* Optional: Add a close button */
 .close-button {
-    position: absolute;
+    position: middle;
     top: 5px;
     right: 5px;
     cursor: pointer;

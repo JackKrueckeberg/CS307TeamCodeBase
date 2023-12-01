@@ -245,6 +245,7 @@ export default function Profile() {
         <div>
           <MessageNotification />
         </div>
+        <h className="headerText">Profile</h>
         <div className="navBar">
           <div class="profiletooltip">
             <button
@@ -310,7 +311,7 @@ export default function Profile() {
                 <div className="top-cities">
                   <h3>Top Searched Cities</h3>
                   <button onClick={clearTopCities}>Clear Top Cities</button>
-                  <ul>
+                  <ul className="smallText">
                     {topCities.map((city, index) => (
                       <li key={index}>{`${city[0]}: ${city[1]} searches`}</li>
                     ))}
@@ -319,13 +320,13 @@ export default function Profile() {
               )}
 
 
-              <div>
-                <h2>Suggested Cities</h2>
+              <div className="suggestedCities">
+                <h2 className="smallText">Suggested Cities</h2>
                 <button onClick={clearSuggestedCities}>Clear All</button>
                 {suggestedCities.length > 0 ? (
                   <ul>
                     {suggestedCities.map((city, index) => (
-                      <li key={index}>
+                      <li className="smallText" key={index}>
                         {city}
                         {!likedCities.has(city) && (
                           <>
@@ -362,7 +363,7 @@ export default function Profile() {
                 <h3>Top Searched Cities</h3>
                 <ul>
                   {topCities.map((city, index) => (
-                    <li key={index}>{`${city[0]}: ${city[1]} searches`}</li>
+                    <li className="smallText" key={index}>{`${city[0]}: ${city[1]} searches`}</li>
                   ))}
                 </ul>
               </div>
