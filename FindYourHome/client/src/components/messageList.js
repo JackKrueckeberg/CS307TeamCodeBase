@@ -402,7 +402,7 @@ export default function MessageList() {
                                     <div className="message-content-container">
                                         <p className="message-sender">{message.sender}</p>
                                         <div className={`message-content ${username === message.sender ? 'sent' : 'received'}`}>
-                                            <p>{message.content}</p>
+                                            <p className="text">{message.content}</p>
                                         </div>
                                         <p className="message-timestamp">{new Date(message.timeSent).toLocaleString()}</p>
                                     </div>
