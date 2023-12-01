@@ -5,7 +5,7 @@
   gap: 20px;
   max-width: 600px;
   margin: 0 auto;
-  margin-top: 10px;
+  margin-top: 60px;
   padding: 50px;
   z-index: 1;
   background-color: #3f4e4f;
@@ -34,27 +34,34 @@
   cursor: pointer;
 }
 
-.label,
-.input {
-  width: 100%;
-}
-
 .input {
   border-radius: 20px;
   height: 40px;
-  width: 100%;
+  min-width: 100%;
   padding: 10px 15px;
   padding-right: 7px;
   border: 0;
   background-color: #dcd7c9;
 }
 
+.emailinput {
+  background-color: #dcd7c9;
+  border-radius: 20px;
+  height: 40px;
+  min-width: 100%;
+  padding: 10px 15px;
+  padding-right: 7px;
+  border: 0;
+}
+
 .passwordEntryWrapper {
   position: relative;
   display: inline-block;
+  width: 100%;
 }
 
 .passwordEntryWrapper .button {
+  background-color: #dcd7c9;
   position: absolute;
   top: 68%;
   right: 5px;
@@ -103,7 +110,7 @@
 }
 
 .incorrect {
-  color: white;
+  color: #dcd7c9;
   background-color: red;
   border-radius: 20px;
   padding-top: 15px;
@@ -137,6 +144,7 @@
 .label {
   color: #a27b5c;
   font-size: 20px;
+  width: 100%;
 }
 
 .checkboxLabel:hover,

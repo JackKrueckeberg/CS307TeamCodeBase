@@ -189,11 +189,10 @@ export const Login = () => {
             Email:{" "}
           </label>
           <input
+            className={styles.emailinput}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            type="text"
             id="email"
-            className={styles.input}
           />
 
           {/*Password Submission box*/}

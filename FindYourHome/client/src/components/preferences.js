@@ -442,6 +442,7 @@ export default function Create() {
   return (
     // name, population, region, state, zip code, county, median income
     <div>
+      <h3 className="headerText">Preference Search</h3>
       <div class="navBar">
 
         <div class="profiletooltip">
@@ -475,15 +476,14 @@ export default function Create() {
             <tbody>
               <tr>
                 <td>
-                    <Checkbox
-                    icon={<FavoriteBorder />}
-                    checkedIcon={<Favorite />}
-                    defaultChecked={form.favorited}
-                    checked={form.favorited}
-                    className="favBtn"
-                    onChange={(e) => addFavorite()}
-                    />
-                  <h3>Preferences:</h3>
+                  <Checkbox
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite />}
+                  defaultChecked={form.favorited}
+                  checked={form.favorited}
+                  className="favBtn"
+                  onChange={(e) => addFavorite()}
+                  />
                 </td>
               </tr>
             </tbody>
@@ -525,68 +525,51 @@ export default function Create() {
                 </td>
               </tr>
             </tbody>
-            <tbody>
-              <tr>
-                <td>
-                  <label className="padding">East Coast </label>
-                  <input
-                    className="padding"
-                    type="checkbox"
-                    defaultChecked={form.east_coast}
-                    value={form.east_coast}
-                    onChange={(e) =>
-                      updateForm({ east_coast: !form.east_coast })
-                    }
-                  />
-                </td>
-              </tr>
-            </tbody>
-            <tbody>
-              <tr>
-                <td>
-                    <label className="padding">West Coast </label>
-                    <input
-                    className="padding"
-                    type="checkbox"
-                    defaultChecked={form.west_coast}
-                    value={form.west_coast}
-                    onChange={(e) => updateForm({ west_coast: !form.west_coast })}
-                    />
-                </td>
-              </tr>
-            </tbody>
-            <tbody>
-              <tr>
-                <td>
-                  <label className="padding">Central </label>
-                  <input
-                    className="padding"
-                    type="checkbox"
-                    defaultChecked={form.central}
-                    value={form.central}
-                    onChange={(e) =>
-                      updateForm({ central: !form.central })
-                    }
-                  />
-                </td>
-              </tr>
-            </tbody>
-            <tbody>
-              <tr>
-                <td>
-                  <label className="padding">Mountain West </label>
-                  <input
-                    className="padding"
-                    type="checkbox"
-                    defaultChecked={form.mountain_west}
-                    value={form.mountain_west}
-                    onChange={(e) =>
-                      updateForm({ mountain_west: !form.mountain_west })
-                    }
-                  />
-                </td>
-              </tr>
-            </tbody>
+            <div className="checkboxRow">
+              <label className="checkboxLabel" htmlFor="east-coast">East Coast</label>
+              <input
+                  id="east-coast"
+                  className="padding"
+                  type="checkbox"
+                  defaultChecked={form.east_coast}
+                  value={form.east_coast}
+                  onChange={(e) => updateForm({ east_coast: !form.east_coast })}
+              />
+            </div>
+            <div className="checkboxRow">
+              <label className="checkboxLabel" htmlFor="west-coast">West Coast</label>
+              <input
+                  id="west-coast"
+                  className="padding"
+                  type="checkbox"
+                  defaultChecked={form.west_coast}
+                  value={form.west_coast}
+                  onChange={(e) => updateForm({ west_coast: !form.west_coast })}
+              />
+            </div>
+            <div className="checkboxRow">
+              <label className="checkboxLabel" htmlFor="central">Central</label>
+              <input
+                  id="central"
+                  className="padding"
+                  type="checkbox"
+                  defaultChecked={form.central}
+                  value={form.central}
+                  onChange={(e) => updateForm({ central: !form.central })}
+              />
+            </div>
+            <div className="checkboxRow">
+              <label className="checkboxLabel" htmlFor="mountain-west">Mountain West</label>
+              <input
+                  id="central"
+                  className="padding"
+                  type="checkbox"
+                  defaultChecked={form.mountain_west}
+                  value={form.mountain_west}
+                  onChange={(e) => updateForm({ mountain_west: !form.mountain_west })}
+              />
+            </div>
+
             <tbody>
               <tr>
                 <td>

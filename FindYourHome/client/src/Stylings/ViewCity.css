@@ -64,6 +64,7 @@ div.container {
 .togglePanelButton {
     /* Styles for the toggle button */
     border-radius: 20px;
+    max-width: 100px;
 }
 
 .pageLayout.searchLeft .mainContent {
