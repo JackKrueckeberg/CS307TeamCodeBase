@@ -306,6 +306,11 @@ export default function Profile() {
                 </h2>
               </div>
 
+              <div className="bio">
+                <span placeholder="Tell us about yourself">{user.bio}</span>
+              </div>
+
+
               {!fetchError && topCities.length > 0 && (
                 <div className="top-cities">
                   <h3>Top Searched Cities</h3>
@@ -339,23 +344,6 @@ export default function Profile() {
                 ) : (
                   <p>No suggested cities available.</p>
                 )}
-              </div>
-
-              <div
-                className={`${tabVal === 2 ? "content active-content" : "content"
-                  }`}
-              >
-                <p2>
-                  <MessageList />
-                </p2>
-              </div>
-
-              <div className="bio">
-                <span placeholder="Tell us about yourself">{user.bio}</span>
-              </div>
-
-              <div className="bio">
-                <span placeholder="Tell us about yourself">{user.bio}</span>
               </div>
 
               <div className="top-cities">
@@ -455,7 +443,7 @@ export default function Profile() {
                   className={`${tabVal === 4 ? "content active-content" : "content"
                     }`}
                 >
-                  {/* <Notifications /> */}
+                  <Notifications />
                 </div>
 
                 <div

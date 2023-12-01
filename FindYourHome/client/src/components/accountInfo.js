@@ -330,7 +330,6 @@ export default function AccountInfo() {
                     <iframe name="dummyframe" id="dummyframe" className="noshow"></iframe>
                     
                     <form action={`http://localhost:5050/profileRoute/upload/${user._id}`} method="post" enctype="multipart/form-data" id="imageUpload" target="dummyframe">
-                        <label for="file">File</label>
                         <input id="file" name="profile_image" type="file" class="form-control-file" />
                         <button className="upload-image">Upload</button>
                     </form>
