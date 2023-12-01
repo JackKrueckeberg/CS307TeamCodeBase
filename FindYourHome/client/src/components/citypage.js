@@ -7,6 +7,7 @@ import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
 import BreadcrumbTrails from "./breadcrumbTrails.js";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const OPENAI_API_KEY = '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'
 
@@ -25,6 +26,14 @@ export default function CityPage(props) {
   const cityModelStored = localStorage.getItem('selectedCity');
   const cityModel = cityModelStored ? JSON.parse(cityModelStored) : {};
   // console.log(cityModel);
+
+  const [attrationsLoc, setAttractionsLoc] = useLocalStorage("attractions-loc", {});
+
+  function updateAttractionsLoc(value) {
+    return setAttractionsLoc((prev) => {
+      return { ...prev, ...value };
+    });
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -111,6 +120,9 @@ export default function CityPage(props) {
           const data = await response.json();
           // console.log(data.choices[0].message.content);
           setApiResponse(data.choices[0].message.content);  // Set the fetched data to the state
+          updateAttractionsLoc( {
+            [cityModel.name]: data.choices[0].message.content
+          })
         } else {
           console.log('Error: Unable to process your request.');
         }
@@ -164,7 +176,7 @@ export default function CityPage(props) {
       </div>
       <div className="attractions">
         <h3 className="headerText">Top 10 City Attractions: (takes a second to load)</h3>
-        <p>{apiResponse}</p>  {/* Render the response */}
+        <p>{attrationsLoc[cityModel.name]}</p>  {/* Render the response */}
       </div>
 
       <button onClick={toggleSearchBar}>
