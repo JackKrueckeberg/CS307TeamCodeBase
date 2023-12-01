@@ -1,5 +1,5 @@
 .profile-background {
-  background: #3f4e4f;
+  background: #2c3639;
   display: flex;
   flex-direction: column;
   height: auto;
@@ -8,12 +8,12 @@
 .profile-page{
   display: flex;
   flex: 1;
-  padding: 40px;
-  margin: 40px;
-  background-color:  rgba(255, 255, 255, 0.295);
+  padding: 20px;
+  margin: 20px;
+  background-color:  #a27b5c;
   flex-direction: column;
   height: fit-content;
-  border-radius: 30px;
+  border-radius: 20px;
 }
 
 .navBar{
@@ -22,18 +22,19 @@
   flex-direction: row;
   width: 100%;
   height: fit-content;
+  
 }
 
 .profile-content{
   display: flex;
   flex-direction: row;
-  margin-top: 10px;
+  margin-top: 0px;
 }
 
 .profileCard{
   width: 25%;
   background-color:  rgba(255, 255, 255, 0.295);
-  border-radius: 30px;
+  border-radius: 20px;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -49,13 +50,14 @@
 .name{
   margin: 15px 10px 0px 10px;
   width: fit-content;
-  
+  color: #3f4e4f;
 }
 
 .bio{
   width: fit-content;
   margin: 10px;
   text-align: center;
+  color: #3f4e4f;
 }
 
 .prof-btn {
@@ -68,22 +70,44 @@
   margin: 10px;
 }
 
+.smallText {
+  color: #3f4e4f;
+}
+
+.favs {
+  color: #3f4e4f;
+}
+
 .deleteAcct:hover {
   background-color: rgb(255, 0, 0);
 }
 
 .profile-sections{
   background-color:  rgba(255, 255, 255, 0.295);
-  padding: 20px;
-  border-radius: 30px;
-  margin-left: 20px;
+  padding: 10px;
+  border-radius: 20px;
+  margin-left: 10px;
   width: 100%;
+}
+
+.profile-details {
+  color: #3f4e4f;
+}
+
+.headerText {
+  color: #a27b5c;
+  font-size: 50px;
 }
 
 .tabs-block{
   display: flex;
   justify-content: center;
   width: 80;
+  color: #3f4e4f;
+}
+
+.suggestedCities {
+  /* max-width: 25%; */
 }
 
 .profile-tab{
@@ -148,11 +172,11 @@
 .active-content{
   display: block;
   margin: 0;
-  padding: 30px;
+  padding: 10px;
   transition: all is ease-in-out;
   animation: content-animation 0.3s;
   border: 2px solid rgb(162, 123, 92);
-  border-radius: 0 0 30px 30px;
+  border-radius: 0 0 20px 20px;
 }
 
 @keyframes content-animation{

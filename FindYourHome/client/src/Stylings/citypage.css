@@ -5,24 +5,9 @@
     box-sizing: border-box;
   }
   
-  body, html {
-    font-family: 'Roboto', sans-serif;
-    background-color: rgb(162, 123, 92);
-    margin: 0;
-  }
-
-  .root {
-    background-color: rgb(162, 123, 92);
-  }
-
-  .attractions {
-    background-color: rgb(162, 123, 92);
-  }
-  
   
   /* Main Content Styling */
   .result {
-    background: rgb(220, 215, 201);
     padding: 1rem;
     margin: 1rem;
     border-radius: 12px;
@@ -30,6 +15,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 0.5rem;
+    background-color: #a27b5c;
   }
   
   /* Attractions Section */
@@ -43,12 +29,6 @@
     color: rgb(220, 215, 201);
   }
   
-  
-  
-  /* Twitter Widget */
-  .Twitter {
-    /* Add styling for the Twitter component here */
-  }
 
   /* Style for the Map Container */
 .mapContainer {
@@ -77,6 +57,7 @@
   
     .result {
       grid-template-columns: 1fr;
+      background-color: #a27b5c;
     }
 
     .mapContainer {
@@ -89,6 +70,7 @@
     .result {
       grid-template-columns: 1fr;
       gap: 0.5rem; /* Ensure gap is consistent on smaller screens */
+      background-color: #a27b5c;
     }
   
     .cityModel, .mapContainer {
@@ -125,6 +107,11 @@
 .dataBar input[type="text"]:focus {
   outline: none;
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), 0 0 5px #aaa;
+}
+
+.headerText {
+  font-size: 20px;
+  color: white;
 }
 
 /* Styling for the Search Button */

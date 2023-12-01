@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import "../Stylings/advancedPrefs.css";
+import "../Stylings/citypage.css";
 //import "../Stylings/citypage.css";
 import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
+import BreadcrumbTrails from "./breadcrumbTrails.js";
 import { useLocalStorage } from "@uidotdev/usehooks";
-import BreadcrumbTrails from "./breadcrumbTrails";
 
 const OPENAI_API_KEY = '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'
 
@@ -21,6 +21,12 @@ export default function CityPage(props) {
   const storedSesUser = JSON.parse(sessionStorage.getItem("currentUser"));
   const storedLocUser = JSON.parse(localStorage.getItem("currentUser"));
 
+
+  // Parsing the cityModel from localStorage
+  const cityModelStored = localStorage.getItem('selectedCity');
+  const cityModel = cityModelStored ? JSON.parse(cityModelStored) : {};
+  // console.log(cityModel);
+
   const [attrationsLoc, setAttractionsLoc] = useLocalStorage("attractions-loc", {});
 
   function updateAttractionsLoc(value) {
@@ -28,14 +34,6 @@ export default function CityPage(props) {
       return { ...prev, ...value };
     });
   }
-
-  console.log(attrationsLoc);
-
-
-  // Parsing the cityModel from localStorage
-  const cityModelStored = localStorage.getItem('selectedCity');
-  const cityModel = cityModelStored ? JSON.parse(cityModelStored) : {};
-  // console.log(cityModel);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -139,7 +137,6 @@ export default function CityPage(props) {
     }
   }, [cityModel.name]);
 
-
   return (
     <div className="root">
       <div className="navBar">
@@ -167,19 +164,18 @@ export default function CityPage(props) {
           View Properties in {cityModel.name}
         </button>
       </div>
+      <div className="breadcrumb"> <BreadcrumbTrails/></div>
       <div className="result">
-
-        <div className="breadcrumb"> <BreadcrumbTrails/></div>
-
         {cityModel.name && <CityModel model={cityModel} />}
         {cityModel.name && (
           <div className="mapContainer">
-            <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} />
+             <h2 style={{ color: 'rgb(220, 215, 201)' }}>Map of {cityModel.name}</h2>
+            { <Map key={`${cityModel.lat}-${cityModel.lon}`} lat={cityModel.lat} lon={cityModel.lon} /> }
           </div>
         )}
       </div>
       <div className="attractions">
-        <h3>Top 10 City Attractions: (takes a second to load)</h3>
+        <h3 className="headerText">Top 10 City Attractions: (takes a second to load)</h3>
         <p>{attrationsLoc[cityModel.name]}</p>  {/* Render the response */}
       </div>
 

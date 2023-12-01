@@ -602,11 +602,9 @@ const DiscussionHome = () => {
                         className={styles.discussionPost}
                       >
                         <div className={styles.authorInfo}>
-                          <h3>
-                            {discussion.selectorChoice === "Your Username"
-                              ? "Posted by " + discussion.postedBy.username
-                              : "Posted Anonymously"}
-                          </h3>
+                          {discussion.selectorChoice === "Your Username"
+                            ? "Posted by " + discussion.postedBy.username
+                            : "Posted Anonymously"}
                         </div>
                         <div className={styles.postContent}>
                           <h4 className={styles.postTitle}>
@@ -615,7 +613,7 @@ const DiscussionHome = () => {
                           )} 
                             {discussion.title}
                           </h4>
-                          <p>"{discussion.content}"</p>
+                          <p className={styles.content}>"{discussion.content}"</p>
                           <Flags
                             type="comment"
                             commentIndex={filteredDiscussions.indexOf(

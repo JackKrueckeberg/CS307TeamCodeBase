@@ -425,7 +425,7 @@ const ViewCity = () => {
 
                     <div className="mainContent">
                         <div className="searchBar">
-                            <label className="label" htmlFor="city-input">Search for a City</label>
+                            <label className="whiteText" htmlFor="city-input">Search for a City</label>
                             <Autosuggest // Use Autosuggest component
                                 suggestions={suggestions}
                                 onSuggestionsFetchRequested={onSuggestionsFetchRequested}

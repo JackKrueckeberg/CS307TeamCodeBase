@@ -64,6 +64,7 @@ div.container {
 .togglePanelButton {
     /* Styles for the toggle button */
     border-radius: 20px;
+    max-width: 100px;
 }
 
 .pageLayout.searchLeft .mainContent {
@@ -99,6 +100,8 @@ div.container {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    min-width: 50%;
+    max-height: fit-content;
     /* stretch to full width */
     gap: 20px;
 }
@@ -293,6 +296,10 @@ button:hover {
 
 .map {
     flex: 1; /* Makes the map take all available space after CityModel */
+}
+
+.whiteText {
+    color: #dcd7c9;
 }
 
 label,
