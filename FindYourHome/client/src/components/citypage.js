@@ -6,6 +6,7 @@ import Map, { lat, lon, cityName } from "./leaflet/leaflet";
 import { CityModel, Model } from "./CityModel/CityModel";
 import Twitter from "./twitter";
 import { useCity } from "../contexts/CityContext";
+import BreadcrumbTrails from "./breadcrumbTrails.js";
 
 const OPENAI_API_KEY = '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'
 
@@ -162,7 +163,7 @@ export default function CityPage(props) {
         )}
       </div>
       <div className="attractions">
-        <h3>Top 10 City Attractions: (takes a second to load)</h3>
+        <h3 className="headerText">Top 10 City Attractions: (takes a second to load)</h3>
         <p>{apiResponse}</p>  {/* Render the response */}
       </div>
 

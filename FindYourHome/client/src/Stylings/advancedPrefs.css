@@ -88,6 +88,11 @@ body {
   white-space: nowrap; /* Prevents text from wrapping */
   font-size: 20px;
 }
+
+label {
+  color: #2c3639;
+  font-size: 20px;
+}
   
   /* Result container styling */
 .result {
@@ -126,6 +131,7 @@ input[type="number"], input[type="text"], select {
 
 input[type="checkbox"] {
   margin-right: 5px;
+  font-size: 20px;
 }
 
 input[type="submit"] {
