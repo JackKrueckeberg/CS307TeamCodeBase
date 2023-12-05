@@ -73,15 +73,17 @@ export default function MessageNotification() {
                 );
 
                 if (found) {
-                    updateMessageBoard(found);    
+                    const updated = updateMessageBoard(found);    
                     setNotificationModal(true);
                     setNotification(`You have a new message from ${found.messagesWith}.`);
                         
+                    if (updated === true) {
                     // Set a timeout to hide the notification after 8 seconds
-                    setTimeout(() => {
-                        setNotification('');
-                        setNotificationModal(false);
-                    }, 8000);
+                        setTimeout(() => {
+                            setNotification('');
+                            setNotificationModal(false);
+                        }, 8000);
+                    }
                 }
             }
 
@@ -105,9 +107,10 @@ export default function MessageNotification() {
         });
 
         if (response.status === 200) {            
-            return;
+            return true;
         } else {
             alert("Something went wrong");
+            return false;
         }
     }
 

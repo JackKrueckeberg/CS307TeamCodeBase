@@ -195,14 +195,14 @@ export default function Replies({ commentIndex, _selectedCity }) {
 
   return (
     <div className={styles.replyContainer}>
-      <button className={styles.button} onClick={() => setExpanded(!expanded)}>{expanded ? "collapse replies" : `expand ${replies.length} replies`}</button>
+      <button className={styles.button} onClick={() => setExpanded(!expanded)}>{expanded ? "collapse replies" : `expand ${replies.length} replies`}
+      {taggedIn === true && (
+        <span className={styles.taggedIndicator}>⭐</span>
+      )}
+      </button>
       {expanded &&
         <div>
-          <h2>
-            {taggedIn === true && (
-              <span className={styles.taggedIndicator}>⭐</span>
-            )}
-            Replies:</h2>
+          <h2>Replies:</h2>
           {replies.map((reply, index) => (
             <div key={index} className={styles.replyItem}>
               <div className={styles.replyDetails}>
