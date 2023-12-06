@@ -8,15 +8,17 @@ import searchImage from "../ViewCity.js";
 import Model from "../ViewCity.js";
 import "../Stylings/ViewCity.css";
 import CityPage from "./citypage";
-import { useCity } from "../contexts/CityContext";
+import { useAllCities, useCity } from "../contexts/CityContext";
 import { useUser } from '../contexts/UserContext';
 import { useLocalStorage } from "@uidotdev/usehooks";
 import BreadcrumbTrails from "./breadcrumbTrails.js";
 import { useLocation } from 'react-router-dom';
 
-export default function Create() {
+
+export default function Create({_selectedCity}) {
   const [recentSearches, setRecentSearches] = useState([]); // Add state to store recent searches
   const {globalCity, setGlobalCity} = useCity();
+  const [isLoading, setIsLoading] = useState(false);
 
   console.log(useLocalStorage("form"));
 
@@ -30,13 +32,7 @@ export default function Create() {
     zip_code: "",
     county: "",
     median_income: "",
-    favorited: false,
-    population_weight: 1,
-    region_weight: 1,
-    state_weight: 1,
-    zip_weight: 1,
-    county_weight: 1,
-    income_weight: 1
+    favorited: false
   });
 
   const [results, setResults] = useLocalStorage("results", []);
@@ -44,13 +40,14 @@ export default function Create() {
   const [cityIncome, setCityIncome] = useState(null);
   const [cityCoordinates, setCityCoordinates] = useState({ lat: 0, lon: 0 }); // Default coordinates
   const [cityModel, setCityModel] = useState(null);
-  const [allCities, setAllCities] = useState([]);
+  const {allCities, setAllCities} = useAllCities();
   const [city, setCity] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
   const [showing, setShowing] = useState([]);
 
   const {user: userProfile } = useUser(); // the id of the current logged in user
+  
 
   // These methods will update the state properties.
   function updateForm(value) {
@@ -60,14 +57,6 @@ export default function Create() {
   }
 
   function compareByScore(a, b) {
-    if (!a.score) {
-      return 1;
-    }
-
-    if (!b.score) {
-      return -1;
-    }
-
     if (a.score < b.score) {
         return 1;
     }
@@ -185,13 +174,7 @@ export default function Create() {
       state: form.state,
       zip_code: form.zip_code,
       county: form.county,
-      median_income: form.median_income,
-      population_weight: form.population_weight,
-      region_weight: form.region_weight,
-      state_weight: form.state_weight,
-      zip_weight: form.zip_weight,
-      county_weight: form.county_weight,
-      income_weight: form.income_weight
+      median_income: form.median_income
     }
     favs.push(newFavorite);
 
@@ -224,13 +207,7 @@ export default function Create() {
       state: form.state,
       zip_code: form.zip_code,
       county: form.county,
-      median_income: form.median_income,
-      population_weight: form.population_weight,
-      region_weight: form.region_weight,
-      state_weight: form.state_weight,
-      zip_weight: form.zip_weight,
-      county_weight: form.county_weight,
-      income_weight: form.income_weight
+      median_income: form.median_income
     }
     recent.push(newRecent);
 
@@ -267,59 +244,81 @@ export default function Create() {
 
     
   }
-
+  useEffect(() => {
   async function getCities() {
-    const city_info = await fetch("http://localhost:5050/city_info", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).catch((error) => {
-      window.alert(error);
-      return;
-    });
+    if (allCities != "") {
+      // Cities are already in local storage, use them
+      setIsLoading(false);
+      console.log("Cities loaded from context");
+  } else {
+      // Cities not in local storage, fetch and store them
+      setIsLoading(true);
 
-    const resp = await city_info.json();
-    setAllCities(resp);
-    return resp;
+      // Fetch cities from your API endpoint
+      try {
+          const response = await fetch(`http://localhost:5050/record/cities_full_2`);
+          if (!response.ok) {
+              const message = `An error occurred: ${response.statusText}`;
+              window.alert(message);
+              return;
+          }
+
+          const cities_ = await response.json();
+          console.log(cities_)
+
+          // Update the context with the fetched cities
+          setAllCities(cities_);
+
+          setIsLoading(false);
+
+          console.log("Cities loaded from API");
+  
+
+      } catch (error) {
+          console.log("There was an error fetching the cities", error);
+          setIsLoading(false);
+      }
+  }
   }  
+  getCities()
+}, []);
 
   async function filterCities() {
-    const cities = await getCities();
+    const cities = allCities
     var resultArr = new Set();
 
     for (var i = 0; i < cities.length; i++) {
       var total_prefs = 0;
       if (form.east_coast) {
         if (cities[i].region === "America/New_York") {
-            total_prefs += form.region_weight;
+            total_prefs++;
         }
       }
       if (form.central) {
         if (cities[i].region === "America/Chicago") {
-          total_prefs += form.region_weight;
+            total_prefs++;
         }
       }
       if (form.mountain_west) {
         if (cities[i].region === "America/Phoenix") {
-          total_prefs += form.region_weight;
+          total_prefs++;
         }
       }
       if (form.west_coast) {
         if (cities[i].region === "America/Los_Angeles") {
-          total_prefs += form.region_weight;
+            total_prefs++;
         }
       }
 
       if (form.zip_code !== "") {
         if (form.zip_code === cities[i].zip_code) {
-            total_prefs += form.zip_weight;
+            total_prefs++;
         }
       }
 
       if (form.county !== "") {
         if (form.county === cities[i].county) {
-            total_prefs += form.county_weight;
+            total_prefs++;
         }
       }
 
@@ -328,7 +327,7 @@ export default function Create() {
           const formPop = parseInt(form.population);
           const cityPop = parseInt(cities[i].population);
           if (Math.abs(formPop - cityPop) / formPop <= 0.25) {
-            total_prefs += form.population_weight;
+            total_prefs++;
           }
         } catch {}
       }
@@ -338,7 +337,7 @@ export default function Create() {
           const formIncome = parseInt(form.median_income);
           const cityIncome = parseInt(cities[i].population);
           if (Math.abs(formIncome - cityIncome) / formIncome <= 0.25) {
-            total_prefs += form.income_weight;
+            total_prefs++;
           }
         } catch {}
       }
@@ -347,7 +346,7 @@ export default function Create() {
         
         try {
           if (cities[i].state === form.state) {
-            total_prefs += form.state_weight;
+            total_prefs++;
           }
         } catch {}
       }
@@ -392,11 +391,6 @@ export default function Create() {
         return;
     }
 
-    if (form.population_weight < 0 || form.region_weight < 0 || form.state_weight < 0 || form.zip_weight < 0 || form.county_weight < 0 || form.income_weight < 0) {
-      alert("Weights cannot be a negative number.");
-      return;
-    }
-
     const recent_searches = await getUser_recentSearches();
     await addRecent(recent_searches)
 
@@ -426,8 +420,7 @@ export default function Create() {
           var tempCity = results[i];
           results[i].form = form;
           setGlobalCity(results[i]);
-          localStorage.setItem('selectedCity', JSON.stringify(results[i]));
-          navigate(`/preferences/citypage/${results[i].name}`, results[i]);
+          navigate("/cityPage", results[i]);
           return;
         }
       }
