@@ -23,7 +23,7 @@ export default function CompareCities() {
     const g_email = user.email;
 
     function handleBackButton() {
-        localStorage.removeItem('compareCities');
+        //localStorage.removeItem('compareCities');
         incrementAchievement("The-Judge");
         navigate("/view-city");
     }
