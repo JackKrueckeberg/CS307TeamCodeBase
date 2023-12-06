@@ -346,16 +346,6 @@ export default function Profile() {
                   <p>No suggested cities available.</p>
                 )}
               </div>
-
-              <div className="top-cities">
-                <h3>Top Searched Cities</h3>
-                <ul>
-                  {topCities.map((city, index) => (
-                    <li className="smallText" key={index}>{`${city[0]}: ${city[1]} searches`}</li>
-                  ))}
-                </ul>
-              </div>
-
     
               <div className="prof-btn">
                 <button
