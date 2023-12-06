@@ -27,19 +27,25 @@ import Disc from "./components/disc";
 import TwoFactor from "./components/twofactor";
 import { NavigationProvider, useNavigationContext } from "./contexts/NavigationContext";
 import { UserContext } from "./contexts/UserContext";
-import { CityContext, CompareCitiesProvider } from "./contexts/CityContext";
+import { AllCitiesContext, CityContext, CompareCitiesProvider } from "./contexts/CityContext";
 import MessageNotification from "./components/messageNotification";
 import AccountInfo from "./components/accountInfo";
 import { AnimatePresence } from "framer-motion";
 import Notifications from './components/notifications';
 import PropertyList from "./components/properties/properties";
 import RecoverAccount from "./components/recover-account";
+import { AllCitiesProvider } from './contexts/CityContext'
+import ReactDOM from 'react-dom';
 
 const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
 
   useEffect(() => {
+   
+     
+     
+    
     if (user) {
       sessionStorage.setItem("currentUser", JSON.stringify(user));
     } else {
@@ -87,6 +93,7 @@ const App = () => {
     <NavigationHandler />
     <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
       <CityContext.Provider value={{ city, setGlobalCity }}>
+      <AllCitiesProvider value={{ city, setGlobalCity }}>
         <CompareCitiesProvider value={{ compareCities, setCompareCities }}>
           <AnimatePresence>
             <Routes key={location.pathname} location={location}>
@@ -114,6 +121,7 @@ const App = () => {
             </Routes>
           </AnimatePresence>
         </CompareCitiesProvider>
+        </AllCitiesProvider>
       </CityContext.Provider>
     </UserContext.Provider>
     </NavigationProvider>

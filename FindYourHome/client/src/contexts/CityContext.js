@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Original City Context
 export const CityContext = createContext();
@@ -34,5 +34,29 @@ export const CompareCitiesProvider = ({ children, value }) => {
         <CompareCitiesContext.Provider value={value}>
             {children}
         </CompareCitiesContext.Provider>
+    );
+};
+
+
+
+
+export const AllCitiesContext = createContext();
+
+export const useAllCities = () => {
+    const context = useContext(AllCitiesContext);
+    if (!context) {
+        throw new Error("useUser must be used within a UserProvider");
+    }
+    return context;
+};
+
+export const AllCitiesProvider = ({ children }) => {
+    const [allCities, setAllCities] = useState([]);
+
+
+    return (
+        <AllCitiesContext.Provider value={{ allCities, setAllCities }}>
+            {children}
+        </AllCitiesContext.Provider>
     );
 };

@@ -3,7 +3,6 @@ import Autosuggest from 'react-autosuggest'; // Import Autosuggest
 import "./Stylings/ViewCity.css";
 import { Queue } from "./components/RecentCitiesQueue/RecentCitiesQueue";
 import RecentCitiesQueue from "./components/RecentCitiesQueue/RecentCitiesQueue";
-import Map, { lat, lon, cityName } from "./components/leaflet/leaflet"
 import { CityModel, Model } from "./components/CityModel/CityModel";
 import Checkbox from "@mui/material/Checkbox";
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
@@ -11,7 +10,7 @@ import Favorite from '@mui/icons-material/Favorite';
 import { useNavigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import CityPage from "./components/citypage"
-import { useCity } from "./contexts/CityContext";
+import { useAllCities, useCity } from "./contexts/CityContext";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SimilarSearches from './components/SimilarSearches'; 
@@ -30,8 +29,7 @@ const ViewCity = () => {
     );
 
     const g_email = user.email;
-    
-    const [allCities, setAllCities] = useState([]);
+    const {allCities, setAllCities} = useAllCities();
     const [city, setCity] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [showResults, setShowResults] = useState(false);
@@ -52,6 +50,7 @@ const ViewCity = () => {
     const [isVerified, setIsVerified] = useState(false);
     const { globalCity, setGlobalCity } = useCity();
     const [similarSearches, setSimilarSearches] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -65,24 +64,52 @@ const ViewCity = () => {
     useEffect(() => {
         const verificationStatus = localStorage.getItem('isVerified');
         setIsVerified(verificationStatus === 'true');
-        async function fetchData() {
-            try {
-                const response = await fetch(`http://localhost:5050/record/cities_full_2`);
-                if (!response.ok) {
-                    const message = `An error occurred: ${response.statusText}`;
-                    window.alert(message);
-                    return;
+        
+    
+        const fetchData = async () => {
+     
+            
+            // Check if cities are already in local storage
+            
+    
+            if (allCities != "") {
+                // Cities are already in local storage, use them
+                setIsLoading(false);
+                console.log("Cities loaded from context");
+            } else {
+                // Cities not in local storage, fetch and store them
+                setIsLoading(true);
+
+                // Fetch cities from your API endpoint
+                try {
+                    const response = await fetch(`http://localhost:5050/record/cities_full_2`);
+                    if (!response.ok) {
+                        const message = `An error occurred: ${response.statusText}`;
+                        window.alert(message);
+                        return;
+                    }
+
+                    const cities = await response.json();
+                    console.log(cities)
+
+                    // Update the context with the fetched cities
+                    setAllCities(cities);
+
+                    setIsLoading(false);
+
+                    console.log("Cities loaded from API");
+
+                } catch (error) {
+                    console.log("There was an error fetching the cities", error);
+                    setIsLoading(false);
                 }
-
-                const cities = await response.json();
-                setAllCities(cities);
-            } catch (error) {
-                console.error("There was an error fetching the cities", error);
             }
-        }
-
+        };
+    
         fetchData();
     }, []);
+    
+    
 
     async function getUser_favorites() {
 
@@ -369,110 +396,118 @@ const ViewCity = () => {
 
     return (
         <div>
-            {!isVerified && !bannerHidden && (
-                <div className="verificationBanner">
-                    Your account is not verified!
-                    <button onClick={handleVerification}>Verify Email</button>
-                    <button onClick={() => setBannerHidden(!bannerHidden)}>Hide Banner</button>
+            {isLoading ? (
+                // Show loading page while data is being loaded
+                <div className="loading-container">
+                    <h1 className="loading-message">Fetching city data</h1>
+                    <div className="loading-spinner"></div>
                 </div>
-            )}
-            {bannerHidden && !isVerified && (
-                <button onClick={() => setBannerHidden(!bannerHidden)}>Show Banner</button>
-            )}
-            <h1 className="header">City Search Page</h1>
-
-            <div className="navBar">
-                <div className="profiletooltip">
-                    <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
-                    <span className="profiletooltiptext">View your profile page and make edits</span>
-                </div>
-                <div class="advancedtooltip">
-                    <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
-                    <span class="advancedtooltiptext">Search based on attributes of cities</span>
-                </div>
-                <div class="discussiontooltip">
-                    <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
-                    <span class="discussiontooltiptext">View discussions about different cities</span>
-                </div>
-                <div class="feedbacktooltip">
-                    <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
-                </div>
-                <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
-            </div>
-
-            <div className={`pageLayout ${searchBarOnLeft ? 'searchLeft' : 'searchRight'}`}>
-                {showResults && (
-                    <div>
-                        <div>
-                            <label>favicon</label>
-
-                            <Checkbox
-                                icon={<FavoriteBorder />}
-                                checkedIcon={<Favorite />}
-                                defaultChecked={favorite}
-                                checked={favorite}
-                                className="fav_icon"
-                                onChange={(e) => setFavorite(!favorite)}
-                            />
-                        </div>
-                        <button className="confirmButton" onClick={confirm_fav}>Confirm favorite</button>
+            ) : (
+                <div>
+                {!isVerified && !bannerHidden && (
+                    <div className="verificationBanner">
+                        Your account is not verified!
+                        <button onClick={handleVerification}>Verify Email</button>
+                        <button onClick={() => setBannerHidden(!bannerHidden)}>Hide Banner</button>
                     </div>
                 )}
+                {bannerHidden && !isVerified && (
+                    <button onClick={() => setBannerHidden(!bannerHidden)}>Show Banner</button>
+                )}
 
-                <div className="container">
-
-                    {showResults && city && <CityPage showResults={showResults} testProp="Test"></CityPage>}
-
-                    <div className="mainContent">
-                        <div className="searchBar">
-                            <label className="whiteText" htmlFor="city-input">Search for a City</label>
-                            <Autosuggest // Use Autosuggest component
-                                suggestions={suggestions}
-                                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
-                                onSuggestionsClearRequested={onSuggestionsClearRequested}
-                                getSuggestionValue={(suggestion) => suggestion}
-                                renderSuggestion={(suggestion) => (
-                                    <div
-                                        key={suggestion}
-                                        className="suggestion"
-                                    >
-                                        {suggestion}
-                                    </div>
-                                )}
-                                inputProps={{
-                                    type: "text",
-                                    placeholder: "Enter a city",
-                                    value: searchTerm,
-                                    onChange: handleInputChange,
-                                }}
-                            />
-                            <div className="button-group">
-                                <button className="submitButton" onClick={handleCombinedActions}>Submit</button>
-                                <button className="clearButton" onClick={handleClear}>Clear</button>
-                                <button onClick={() => setSearchBarOnLeft(!searchBarOnLeft)}>Swap Layout</button>
+                <h1 className="header">City Search Page</h1>
+    
+                    <div className="navBar">
+                        <div className="profiletooltip">
+                            <button className="profilebtn" onClick={() => navigate("/profile")}>Profile</button>
+                            <span className="profiletooltiptext">View your profile page and make edits</span>
+                        </div>
+                        <div class="advancedtooltip">
+                            <button className="advancedSearch" onClick={() => navigate("/preferences")}>Advanced Search</button>
+                            <span class="advancedtooltiptext">Search based on attributes of cities</span>
+                        </div>
+                        <div class="discussiontooltip">
+                            <button className="discussionButton" onClick={() => navigate("/discussionHome")}>Discussions</button>
+                            <span class="discussiontooltiptext">View discussions about different cities</span>
+                        </div>
+                        <div class="feedbacktooltip">
+                            <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
+                        </div>
+                        <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
+                    </div>
+    
+                    <div className={`pageLayout ${searchBarOnLeft ? 'searchLeft' : 'searchRight'}`}>
+                        {showResults && (
+                            <div>
+                                <label>favicon</label>
+                                <Checkbox
+                                    icon={<FavoriteBorder />}
+                                    checkedIcon={<Favorite />}
+                                    defaultChecked={favorite}
+                                    checked={favorite}
+                                    className="fav_icon"
+                                    onChange={(e) => setFavorite(!favorite)}
+                                />
+                                <button className="confirmButton" onClick={confirm_fav}>Confirm favorite</button>
                             </div>
-                            {!isValidSearch &&
-                                <div className="errorMessage">
-                                    {searchTerm === "" ? <h2>No City Searched</h2> : similarSearches.length === 0 ? <h2>No results matching your search</h2> : <h2>Invalid Search</h2>}
-                                    <div>
-                                        {similarSearches.length > 0 && <SimilarSearches suggestions={similarSearches} onSuggestionClick={handleSimilarSuggestionClick} />}
+                        )}
+    
+                        <div className="container">
+                            {showResults && city && <CityPage showResults={showResults} testProp="Test"></CityPage>}
+    
+                            <div className="mainContent">
+                                <div className="searchBar">
+                                    <label className="label" htmlFor="city-input">Search for a City</label>
+                                    <Autosuggest
+                                        suggestions={suggestions}
+                                        onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                                        onSuggestionsClearRequested={onSuggestionsClearRequested}
+                                        getSuggestionValue={(suggestion) => suggestion}
+                                        renderSuggestion={(suggestion) => (
+                                            <div
+                                                key={suggestion}
+                                                className="suggestion"
+                                            >
+                                                {suggestion}
+                                            </div>
+                                        )}
+                                        inputProps={{
+                                            type: "text",
+                                            placeholder: "Enter a city",
+                                            value: searchTerm,
+                                            onChange: handleInputChange,
+                                        }}
+                                    />
+                                    <div className="button-group">
+                                        <button className="submitButton" onClick={handleCombinedActions}>Submit</button>
+                                        <button className="clearButton" onClick={handleClear}>Clear</button>
+                                        <button onClick={() => setSearchBarOnLeft(!searchBarOnLeft)}>Swap Layout</button>
                                     </div>
+                                    {!isValidSearch &&
+                                        <div className="errorMessage">
+                                            {searchTerm === "" ? <h2>No City Searched</h2> : similarSearches.length === 0 ? <h2>No results matching your search</h2> : <h2>Invalid Search</h2>}
+                                            <div>
+                                                {similarSearches.length > 0 && <SimilarSearches suggestions={similarSearches} onSuggestionClick={handleSimilarSuggestionClick} />}
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
-                            }
+                            </div>
+    
+                            <div className={`sidePanel ${isPanelOpen ? 'open' : ''}`}>
+                                <button onClick={() => setIsPanelOpen(!isPanelOpen)} className="togglePanelButton">
+                                    {isPanelOpen ? 'Close' : 'Open'} Recent Cities
+                                </button>
+                                {isPanelOpen && <RecentCitiesQueue queue={recentCitiesQueue} />}
+                            </div>
                         </div>
                     </div>
-
-                    <div className={`sidePanel ${isPanelOpen ? 'open' : ''}`}>
-                        <button onClick={() => setIsPanelOpen(!isPanelOpen)} className="togglePanelButton">
-                            {isPanelOpen ? 'Close' : 'Open'} Recent Cities
-                        </button>
-                        {isPanelOpen && <RecentCitiesQueue queue={recentCitiesQueue} />}
-                    </div>
+                    <ToastContainer />
                 </div>
-            </div>
-            <ToastContainer />
+            )}
         </div>
     );
+    
 };
 
 export default ViewCity;
