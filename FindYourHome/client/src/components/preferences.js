@@ -383,6 +383,7 @@ export default function Create({_selectedCity}) {
           var tempCity = results[i];
           results[i].form = form;
           setGlobalCity(results[i]);
+          localStorage.setItem('selectedCity', JSON.stringify(results[i]));
           navigate("/cityPage", results[i]);
           return;
         }
@@ -417,7 +418,7 @@ export default function Create({_selectedCity}) {
                     <button className="feedbackButton" onClick={() => navigate("/Feedback")}>Feedback</button>
         </div>
         <button className="logoutbtn" onClick={() => handleLogout()}>Logout</button>
-
+,
       </div>
         <div>
           {pathnames === "/profile/favorite-search/preferences" ? (
