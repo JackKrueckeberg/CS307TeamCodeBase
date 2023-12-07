@@ -244,44 +244,7 @@ export default function Create({_selectedCity}) {
 
     
   }
-  useEffect(() => {
-  async function getCities() {
-    if (allCities != "") {
-      // Cities are already in local storage, use them
-      setIsLoading(false);
-      console.log("Cities loaded from context");
-  } else {
-      // Cities not in local storage, fetch and store them
-      setIsLoading(true);
-
-      // Fetch cities from your API endpoint
-      try {
-          const response = await fetch(`http://localhost:5050/record/cities_full_2`);
-          if (!response.ok) {
-              const message = `An error occurred: ${response.statusText}`;
-              window.alert(message);
-              return;
-          }
-
-          const cities_ = await response.json();
-          console.log(cities_)
-
-          // Update the context with the fetched cities
-          setAllCities(cities_);
-
-          setIsLoading(false);
-
-          console.log("Cities loaded from API");
   
-
-      } catch (error) {
-          console.log("There was an error fetching the cities", error);
-          setIsLoading(false);
-      }
-  }
-  }  
-  getCities()
-}, []);
 
   async function filterCities() {
     const cities = allCities

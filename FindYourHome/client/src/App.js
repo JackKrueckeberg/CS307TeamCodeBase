@@ -27,7 +27,7 @@ import Disc from "./components/disc";
 import TwoFactor from "./components/twofactor";
 import { NavigationProvider, useNavigationContext } from "./contexts/NavigationContext";
 import { UserContext } from "./contexts/UserContext";
-import { AllCitiesContext, CityContext, CompareCitiesProvider } from "./contexts/CityContext";
+import { AllCitiesContext, CityContext, CompareCitiesProvider, useAllCities } from "./contexts/CityContext";
 import MessageNotification from "./components/messageNotification";
 import AccountInfo from "./components/accountInfo";
 import { AnimatePresence } from "framer-motion";
@@ -41,10 +41,48 @@ const App = () => {
   const storedUser = sessionStorage.getItem("currentUser");
   const [user, setUser] = useState(storedUser ? JSON.parse(storedUser) : null);
 
+  const [isLoading, setIsLoading] = useState(true);
+  const {allCities, setAllCities} = useAllCities();
+
   useEffect(() => {
+
    
-     
-     
+    
+
+    const fetchData = async () => {
+ 
+        
+        // Check if cities are already in local storage
+        
+
+            // Cities not in local storage, fetch and store them
+          
+            try {
+                const response = await fetch(`http://localhost:5050/record/cities_full_2`);
+              if (!response.ok) {
+                  const message = `An error occurred: ${response.statusText}`;
+                  window.alert(message);
+                  return;
+              }
+
+              const cities = await response.json();
+              console.log(cities)
+
+              // Update the context with the fetched cities
+              setAllCities(cities);
+
+              setIsLoading(false);
+
+              console.log("Cities loaded from API");
+
+          } catch (error) {
+              console.log("There was an error fetching the cities", error);
+              setIsLoading(false);
+          }
+    };
+
+    fetchData();
+
     
     if (user) {
       sessionStorage.setItem("currentUser", JSON.stringify(user));
@@ -89,11 +127,19 @@ const App = () => {
   
 
   return (
-    <NavigationProvider>
-    <NavigationHandler />
+    <div>
+      {isLoading ? (
+        // Show loading page while data is being loaded
+        <div className="loading-container">
+          <h1 className="loading-message">Setting up your experience</h1>
+          <div className="loading-spinner"></div>
+        </div>
+      ) : (
+        <NavigationProvider>
+          <NavigationHandler />
     <UserContext.Provider value={{ user, setLoggedInUser, logout }}>
       <CityContext.Provider value={{ city, setGlobalCity }}>
-      <AllCitiesProvider value={{ city, setGlobalCity }}>
+     
         <CompareCitiesProvider value={{ compareCities, setCompareCities }}>
           <AnimatePresence>
             <Routes key={location.pathname} location={location}>
@@ -121,10 +167,11 @@ const App = () => {
             </Routes>
           </AnimatePresence>
         </CompareCitiesProvider>
-        </AllCitiesProvider>
       </CityContext.Provider>
     </UserContext.Provider>
     </NavigationProvider>
+      )}
+    </div>
   );
 };
 
